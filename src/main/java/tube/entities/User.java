@@ -20,7 +20,8 @@ public class User {
 	private String email;
 	
 	@NotNull
-	@Size(min=5, max=25, message="{password.size}")
+	@Size(min=8, message="{password.size}")
+	@Pattern(regexp="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$", message="{password.pattern}")
 	private String password;
 
 	public User() {
