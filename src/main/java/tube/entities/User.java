@@ -16,7 +16,7 @@ public class User {
 	private String username;
 	
 	@NotNull
-	@Email(message="{email.valid}")
+	@Pattern(regexp="([a-zA-Z0-9]+(?:[._+-][a-zA-Z0-9]+)*){2,}@([a-zA-Z0-9]+(?:[.-][a-zA-Z0-9]+)*[.][a-zA-Z]{2,})", message="{email.valid}")
 	private String email;
 	
 	@NotNull
