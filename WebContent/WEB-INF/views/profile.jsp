@@ -4,6 +4,13 @@
 <%@ page session="false" %>
 <c:import url="/includes/header.jsp" />
 	<h1>WELCOME</h1>
+	
 	<c:out value="${user.username}" /><br/>
-	<c:out value="${user.email}" />
+	<c:out value="${user.email}" /><br/>
+	<c:out value="${user.id}" /><br/>
+	
+	<h3>File Upload:</h3>
+	
+<c:import url="/includes/welcome.jsp" />
+	
 <c:import url="/includes/footer.jsp" />

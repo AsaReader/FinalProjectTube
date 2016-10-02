@@ -9,7 +9,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class User {
 
-	private long id;
+	private int id;
 	
 	@NotNull
 	@Size(min=5, max=16, message="{username.size}")
@@ -24,6 +24,9 @@ public class User {
 	@Size(min=8, message="{password.size}")
 	@Pattern(regexp="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$", message="{password.pattern}")
 	private String password;
+	
+	private boolean isBanned;
+	private boolean isAdmin;
 
 	public User() {
 	}
@@ -32,18 +35,28 @@ public class User {
 		this(0, username, email, password);
 	}
 
-	public User(long id, String username, String email, String password) {
+	public User(int id, String username, String email, String password) {
 		this.id = id;
 		this.username = username;
 		this.email = email;
 		this.password = password;
+		this.isBanned = false;
+		this.isAdmin = false;
 	}
 
-	public long getId() {
+	public boolean isBanned() {
+		return isBanned;
+	}
+
+	public void setBanned(boolean isBanned) {
+		this.isBanned = isBanned;
+	}
+
+	public int getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -71,6 +84,14 @@ public class User {
 		this.password = password;
 	}
 
+	public boolean isAdmin() {
+		return isAdmin;
+	}
+
+	public void setAdmin(boolean isAdmin) {
+		this.isAdmin = isAdmin;
+	}
+
 	@Override
 	public boolean equals(Object that) {
 		return EqualsBuilder.reflectionEquals(this, that, "username", "password", "email");
@@ -81,4 +102,11 @@ public class User {
 		return HashCodeBuilder.reflectionHashCode(this, "username", "password", "email");
 	}
 
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", username=" + username + ", email=" + email + ", password=" + password
+				+ ", isBanned=" + isBanned + ", isAdmin=" + isAdmin + "]";
+	}
+
+	
 }

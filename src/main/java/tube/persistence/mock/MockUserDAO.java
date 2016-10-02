@@ -3,7 +3,8 @@ package tube.persistence.mock;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.stereotype.Repository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.*;
 
 import tube.entities.User;
 import tube.persistence.UserDAO;
