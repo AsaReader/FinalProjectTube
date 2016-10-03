@@ -32,7 +32,7 @@ public class UserControllerTest {
 	public void testProcessRegistration() throws Exception {
 		UserDAO mockUserDao = mock(UserDAO.class);
 		User unsaved = new User("Jimmy", "jim@gmail.com", "JimHasAStrongPassword");
-		User saved = new User(0L, "Jimmy", "jim@gmail.com", "JimHasAStrongPassword");
+		User saved = new User(0, "Jimmy", "jim@gmail.com", "JimHasAStrongPassword");
 		when(mockUserDao.insert(unsaved)).thenReturn(saved);
 		
 		UserController controller = new UserController(mockUserDao);

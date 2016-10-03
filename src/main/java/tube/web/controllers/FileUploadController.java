@@ -2,6 +2,8 @@ package tube.web.controllers;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,10 +18,13 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
+import tube.entities.User;
 import tube.entities.Video;
 import tube.jdbc.VideoJDBCTemplate;
 import tube.model.FileBucket;
@@ -28,9 +33,11 @@ import tube.model.MultiFileBucket;
 import tube.model.MultiFileValidator;
 
 @Controller
+@SessionAttributes("loggedUser")
 public class FileUploadController {
 
-	private static String UPLOAD_LOCATION = "C:/mytemp/";	
+	private static final String VIDEO_MP4 = "video/mp4";
+	private static String UPLOAD_LOCATION = "C:/mytemp/";
 	private ApplicationContext context = new ClassPathXmlApplicationContext("Beans.xml");
 	private VideoJDBCTemplate videoJDBCTemplate = (VideoJDBCTemplate) context.getBean("VideoJDBCTemplate");
 
@@ -63,34 +70,41 @@ public class FileUploadController {
 	}
 
 	@RequestMapping(value = "/singleUpload", method = RequestMethod.POST)
-	public String singleFileUpload(@Valid FileBucket fileBucket, BindingResult result, ModelMap model)
-			throws IOException {
+	public String singleFileUpload(@Valid FileBucket fileBucket, BindingResult result, ModelMap model,
+			@ModelAttribute("loggedUser") User loggedUser) throws IOException {
 
 		if (result.hasErrors()) {
 			System.out.println("validation errors");
 			return "singleFileUploader";
-		} else {
-			System.out.println("Fetching file");
-			MultipartFile multipartFile = fileBucket.getFile();
-
-			// Now do something with file...
-			FileCopyUtils.copy(fileBucket.getFile().getBytes(),
-					new File(UPLOAD_LOCATION + fileBucket.getFile().getOriginalFilename()));
-
-			String fileName = multipartFile.getOriginalFilename();
-			
-			//TODO get info from fields
-			String title = "Title";
-			String descr = "Description";
-			//TODO get from sesion USER info
-			int userID = 1;
-			Video video = new Video(descr, fileName, title, userID);
-			int id = videoJDBCTemplate.addVideo(video);
-			video.setId(id);
-			
-			model.addAttribute("fileName", fileName);
-			return "success";
 		}
+		System.out.println("Fetching file");
+		MultipartFile multipartFile = fileBucket.getFile();
+		String fileName = loggedUser.getUsername() + LocalDateTime.now().toString().replace(":", "-") + ".mp4";
+		// Now do something with file...
+		
+		String ext = fileBucket.getFile().getContentType();
+		if(!VIDEO_MP4.equals(ext)) {
+			return "singleFileUploader";
+		}
+		
+		FileCopyUtils.copy(fileBucket.getFile().getBytes(),
+				new File(UPLOAD_LOCATION + fileName));
+// fileBucket.getFile().getOriginalFilename())
+		
+		
+//		String fileName = multipartFile.getOriginalFilename();
+
+		// TODO get info from fields
+		String title = "Title";
+		String descr = "Description";
+
+		int userID = loggedUser.getId();
+		Video video = new Video(descr, fileName, title, userID);
+		int id = videoJDBCTemplate.addVideo(video);
+		video.setId(id);
+
+		model.addAttribute("fileName", fileName);
+		return "success";
 	}
 
 	@RequestMapping(value = "/multiUpload", method = RequestMethod.GET)

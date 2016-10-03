@@ -14,6 +14,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import tube.entities.User;
 import tube.jdbc.UserJDBCTemplate;
@@ -21,6 +22,7 @@ import tube.persistence.UserDAO;
 
 @Controller
 @RequestMapping("/user")
+@SessionAttributes("loggedUser")
 public class UserController {
 
 	private UserDAO userDao;
@@ -41,12 +43,13 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/login", method = POST)
-	public String confirmLogin(@ModelAttribute User user) {
+	public String confirmLogin(@ModelAttribute User user, Model model) {
 		//TODO add erroe message for wrong username or password
 		User dbUser = userJDBCTemplate.login(user.getUsername());
 
 		if (dbUser != null) {
 			if (dbUser.getPassword().equals(user.getPassword())) {
+				model.addAttribute("loggedUser", dbUser);
 				return "redirect:/user/" + dbUser.getUsername();
 			} else {
 				return "loginForm";
@@ -62,7 +65,7 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/register", method = POST)
-	public String processRegistration(@Valid User user, Errors errors) {
+	public String processRegistration(@Valid User user, Errors errors, Model model) {
 		if (errors.hasErrors()) {
 			return "registerForm";
 		}
@@ -70,6 +73,7 @@ public class UserController {
 		// TODO password hashing algoritm
 		int id = userJDBCTemplate.registerNewUser(user);
 		user.setId(id);
+		model.addAttribute("loggedUser", user);
 		return "redirect:/user/" + user.getUsername();
 	}
 

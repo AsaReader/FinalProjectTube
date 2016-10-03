@@ -8,9 +8,10 @@
 	<c:out value="${user.username}" /><br/>
 	<c:out value="${user.email}" /><br/>
 	<c:out value="${user.id}" /><br/>
-	
+	<c:out value="Session user id = ${loggedUser.id}" /><br/>
 	<h3>File Upload:</h3>
 	
-<c:import url="/includes/welcome.jsp" />
+	Click on below links to see FileUpload in action.<br />
+	<br /> <a href="<c:url value='/singleUpload' />">Single File Upload</a>
 	
 <c:import url="/includes/footer.jsp" />
