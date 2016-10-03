@@ -22,7 +22,7 @@ public class Video {
 	@Size(min=5, max=100, message="{username.size}")
 	private String title;
 	
-	private int userID;
+	private Long userID;
 	// private List<Comment> comments;
 	// private List<Playlist> playlists;
 	// private List<UserLike> userLikes;
@@ -33,11 +33,11 @@ public class Video {
 		
 	}
 	
-	public Video(String description, String fileName, String title, int userID) {
+	public Video(String description, String fileName, String title, Long userID) {
 		this(0, description, fileName, title, userID);
 	}
 	
-	public Video(int id, String description, String fileName, String title, int userID) {
+	public Video(int id, String description, String fileName, String title, Long userID) {
 		this.id = id;
 		this.description = description;
 		this.fileName = fileName;
@@ -85,11 +85,11 @@ public class Video {
 		this.title = title;
 	}
 
-	public int getUserID() {
+	public Long getUserID() {
 		return userID;
 	}
 
-	public void setUserID(int userID) {
+	public void setUserID(Long userID) {
 		this.userID = userID;
 	}
 

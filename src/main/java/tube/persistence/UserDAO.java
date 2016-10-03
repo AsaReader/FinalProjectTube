@@ -1,11 +1,11 @@
 package tube.persistence;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+
 import tube.entities.User;
 
-public interface UserDAO {
+public interface UserDAO extends JpaRepository<User, Long> {
 
-	User insert(User user);
-
-	User selectByUsername(String username);
-
+	User findByUsername(String username);
+	
 }

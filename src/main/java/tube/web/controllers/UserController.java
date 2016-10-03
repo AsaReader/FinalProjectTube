@@ -69,17 +69,17 @@ public class UserController {
 		if (errors.hasErrors()) {
 			return "registerForm";
 		}
-		userDao.insert(user);
+		user = userDao.save(user);
 		// TODO password hashing algoritm
-		int id = userJDBCTemplate.registerNewUser(user);
-		user.setId(id);
+//		int id = userJDBCTemplate.registerNewUser(user);
+//		user.setId(id);
 		model.addAttribute("loggedUser", user);
 		return "redirect:/user/" + user.getUsername();
 	}
 
 	@RequestMapping(value = "/{username}", method = GET)
-	public String showSpitterProfile(@PathVariable String username, Model model) {
-		User user = userJDBCTemplate.login(username);
+	public String showUserProfile(@PathVariable String username, Model model) {
+		User user = userDao.findByUsername(username);
 		model.addAttribute(user);
 		return "profile";
 	}

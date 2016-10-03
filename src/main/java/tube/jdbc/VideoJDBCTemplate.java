@@ -37,7 +37,7 @@ public class VideoJDBCTemplate {
 				pst.setString(1, video.getFileName());
 				pst.setString(2, video.getTitle());
 				pst.setString(3, video.getDescription());
-				pst.setInt(4, video.getUserID());
+				pst.setLong(4, video.getUserID());
 				return pst;
 			}
 		}, keyHolder);
@@ -62,7 +62,7 @@ public class VideoJDBCTemplate {
 				video.setFileName(rs.getString("file_name"));
 				video.setTitle(rs.getString("title"));
 				video.setDescription(rs.getString("description"));
-				video.setUserID(rs.getInt("user_id"));
+				video.setUserID(rs.getLong("user_id"));
 
 				return video;
 			 }

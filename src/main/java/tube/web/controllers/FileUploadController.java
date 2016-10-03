@@ -98,7 +98,7 @@ public class FileUploadController {
 		String title = "Title";
 		String descr = "Description";
 
-		int userID = loggedUser.getId();
+		Long userID = loggedUser.getId();
 		Video video = new Video(descr, fileName, title, userID);
 		int id = videoJDBCTemplate.addVideo(video);
 		video.setId(id);
