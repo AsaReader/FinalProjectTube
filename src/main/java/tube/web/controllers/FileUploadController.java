@@ -2,11 +2,11 @@ package tube.web.controllers;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +35,7 @@ import tube.model.MultiFileValidator;
 @Controller
 @SessionAttributes("loggedUser")
 public class FileUploadController {
-
+	private static final int MAX_SIZE_FOR_UPLOAD = 524288000;
 	private static final String VIDEO_MP4 = "video/mp4";
 	private static String UPLOAD_LOCATION = "C:/mytemp/";
 	private ApplicationContext context = new ClassPathXmlApplicationContext("Beans.xml");
@@ -71,35 +71,61 @@ public class FileUploadController {
 
 	@RequestMapping(value = "/singleUpload", method = RequestMethod.POST)
 	public String singleFileUpload(@Valid FileBucket fileBucket, BindingResult result, ModelMap model,
-			@ModelAttribute("loggedUser") User loggedUser) throws IOException {
+			@ModelAttribute("loggedUser") User loggedUser, HttpServletRequest request) throws IOException {
+		
+		//TODO error mesage on jsp to validate Parameters!!!!!!!!!!!!!!!!!!!!
+		String title = request.getParameter("title");
+		String descr = request.getParameter("descr");
 
 		if (result.hasErrors()) {
 			System.out.println("validation errors");
 			return "singleFileUploader";
 		}
+		
 		System.out.println("Fetching file");
 		MultipartFile multipartFile = fileBucket.getFile();
 		String fileName = loggedUser.getUsername() + LocalDateTime.now().toString().replace(":", "-") + ".mp4";
-		// Now do something with file...
-		
+
+		//TODO error message for wrong type and over size file
 		String ext = fileBucket.getFile().getContentType();
-		if(!VIDEO_MP4.equals(ext)) {
+		if (!VIDEO_MP4.equals(ext) || fileBucket.getFile().getSize()>MAX_SIZE_FOR_UPLOAD) {
 			return "singleFileUploader";
 		}
 		
-		FileCopyUtils.copy(fileBucket.getFile().getBytes(),
-				new File(UPLOAD_LOCATION + fileName));
-// fileBucket.getFile().getOriginalFilename())
-		
-		
-//		String fileName = multipartFile.getOriginalFilename();
+		//Please dont use it for now!!!!!!!!!!
+//		String url = null;
+//		try {
+//			url = S3JavaSDK.uploadFileToS3AWS(fileName, multipartFile);
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 
-		// TODO get info from fields
-		String title = "Title";
-		String descr = "Description";
+		//copy file to computer
+		FileCopyUtils.copy(fileBucket.getFile().getBytes(), new File(UPLOAD_LOCATION + fileName));
+		// fileBucket.getFile().getOriginalFilename())
+		
+		//Copy file to AWS - S3
+		// String fileName = multipartFile.getOriginalFilename();
 
-		Long userID = loggedUser.getId();
+
+		title = title.trim();
+		descr = descr.trim();
+		if(title.isEmpty() || title==null){
+			title = loggedUser.getUsername() + " " + LocalDateTime.now().toString();
+		}
+		if(descr.isEmpty() || descr==null){
+			descr = loggedUser.getUsername() + " " + LocalDateTime.now().toString();
+		}
+		
+		long userID = loggedUser.getId();
+		//using copy to PC
 		Video video = new Video(descr, fileName, title, userID);
+		
+		//using copy to AWS - S3
+//		Video video = new Video(descr, url, title, userID);
+		
+		//TODO change it with hibernate
 		int id = videoJDBCTemplate.addVideo(video);
 		video.setId(id);
 

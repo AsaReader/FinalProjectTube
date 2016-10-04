@@ -24,7 +24,7 @@ import org.springframework.web.servlet.view.JstlView;
 @ComponentScan(basePackages = { "tube" }, excludeFilters = {
 		@Filter(type = FilterType.ANNOTATION, value = EnableWebMvc.class) })
 public class RootConfig extends WebMvcConfigurerAdapter {
-
+	private static final int MAX_SIZE_FOR_UPLOAD = 524288000;
 	@Bean
 	public InternalResourceViewResolver getInternalResourceViewResolver() {
 		InternalResourceViewResolver resolver = new InternalResourceViewResolver();
@@ -40,7 +40,7 @@ public class RootConfig extends WebMvcConfigurerAdapter {
 		CommonsMultipartResolver resolver = new CommonsMultipartResolver();
 
 		// Set the maximum allowed size (in bytes) for each individual file.
-		resolver.setMaxUploadSizePerFile(724288000);// 500MB
+		resolver.setMaxUploadSizePerFile(MAX_SIZE_FOR_UPLOAD);// 500MB
 		resolver.setMaxInMemorySize(40 * 1024);
 		
 		// You may also set other available properties.
