@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import tube.entities.User;
 import tube.jdbc.UserJDBCTemplate;
 import tube.persistence.UserDAO;
+import tube.validations.UsernameValidation;
 
 @Controller
 @RequestMapping("/user")
@@ -65,7 +66,10 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/register", method = POST)
-	public String processRegistration(@Valid User user, Errors errors, Model model) {
+	public String processRegistration(@Valid User user, Errors errors, Model model, @Autowired UsernameValidation usernameValidator) {
+		if (!usernameValidator.isUsernameAvailable(user.getUsername(), userDao)) {
+			errors.rejectValue("username", null, "This username is already taken.");
+		}
 		if (errors.hasErrors()) {
 			return "registerForm";
 		}
