@@ -26,11 +26,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import tube.entities.User;
 import tube.entities.Video;
-import tube.jdbc.VideoJDBCTemplate;
+
 import tube.model.FileBucket;
 import tube.model.FileValidator;
 import tube.model.MultiFileBucket;
 import tube.model.MultiFileValidator;
+import tube.persistence.UserDAO;
 
 @Controller
 @SessionAttributes("loggedUser")
@@ -38,11 +39,14 @@ public class FileUploadController {
 	private static final int MAX_SIZE_FOR_UPLOAD = 524288000;
 	private static final String VIDEO_MP4 = "video/mp4";
 	private static String UPLOAD_LOCATION = "C:/mytemp/";
-	private ApplicationContext context = new ClassPathXmlApplicationContext("Beans.xml");
-	private VideoJDBCTemplate videoJDBCTemplate = (VideoJDBCTemplate) context.getBean("VideoJDBCTemplate");
+//	private ApplicationContext context = new ClassPathXmlApplicationContext("Beans.xml");
+	
 
 	@Autowired
 	FileValidator fileValidator;
+	
+	@Autowired
+	UserDAO userDAO;
 
 	@Autowired
 	MultiFileValidator multiFileValidator;
@@ -120,14 +124,14 @@ public class FileUploadController {
 		
 		long userID = loggedUser.getId();
 		//using copy to PC
-		Video video = new Video(descr, fileName, title, userID);
-		
+		Video video = new Video(descr, fileName, title, userDAO.findOne(userID));
+	
 		//using copy to AWS - S3
 //		Video video = new Video(descr, url, title, userID);
 		
 		//TODO change it with hibernate
-		int id = videoJDBCTemplate.addVideo(video);
-		video.setId(id);
+//		int id = videoJDBCTemplate.addVideo(video);
+//		video.setId(id);
 
 		model.addAttribute("fileName", fileName);
 		return "success";

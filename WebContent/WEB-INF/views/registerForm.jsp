@@ -13,6 +13,7 @@
 	</a> 
 	<h1><spring:message code="user.register" /></h1>
 
+
 	<sf:form method="POST" commandName="user">
 				<!-- Handle errors -->
 	

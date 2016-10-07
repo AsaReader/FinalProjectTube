@@ -3,11 +3,11 @@ package tube.web.controllers;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -17,8 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import tube.entities.User;
-import tube.jdbc.UserJDBCTemplate;
+import tube.entities.Video;
 import tube.persistence.UserDAO;
+import tube.persistence.VideoDAO;
 import tube.validations.UserValidation;
 
 @Controller
@@ -27,8 +28,8 @@ import tube.validations.UserValidation;
 public class UserController {
 
 	private UserDAO userDao;
-	private ApplicationContext context = new ClassPathXmlApplicationContext("Beans.xml");
-	private UserJDBCTemplate userJDBCTemplate = (UserJDBCTemplate) context.getBean("UserJDBCTemplate");
+//	private ApplicationContext context = new ClassPathXmlApplicationContext("Beans.xml");
+//	private UserJDBCTemplate userJDBCTemplate = (UserJDBCTemplate) context.getBean("UserJDBCTemplate");
 
 	public UserController() {
 	}
@@ -37,25 +38,32 @@ public class UserController {
 	public UserController(UserDAO userDao) {
 		this.userDao = userDao;
 	}
+	
+	@Autowired
+	VideoDAO videoDAO;
 
 	@RequestMapping(value = "/login", method = GET)
 	public String showLoginForm() {
 		return "loginForm";
 	}
 
+	
+	
 	@RequestMapping(value = "/login", method = POST)
 	public String confirmLogin(@ModelAttribute User user, Model model) {
 		//TODO add erroe message for wrong username or password
-		User dbUser = userJDBCTemplate.login(user.getUsername());
-
-		if (dbUser != null) {
-			if (dbUser.getPassword().equals(user.getPassword())) {
-				model.addAttribute("loggedUser", dbUser);
-				return "redirect:/user/" + dbUser.getUsername();
-			} else {
-				return "loginForm";
-			}
-		}
+//		User dbUser = userJDBCTemplate.login(user.getUsername());
+//
+//		if (dbUser != null) {
+////			if (dbUser.getPassword().equals(user.getPassword())) {
+////				model.addAttribute("loggedUser", dbUser);
+////				return "redirect:/user/" + dbUser.getUsername();
+//			
+//		
+//			} else {
+//				return "loginForm";
+//			}
+//		}
 		return "loginForm";
 	}
 
