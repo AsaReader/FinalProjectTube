@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jndi.JndiObjectFactoryBean;
+import org.springframework.orm.hibernate5.HibernateExceptionTranslator;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -16,7 +17,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@EnableJpaRepositories(basePackages="tube.persistence")
+@EnableJpaRepositories(basePackages = "tube.persistence")
 @EnableTransactionManagement
 public class SpringDataJpaConfig {
 
@@ -38,6 +39,11 @@ public class SpringDataJpaConfig {
 		adapter.setGenerateDdl(true);
 		adapter.setDatabasePlatform("org.hibernate.dialect.MySQL5Dialect");
 		return adapter;
+	}
+
+	@Bean
+	public HibernateExceptionTranslator hibernateExceptionTranslator() {
+		return new HibernateExceptionTranslator();
 	}
 
 	@Bean
