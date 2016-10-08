@@ -122,7 +122,7 @@ public class FileUploadController {
 			descr = loggedUser.getUsername() + " " + LocalDateTime.now().toString();
 		}
 		
-		long userID = loggedUser.getId();
+		int userID = loggedUser.getId();
 		//using copy to PC
 		Video video = new Video(descr, fileName, title, userDAO.findOne(userID));
 	

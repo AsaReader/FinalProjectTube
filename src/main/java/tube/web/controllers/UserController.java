@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import net.sf.ehcache.util.FindBugsSuppressWarnings;
 import tube.entities.User;
 import tube.entities.Video;
 import tube.persistence.UserDAO;
@@ -27,6 +28,7 @@ import tube.validations.UserValidation;
 @SessionAttributes("loggedUser")
 public class UserController {
 
+	private static final String ALABALA = new String("alabala");
 	private UserDAO userDao;
 //	private ApplicationContext context = new ClassPathXmlApplicationContext("Beans.xml");
 //	private UserJDBCTemplate userJDBCTemplate = (UserJDBCTemplate) context.getBean("UserJDBCTemplate");
@@ -69,6 +71,17 @@ public class UserController {
 
 	@RequestMapping(value = "/register", method = GET)
 	public String showRegistrationForm(Model model) {
+		for (int i = 0; i < 5; i++) {
+			System.out.println("username from find by username: " + userDao.findByEmail("alabala@abv.bg").getUsername());
+			System.out.println("by username: " + userDao.findByUsername("kjhfdgjfbghvdhvbdsjhb2"));
+			System.out.println("id 21 exists ; " + userDao.exists(21));
+			System.out.println(userDao.findOne(3));
+			System.out.println(userDao.countByEmail("hristo_angelov1234@abv.bg"));
+			
+			System.out.println("*****");
+		}
+		
+		
 		model.addAttribute(new User());
 		return "registerForm";
 	}
@@ -84,17 +97,35 @@ public class UserController {
 		if (errors.hasErrors()) {
 			return "registerForm";
 		}
-		user = userDao.save(user);
-		// TODO password hashing algoritm
-//		int id = userJDBCTemplate.registerNewUser(user);
-//		user.setId(id);
+		
+		
+		System.out.println(user.getEmail() + "; username: "+ user.getUsername());
+		user = userDao.saveAndFlush(user);
+		System.out.println("USER:::::::" + user);
+//		System.out.println("--------");
+//		System.out.println(userDao.findByUsername(user.getUsername()));
+//		System.out.println("after" + user.getEmail() + "; username: "+ user.getUsername());
+////		System.out.println(userDao.findByEmail(user.getEmail()));
+//		System.out.println(userDao.countByEmail(user.getEmail()));
+//		System.out.println(userDao.countByUsername(user.getUsername()));
+//		System.out.println(userDao.findOne(user.getId()));
+//		System.out.println("--------");
 		model.addAttribute("loggedUser", user);
 		return "redirect:/user/" + user.getUsername();
 	}
 
+	
+
 	@RequestMapping(value = "/{username}", method = GET)
 	public String showUserProfile(@PathVariable String username, Model model) {
-		User user = userDao.findByUsername(username);
+		
+		System.out.println(username);
+		String kkk = username;
+		System.out.println(userDao.findByUsername("mincho"));
+		
+		System.out.println(userDao.findByUsername(kkk));
+		User user = userDao.findByUsername(kkk);
+		System.out.println(user);
 		model.addAttribute(user);
 		return "profile";
 	}
