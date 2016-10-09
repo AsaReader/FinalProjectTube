@@ -28,7 +28,6 @@ import tube.validations.UserValidation;
 @SessionAttributes("loggedUser")
 public class UserController {
 
-	private static final String ALABALA = new String("alabala");
 	private UserDAO userDao;
 //	private ApplicationContext context = new ClassPathXmlApplicationContext("Beans.xml");
 //	private UserJDBCTemplate userJDBCTemplate = (UserJDBCTemplate) context.getBean("UserJDBCTemplate");

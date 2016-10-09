@@ -25,15 +25,6 @@ import org.springframework.web.servlet.view.JstlView;
 		@Filter(type = FilterType.ANNOTATION, value = EnableWebMvc.class) })
 public class RootConfig extends WebMvcConfigurerAdapter {
 	private static final int MAX_SIZE_FOR_UPLOAD = 524288000;
-	@Bean
-	public InternalResourceViewResolver getInternalResourceViewResolver() {
-		InternalResourceViewResolver resolver = new InternalResourceViewResolver();
-		resolver.setViewClass(JstlView.class);
-		resolver.setPrefix("/WEB-INF/views/");
-		resolver.setSuffix(".jsp");
-
-		return resolver;
-	}
 
 	@Bean(name = "multipartResolver")
 	public CommonsMultipartResolver getResolver() throws IOException {

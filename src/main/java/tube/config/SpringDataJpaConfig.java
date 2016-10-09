@@ -1,4 +1,4 @@
-package tube.persistence;
+package tube.config;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;

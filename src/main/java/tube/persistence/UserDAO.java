@@ -16,16 +16,14 @@ public interface UserDAO extends JpaRepository<User, Integer> {
 	
 	@Cacheable(value = "tubeCache")
 	@Override
-	User findOne(Integer arg0);
+	User findOne(Integer userId);
 	
-	@CachePut(value = "tubeCache", key="#result.email")
+	@CachePut(value = "tubeCache", key="#result.username")
 	@Override
 	<S extends User> S saveAndFlush(S user);
 	
-	@Cacheable(value = "tubeCache", key = "{#root.methodName,  #root.args}")
 	int countByUsername(String username);
 
-	@Cacheable(value = "tubeCache", key = "{#root.methodName,  #root.args}")
 	int countByEmail(String email);
 	
 }
