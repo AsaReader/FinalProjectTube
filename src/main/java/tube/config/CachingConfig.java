@@ -14,7 +14,6 @@ import org.springframework.context.annotation.Configuration;
 import net.sf.ehcache.config.CacheConfiguration;
 import net.sf.ehcache.config.CacheConfiguration.TransactionalMode;
 
-
 @Configuration
 @EnableCaching
 public class CachingConfig implements CachingConfigurer {
@@ -25,10 +24,8 @@ public class CachingConfig implements CachingConfigurer {
 		cacheConfiguration.setName("tubeCache");
 		cacheConfiguration.setMemoryStoreEvictionPolicy("LRU");
 		cacheConfiguration.setMaxEntriesLocalHeap(1000);
-		cacheConfiguration.timeToLiveSeconds(1000000);
+		cacheConfiguration.timeToLiveSeconds(10000);
 		
-		
-
 		net.sf.ehcache.config.Configuration config = new net.sf.ehcache.config.Configuration();
 		config.addCache(cacheConfiguration);
 
@@ -43,7 +40,6 @@ public class CachingConfig implements CachingConfigurer {
 
 	@Override
 	public CacheResolver cacheResolver() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -55,7 +51,6 @@ public class CachingConfig implements CachingConfigurer {
 
 	@Override
 	public CacheErrorHandler errorHandler() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 }

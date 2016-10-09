@@ -15,6 +15,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.*;
 
 import org.springframework.cache.annotation.Cacheable;
 
@@ -28,11 +29,23 @@ import org.springframework.cache.annotation.Cacheable;
 public class User implements java.io.Serializable {
 
 	private Integer id;
+	
+	@NotNull
+	@Pattern(regexp="([a-zA-Z0-9]+(?:[._+-][a-zA-Z0-9]+)*){2,}@([a-zA-Z0-9]+(?:[.-][a-zA-Z0-9]+)*[.][a-zA-Z]{2,})", message="{email.valid}")
 	private String email;
+	
+	@NotNull
+	@Size(min=8, message="{password.size}")
+	@Pattern(regexp="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$", message="{password.pattern}")
+	private String password;
+	
+	@NotNull
+	@Size(min=2, max=20, message="{username.size}")
+	@Pattern(regexp="[a-zA-Z0-9_-]+", message="{username.pattern}")
+	private String username;
+	
 	private boolean isAdmin;
 	private boolean isBanned;
-	private String password;
-	private String username;
 	private Set<Comment> comments = new HashSet<Comment>(0);
 	private Set<Playlist> playlists = new HashSet<Playlist>(0);
 	private Set<User> usersForUserId = new HashSet<User>(0);
