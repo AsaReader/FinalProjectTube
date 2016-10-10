@@ -65,6 +65,14 @@ public class Video implements java.io.Serializable {
 		this.user = user;
 	}
 
+	public Video(String description, String fileName, String title, User user, Set<Tag> tags) {
+		this.description = description;
+		this.fileName = fileName;
+		this.title = title;
+		this.user = user;
+		this.tags = tags;
+	}
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 

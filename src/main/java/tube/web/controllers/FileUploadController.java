@@ -4,14 +4,15 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.FileCopyUtils;
@@ -24,27 +25,37 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
+import tube.entities.Tag;
 import tube.entities.User;
 import tube.entities.Video;
-
 import tube.model.FileBucket;
 import tube.model.FileValidator;
 import tube.model.MultiFileBucket;
 import tube.model.MultiFileValidator;
+import tube.persistence.TagDAO;
 import tube.persistence.UserDAO;
+import tube.persistence.VideoDAO;
 
 @Controller
 @SessionAttributes("loggedUser")
 public class FileUploadController {
 	private static final int MAX_SIZE_FOR_UPLOAD = 524288000;
 	private static final String VIDEO_MP4 = "video/mp4";
-	private static String UPLOAD_LOCATION = "C:/mytemp/";
-//	private ApplicationContext context = new ClassPathXmlApplicationContext("Beans.xml");
-	
+	private static final String UPLOAD_LOCATION = "C:/mytemp/";
+	private VideoDAO videoDao;
+	private TagDAO tagDao;
+	// private ApplicationContext context = new
+	// ClassPathXmlApplicationContext("Beans.xml");
+
+	@Autowired
+	public FileUploadController(VideoDAO videoDao, TagDAO tagDao) {
+		this.videoDao = videoDao;
+		this.tagDao = tagDao;
+	}
 
 	@Autowired
 	FileValidator fileValidator;
-	
+
 	@Autowired
 	UserDAO userDAO;
 
@@ -76,62 +87,81 @@ public class FileUploadController {
 	@RequestMapping(value = "/singleUpload", method = RequestMethod.POST)
 	public String singleFileUpload(@Valid FileBucket fileBucket, BindingResult result, ModelMap model,
 			@ModelAttribute("loggedUser") User loggedUser, HttpServletRequest request) throws IOException {
-		
-		//TODO error mesage on jsp to validate Parameters!!!!!!!!!!!!!!!!!!!!
+
+		// TODO error message on jsp to validate Parameters!!!!!!!!!!!!!!!!!!!!
 		String title = request.getParameter("title");
 		String descr = request.getParameter("descr");
+		String tags = request.getParameter("tags");
 
 		if (result.hasErrors()) {
 			System.out.println("validation errors");
 			return "singleFileUploader";
 		}
-		
+
 		System.out.println("Fetching file");
 		MultipartFile multipartFile = fileBucket.getFile();
 		String fileName = loggedUser.getUsername() + LocalDateTime.now().toString().replace(":", "-") + ".mp4";
 
-		//TODO error message for wrong type and over size file
+		// TODO error message for wrong type and over size file
 		String ext = fileBucket.getFile().getContentType();
-		if (!VIDEO_MP4.equals(ext) || fileBucket.getFile().getSize()>MAX_SIZE_FOR_UPLOAD) {
+		if (!VIDEO_MP4.equals(ext) || fileBucket.getFile().getSize() > MAX_SIZE_FOR_UPLOAD) {
 			return "singleFileUploader";
 		}
-		
-		//Please dont use it for now!!!!!!!!!!
-//		String url = null;
-//		try {
-//			url = S3JavaSDK.uploadFileToS3AWS(fileName, multipartFile);
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
 
-		//copy file to computer
+		// Please dont use it for now!!!!!!!!!!
+		// String url = null;
+		// try {
+		// url = S3JavaSDK.uploadFileToS3AWS(fileName, multipartFile);
+		// } catch (Exception e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+
+		// copy file to computer
 		FileCopyUtils.copy(fileBucket.getFile().getBytes(), new File(UPLOAD_LOCATION + fileName));
-		// fileBucket.getFile().getOriginalFilename())
-		
-		//Copy file to AWS - S3
-		// String fileName = multipartFile.getOriginalFilename();
 
+		// Copy file to AWS - S3
+		// String fileName = multipartFile.getOriginalFilename();
 
 		title = title.trim();
 		descr = descr.trim();
-		if(title.isEmpty() || title==null){
+		tags = tags.trim();
+		if (title.isEmpty() || title == null) {
 			title = loggedUser.getUsername() + " " + LocalDateTime.now().toString();
 		}
-		if(descr.isEmpty() || descr==null){
-			descr = loggedUser.getUsername() + " " + LocalDateTime.now().toString();
+		if (descr == null) {
+			descr = "";
 		}
-		
+		if (tags == null) {
+			descr = "";
+		}
+
+		//add video Tags
+		List<String> tagsList = Arrays.asList(tags.split(","));
+		Set<Tag> tagSet = new HashSet<Tag>();
+
+		for (String tagStr : tagsList) {
+			if (!tagStr.isEmpty()) {
+				Tag tag = new Tag(tagStr.trim());
+				try {
+					tag = tagDao.saveAndFlush(tag);
+				} catch (Exception e) {
+					tag = tagDao.findByName(tagStr.trim());
+				}
+				tagSet.add(tag);
+			}
+		}
+
 		int userID = loggedUser.getId();
-		//using copy to PC
-		Video video = new Video(descr, fileName, title, userDAO.findOne(userID));
-	
-		//using copy to AWS - S3
-//		Video video = new Video(descr, url, title, userID);
-		
-		//TODO change it with hibernate
-//		int id = videoJDBCTemplate.addVideo(video);
-//		video.setId(id);
+		// using copy to PC
+		Video video = new Video(descr, fileName, title, userDAO.findOne(userID), tagSet);
+
+		// using copy to AWS - S3
+		// Video video = new Video(descr, url, title, userID);
+
+		video = videoDao.saveAndFlush(video);
+		// int id = videoJDBCTemplate.addVideo(video);
+		// video.setId(id);
 
 		model.addAttribute("fileName", fileName);
 		return "success";

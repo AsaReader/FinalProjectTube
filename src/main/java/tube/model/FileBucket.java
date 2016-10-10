@@ -8,16 +8,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class FileBucket {
 	MultipartFile file;
-	
+
 	@NotNull
-	@Size(min=5, max=90, message="{bucket.size}")
-	@Pattern(regexp="[a-zA-Z0-9_-]+", message="{bucket.pattern}")
+	@Size(min = 5, max = 90, message = "{bucket.size}")
+	@Pattern(regexp = "[a-zA-Z0-9_-]+", message = "{bucket.pattern}")
 	private String title;
-	
-	@NotNull
-	@Size(max=150, message="{bucket.size2}")
-	@Pattern(regexp="[a-zA-Z0-9_-]+", message="{bucket.patternDescr}")
+
 	private String descr;
+	private String tags;
 
 	public MultipartFile getFile() {
 		return file;
@@ -26,7 +24,7 @@ public class FileBucket {
 	public void setFile(MultipartFile file) {
 		this.file = file;
 	}
-	
+
 	public String getTitle() {
 		return title;
 	}
@@ -42,4 +40,13 @@ public class FileBucket {
 	public void setDescr(String descr) {
 		this.descr = descr;
 	}
+
+	public String getTags() {
+		return tags;
+	}
+
+	public void setTags(String tags) {
+		this.tags = tags;
+	}
+
 }
