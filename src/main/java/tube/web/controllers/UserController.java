@@ -3,34 +3,38 @@ package tube.web.controllers;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
-import java.util.List;
+import java.security.Principal;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
 
-import net.sf.ehcache.util.FindBugsSuppressWarnings;
 import tube.entities.User;
-import tube.entities.Video;
 import tube.persistence.UserDAO;
 import tube.persistence.VideoDAO;
 import tube.validations.UserValidation;
 
 @Controller
 @RequestMapping("/user")
-@SessionAttributes("loggedUser")
 public class UserController {
 
 	private UserDAO userDao;
-//	private ApplicationContext context = new ClassPathXmlApplicationContext("Beans.xml");
-//	private UserJDBCTemplate userJDBCTemplate = (UserJDBCTemplate) context.getBean("UserJDBCTemplate");
+	// private ApplicationContext context = new
+	// ClassPathXmlApplicationContext("Beans.xml");
+	// private UserJDBCTemplate userJDBCTemplate = (UserJDBCTemplate)
+	// context.getBean("UserJDBCTemplate");
 
 	public UserController() {
 	}
@@ -39,7 +43,7 @@ public class UserController {
 	public UserController(UserDAO userDao) {
 		this.userDao = userDao;
 	}
-	
+
 	@Autowired
 	VideoDAO videoDAO;
 
@@ -48,24 +52,13 @@ public class UserController {
 		return "loginForm";
 	}
 
-	
-	
-	@RequestMapping(value = "/login", method = POST)
-	public String confirmLogin(@ModelAttribute User user, Model model) {
-		//TODO add erroe message for wrong username or password
-//		User dbUser = userJDBCTemplate.login(user.getUsername());
-//
-//		if (dbUser != null) {
-////			if (dbUser.getPassword().equals(user.getPassword())) {
-////				model.addAttribute("loggedUser", dbUser);
-////				return "redirect:/user/" + dbUser.getUsername();
-//			
-//		
-//			} else {
-//				return "loginForm";
-//			}
-//		}
-		return "loginForm";
+	@RequestMapping(value = "/logout", method = GET)
+	public String logout(HttpServletRequest request, HttpServletResponse response) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (auth != null) {
+			new SecurityContextLogoutHandler().logout(request, response, auth);
+		}
+		return "redirect:/user/login?logout";
 	}
 
 	@RequestMapping(value = "/register", method = GET)
@@ -75,27 +68,43 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/register", method = POST)
-	public String processRegistration(@Valid User user, Errors errors, Model model, @Autowired UserValidation userValidator) {
-		if (!userValidator.isUsernameAvailable(user.getUsername(), userDao)) {
-			errors.rejectValue("username", null, "This username is already taken.");
-		}
-		if (!userValidator.isEmailAvailable(user.getEmail(), userDao)) {
-			errors.rejectValue("email", null, "This email is already taken.");
-		}
-		if (errors.hasErrors()) {
+	public String processRegistration(@Valid User user, Errors errors, Model model,
+			@Autowired UserValidation userValidator, HttpServletRequest request, @Autowired BCryptPasswordEncoder passwordEncoder) {
+		try {
+			if (!userValidator.isUsernameAvailable(user.getUsername(), userDao)) {
+				errors.rejectValue("username", null, "This username is already taken.");
+			}
+			if (!userValidator.isEmailAvailable(user.getEmail(), userDao)) {
+				errors.rejectValue("email", null, "This email is already taken.");
+			}
+			if (errors.hasErrors()) {
+				return "registerForm";
+			}
+			saveAndLogin(user, request, passwordEncoder);
+			return "redirect:/user/" + user.getUsername();
+		} catch (Exception e) {
+			e.printStackTrace();
 			return "registerForm";
 		}
-		user = userDao.saveAndFlush(user);
-		model.addAttribute("loggedUser", user);
-		return "redirect:/user/" + user.getUsername();
 	}
 
-	
+	private void saveAndLogin(User user, HttpServletRequest request, BCryptPasswordEncoder passwordEncoder)
+			throws ServletException {
+		String origPass = user.getPassword();
+		user.setPassword(passwordEncoder.encode(origPass));
+		userDao.saveAndFlush(user);
+		request.login(user.getUsername(), origPass);
+	}
+
+	@RequestMapping(value = "/me", method = GET)
+	public String getMyProfile(Principal principal) {
+		return "forward:/user/" + principal.getName();
+	}
 
 	@RequestMapping(value = "/{username}", method = GET)
-	public String showUserProfile(@PathVariable String username, Model model) {
-		User user = userDao.findByUsername(username);
-		model.addAttribute(user);
+	public String getProfile(@PathVariable String username, Model model) {
+		model.addAttribute("user", userDao.findByUsername(username));
 		return "profile";
 	}
+
 }

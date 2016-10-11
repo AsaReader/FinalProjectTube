@@ -1,8 +1,10 @@
 package tube.config;
 
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -16,32 +18,38 @@ import tube.security.TubeUserService;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-  
+
+	private static final int FOUR_WEEKS = 2419200;
 	private static final int ENCODER_STRENGTH = 12;
 
 	@Autowired
 	TubeUserService userDetailsService;
-	
+
+	@Autowired
+	BCryptPasswordEncoder passwordEncoder;
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http
-				.csrf().disable()
-    		.formLogin()
-    			.loginPage("/user/login")
-    			.and()
-    		.authorizeRequests()
-    			.antMatchers(HttpMethod.POST, "/upload").authenticated()
-    			.antMatchers("/user/me/edit").authenticated()
-    			.anyRequest().permitAll();
-  }
-  
-  @Override
-  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-    auth
-      .userDetailsService(userDetailsService)
-      .passwordEncoder(new BCryptPasswordEncoder(ENCODER_STRENGTH, SecureRandom.getInstance("SHA1PRNG")));
-  }
+		http.csrf().disable().formLogin().loginPage("/user/login").and().logout().logoutSuccessUrl("/")
+				.logoutUrl("/user/logout").and().authorizeRequests().antMatchers(HttpMethod.POST, "/upload")
+				.authenticated().antMatchers("/user/login", "/user/register").anonymous().antMatchers("/user/me")
+				.authenticated().antMatchers("/members").authenticated().anyRequest().permitAll().and().rememberMe()
+				.tokenValiditySeconds(FOUR_WEEKS);
+	}
 
-  
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
+	}
+
+	@Bean
+	public BCryptPasswordEncoder passwordEncoder() {
+		try {
+			return new BCryptPasswordEncoder(ENCODER_STRENGTH, SecureRandom.getInstance("SHA1PRNG"));
+		} catch (NoSuchAlgorithmException e) {
+			System.out.println(
+					"Failed to instantiate specified BCryptPasswordEncoder, reverting to deafult BCryptPasswordEncoder.");
+			return new BCryptPasswordEncoder();
+		}
+	}
 }
-
