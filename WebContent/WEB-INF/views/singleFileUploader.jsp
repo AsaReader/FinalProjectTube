@@ -2,10 +2,13 @@
 	pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<spring:url value="/resources/js/jquery-3.1.1.min.js" var="jqueryJs" />
+	<spring:url value="/resources/js/main.js" var="mainJs" />
 <title>Video File Upload</title>
 <link href="<c:url value='/static/css/bootstrap.css' />"
 	rel="stylesheet" type="text/css"></link>
@@ -29,7 +32,7 @@
 					<label class="col-md-3 control-lable" for="file">Upload a
 						file</label> <br /> <br /> <label for="textinput1">Video Title:
 					</label>
-					<sf:input type="text" path="title" />
+					<sf:input type="text" path="title" required="required" id="title" />
 					<br /> <br /> <label for="textinput2">Video Description:
 					</label><br />
 					<sf:textarea rows="4" cols="30" path="descr" />
@@ -57,4 +60,7 @@
 		<a href="<c:url value='/user/${loggedUser.username}' />">Home</a>
 	</div>
 </body>
+	<script>
+		$("#title").attr('required', ''); 
+	</script>
 </html>

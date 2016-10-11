@@ -88,7 +88,6 @@ public class FileUploadController {
 	public String singleFileUpload(@Valid FileBucket fileBucket, BindingResult result, ModelMap model,
 			@ModelAttribute("loggedUser") User loggedUser, HttpServletRequest request) throws IOException {
 
-		// TODO error message on jsp to validate Parameters!!!!!!!!!!!!!!!!!!!!
 		String title = request.getParameter("title");
 		String descr = request.getParameter("descr");
 		String tags = request.getParameter("tags");
@@ -141,7 +140,7 @@ public class FileUploadController {
 		Set<Tag> tagSet = new HashSet<Tag>();
 
 		for (String tagStr : tagsList) {
-			if (!tagStr.isEmpty()) {
+			if (!tagStr.trim().isEmpty()) {
 				Tag tag = new Tag(tagStr.trim());
 				try {
 					tag = tagDao.saveAndFlush(tag);
