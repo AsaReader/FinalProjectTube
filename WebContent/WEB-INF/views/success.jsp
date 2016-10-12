@@ -11,7 +11,7 @@
 	<div class="success">
 		File <strong>${fileName}</strong> uploaded successfully. <br/>
 		<br/> 
-		<a href="<c:url value='/user/${loggedUser.username}' />">Home</a>
+		<a href="<c:url value='/home' />">Home</a>
 	</div>
 </body>
 </html>
