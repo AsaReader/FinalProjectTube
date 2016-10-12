@@ -11,11 +11,11 @@
 		<c:forEach items="${videos}" var="video">
 			<div class="grid">
 				<div class="preview">
-					<a href="single.html"><img src="images/album.jpg" alt=""></a>
+					<a href="${pageContext.request.contextPath}/video/${video.id}"><img src="images/album.jpg" alt=""></a>
 					<div class="data">
 						<h3>
-							<a href=""><c:out value="${video.title}"></c:out></a> 
-							<a href=""><c:out value="${video.fileName}"></c:out></a>
+							<a href="${pageContext.request.contextPath}/video/${video.id}"><c:out value="${video.title}"></c:out></a> 
+							<a href="${pageContext.request.contextPath}/video/${video.id}"><c:out value="${video.fileName}"></c:out></a>
 						</h3>
 					</div>
 				</div>

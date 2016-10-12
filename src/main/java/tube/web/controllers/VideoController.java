@@ -1,13 +1,31 @@
 package tube.web.controllers;
 
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
+
+import tube.entities.Video;
+import tube.persistence.VideoDAO;
 
 @Controller
-@RequestMapping("/video")
-@SessionAttributes("loggedUser")
 public class VideoController {
+	
+	@Autowired
+	VideoDAO videoDao;
+	
+	@RequestMapping(value = "/video/{videoId}", method = GET)
+	public String playVideo(Model model , @PathVariable("videoId") int videoId ){
+		Video video = videoDao.findOne(videoId);
+		model.addAttribute("video", video);
+		
+		
+		return "video";
+		
+	}
 	
 	
 
