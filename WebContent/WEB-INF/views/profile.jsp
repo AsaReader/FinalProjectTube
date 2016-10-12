@@ -4,10 +4,9 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="sf" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <c:import url="/includes/header.jsp" />
-
-<sec:authentication property="principal.username" var="loggedInUser"/>
+	<sec:authorize access="isAuthenticated()">
+	<sec:authentication property="principal.username" var="loggedInUser"/>
 	
-	<c:if test="${loggedInUser ne null}">
 	<c:out value="Logged in as ${loggedInUser}" /><br/>
 	
 	<c:if test="${loggedInUser ne user.username}">
@@ -21,22 +20,27 @@
 	
 		<c:choose>
 			<c:when test="${subscribed == true}">
-				<form action="home" method="post">
-					<input type="hidden" name="action" value="unfollow">
-					<input type="hidden" name="subjectName" value="${subject.username}"> 
+				<sf:form method="post" action="${pageContext.request.contextPath}/unsubscribe">
+					<input type="hidden" name="subjectName" value="${user.username}"> 
 					<input type="submit" value="Unsubscribe" class="margin_left">
-				</form>
+				</sf:form>
 			</c:when>
 			<c:otherwise>
-				<form action="home" method="post">
-					<input type="hidden" name="action" value="follow">
-					<input type="hidden" name="subjectName" value="${subject.username}">
+				<sf:form method="post" action="${pageContext.request.contextPath}/subscribe">
+					<input type="hidden" name="subjectName" value="${user.username}">
 					<input type="submit" value="Subscribe" class="margin_left">
-				</form>
+				</sf:form>
 			</c:otherwise>
 		</c:choose>
 	</c:if>
-	</c:if>
+	</sec:authorize>
+	
+	<sec:authorize access="isAnonymous()">
+		<sf:form method="post" action="${pageContext.request.contextPath}/subscribe">
+			<input type="hidden" name="subjectName" value="${user.username}">
+			<input type="submit" value="Subscribe" class="margin_left">
+		</sf:form>
+	</sec:authorize>
 	<h1><c:out value="${user.username}'s profile"/></h1>
 	
 	<c:out value="${user.username}" /><br/>

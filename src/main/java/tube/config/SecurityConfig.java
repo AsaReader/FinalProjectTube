@@ -30,10 +30,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.csrf().disable().formLogin().loginPage("/user/login").and().logout().logoutSuccessUrl("/")
-				.logoutUrl("/user/logout").and().authorizeRequests().antMatchers(HttpMethod.POST, "/upload")
-				.authenticated().antMatchers("/user/login", "/user/register").anonymous().antMatchers("/user/me")
-				.authenticated().antMatchers("/members").authenticated().anyRequest().permitAll().and().rememberMe()
+		http
+			.csrf().disable()
+			.formLogin()
+				.loginPage("/user/login")
+			.and()
+			.logout()
+				.logoutSuccessUrl("/")
+				.logoutUrl("/user/logout")
+			.and()
+			.authorizeRequests()
+				.antMatchers(HttpMethod.POST, "/subscribe").authenticated()
+				.antMatchers(HttpMethod.POST, "/upload").authenticated()
+				.antMatchers("/user/login", "/user/register").anonymous()
+				.antMatchers("/user/me").authenticated()
+				.antMatchers("/members").authenticated()
+				.anyRequest().permitAll()
+			.and()
+			.rememberMe()
 				.tokenValiditySeconds(FOUR_WEEKS);
 	}
 
