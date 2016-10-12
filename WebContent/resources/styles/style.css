@@ -76,7 +76,7 @@ header{
 	border-radius:.6em;
 }
 .search-box input[type=text]{
-	width:200px;
+	width:400px;
 	padding:5px;
 	margin-right:32px;
 }

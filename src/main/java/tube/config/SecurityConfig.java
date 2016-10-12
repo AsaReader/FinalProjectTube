@@ -20,7 +20,7 @@ import tube.security.TubeUserService;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	private static final int FOUR_WEEKS = 2419200;
-	private static final int ENCODER_STRENGTH = 12;
+	private static final int ENCODER_STRENGTH = 4;
 
 	@Autowired
 	TubeUserService userDetailsService;

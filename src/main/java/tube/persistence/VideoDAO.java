@@ -19,11 +19,16 @@ public interface VideoDAO extends JpaRepository<Video, Integer> {
 	List<Video> getByTitle(String title);
 	
 	@Cacheable(value = "tubeCache")
-	@Query(value = "SELECT v.* FROM videos v "
+	@Query(value = "SELECT DISTINCT v.* FROM videos v "
 			+ "JOIN video_has_tags vt ON (v.id = vt.video_id) "
 			+ "JOIN tags t ON (t.id = vt.tags_id) "
 			+ "WHERE v.title LIKE ?1% "
 			+ "OR t.name LIKE ?1% ", nativeQuery = true)
 	List<Video> getVideosByInput(String description);
+	
+	
+	
+	@Query(value = "Select Count(likeStatus) from user_likes where likeStatus = ?1 AND video_id = ?2", nativeQuery = true)
+	Integer getLikes(Boolean bool, int videoId);
 	
 }
