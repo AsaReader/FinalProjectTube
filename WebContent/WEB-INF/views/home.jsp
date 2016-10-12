@@ -68,14 +68,6 @@
             <div class="more">
                 <a href="#">More</a>
             </div>
+</div>
 
-	<h1>WeLcome to OurTube</h1>
-	    <sec:authorize access="isAnonymous()">
-        <td><a href="<c:url value="/user/login"/>">Login</a></td> <br> 
-		<td><a href="<c:url value="/user/register"/>">Register</a></td><br> 
-    </sec:authorize>
-    <sec:authorize access="isAuthenticated()">
-        <td><a href="<c:url value="/user/logout"/>">Logout</a></td>
-    </sec:authorize>
-	
 <c:import url="/includes/footer.jsp" />
