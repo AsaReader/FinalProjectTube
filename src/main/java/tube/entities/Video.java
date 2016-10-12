@@ -4,6 +4,7 @@ package tube.entities;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -27,6 +28,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name = "videos", catalog = "youtubeDB", uniqueConstraints = @UniqueConstraint(columnNames = "file_name"))
 public class Video implements java.io.Serializable {
 
+	private static final long serialVersionUID = 8438340336511057600L;
+	
 	private Integer id;
 	private User user;
 	private LocalDateTime date;
@@ -74,6 +77,14 @@ public class Video implements java.io.Serializable {
 		this.title = title;
 		this.user = user;
 		this.tags = tags;
+	}
+	
+	public Video(User user, LocalDateTime date, String description, String fileName, String title) {
+		this.user = user;
+		this.date = date;
+		this.description = description;
+		this.fileName = fileName;
+		this.title = title;
 	}
 
 	@Id

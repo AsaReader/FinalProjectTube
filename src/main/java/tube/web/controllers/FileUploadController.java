@@ -20,10 +20,8 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import tube.entities.Tag;
@@ -41,7 +39,7 @@ import tube.persistence.VideoDAO;
 public class FileUploadController {
 	private static final int MAX_SIZE_FOR_UPLOAD = 524288000;
 	private static final String VIDEO_MP4 = "video/mp4";
-	private static final String UPLOAD_LOCATION = "C:/mytemp/";
+//	private static final String UPLOAD_LOCATION = "C:\\Users\\John Lemon\\Documents\\workspace-sts-3.8.2.RELEASE\\FinalProjectTube\\WebContent\\";
 	private VideoDAO videoDao;
 	private TagDAO tagDao;
 	// private ApplicationContext context = new
@@ -119,7 +117,8 @@ public class FileUploadController {
 		// }
 
 		// copy file to computer
-		FileCopyUtils.copy(fileBucket.getFile().getBytes(), new File(UPLOAD_LOCATION + fileName));
+		String folderPath= request.getServletContext().getRealPath("/");
+		FileCopyUtils.copy(fileBucket.getFile().getBytes(), new File (folderPath + fileName));
 
 		// Copy file to AWS - S3
 		// String fileName = multipartFile.getOriginalFilename();
@@ -145,7 +144,7 @@ public class FileUploadController {
 			if (!tagStr.trim().isEmpty()) {
 				Tag tag = new Tag(tagStr.trim());
 				try {
-					tag = tagDao.saveAndFlush(tag);
+					tag = tagDao.save(tag);
 				} catch (Exception e) {
 					tag = tagDao.findByName(tagStr.trim());
 				}
@@ -155,8 +154,8 @@ public class FileUploadController {
 
 		int userID = loggedUser.getId();
 		// using copy to PC
-		Video video = new Video(descr, fileName, title, userDAO.findOne(userID), tagSet);
-
+		Video video = new Video(userDAO.findOne(userID), LocalDateTime.now(), descr, fileName, title);
+		video.setTags(tagSet);
 		// using copy to AWS - S3
 		// Video video = new Video(descr, url, title, userID);
 
@@ -176,7 +175,7 @@ public class FileUploadController {
 	}
 
 	@RequestMapping(value = "/multiUpload", method = RequestMethod.POST)
-	public String multiFileUpload(@Valid MultiFileBucket multiFileBucket, BindingResult result, ModelMap model)
+	public String multiFileUpload(@Valid MultiFileBucket multiFileBucket, BindingResult result, ModelMap model, HttpServletRequest request)
 			throws IOException {
 
 		if (result.hasErrors()) {
@@ -185,11 +184,11 @@ public class FileUploadController {
 		} else {
 			System.out.println("Fetching files");
 			List<String> fileNames = new ArrayList<String>();
-
+			String folderPath= request.getServletContext().getRealPath("/");
 			// Now do something with file...
 			for (FileBucket bucket : multiFileBucket.getFiles()) {
 				FileCopyUtils.copy(bucket.getFile().getBytes(),
-						new File(UPLOAD_LOCATION + bucket.getFile().getOriginalFilename()));
+						new File (folderPath + bucket.getFile().getOriginalFilename()));
 				fileNames.add(bucket.getFile().getOriginalFilename());
 			}
 
