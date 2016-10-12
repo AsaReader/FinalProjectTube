@@ -23,9 +23,6 @@
 		<h1>Video Upload</h1>
 		<sf:form commandName="fileBucket" method="POST"
 			enctype="multipart/form-data" class="form-horizontal">
-			<h1>
-				<c:out value="Session username = ${loggedUser.username}" />
-			</h1>
 
 			<div class="row">
 				<div class="form-group col-md-12">

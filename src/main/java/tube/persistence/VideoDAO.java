@@ -26,9 +26,11 @@ public interface VideoDAO extends JpaRepository<Video, Integer> {
 			+ "OR t.name LIKE ?1% ", nativeQuery = true)
 	List<Video> getVideosByInput(String description);
 	
-	
-	
 	@Query(value = "Select Count(likeStatus) from user_likes where likeStatus = ?1 AND video_id = ?2", nativeQuery = true)
 	Integer getLikes(Boolean bool, int videoId);
+
+	@Cacheable(value = "tubeCache")
+	@Query(value = "SELECT v.* FROM videos v ORDER BY v.date DESC LIMIT 10", nativeQuery = true)
+	List<Video> getLastVideos();
 	
 }

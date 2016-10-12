@@ -85,7 +85,7 @@ public class FileUploadController {
 	}
 
 	@RequestMapping(value = "/singleUpload", method = RequestMethod.POST)
-	public String singleFileUpload(@Valid FileBucket fileBucket, BindingResult result, ModelMap model, 
+	public String singleFileUpload(@Valid FileBucket fileBucket, BindingResult result, ModelMap model,
 			HttpServletRequest request, Principal principal) throws IOException {
 
 		User loggedUser = userDAO.findByUsername(principal.getName());
@@ -137,7 +137,7 @@ public class FileUploadController {
 			descr = "";
 		}
 
-		//add video Tags
+		// add video Tags
 		List<String> tagsList = Arrays.asList(tags.split(","));
 		Set<Tag> tagSet = new HashSet<Tag>();
 
