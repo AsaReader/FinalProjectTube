@@ -1,6 +1,7 @@
 package tube.entities;
 // Generated Oct 6, 2016 4:59:27 PM by Hibernate Tools 5.2.0.Beta1
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
@@ -28,7 +29,7 @@ public class Video implements java.io.Serializable {
 
 	private Integer id;
 	private User user;
-	private byte[] date;
+	private LocalDateTime date;
 	private String description;
 	private String fileName;
 	private String title;
@@ -40,14 +41,14 @@ public class Video implements java.io.Serializable {
 	public Video() {
 	}
 
-	public Video(User user, byte[] date, String fileName, String title) {
+	public Video(User user, LocalDateTime date, String fileName, String title) {
 		this.user = user;
 		this.date = date;
 		this.fileName = fileName;
 		this.title = title;
 	}
 
-	public Video(User user, byte[] date, String description, String fileName, String title, Set<Playlist> playlists,
+	public Video(User user, LocalDateTime date, String description, String fileName, String title, Set<Playlist> playlists,
 			Set<Comment> comments, Set<Tag> tags, Set<UserLikes> userLikes) {
 		this.user = user;
 		this.date = date;
@@ -89,20 +90,20 @@ public class Video implements java.io.Serializable {
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "user_id", nullable = false)
-	public User getUsers() {
+	public User getUser() {
 		return this.user;
 	}
 
-	public void setUsers(User user) {
+	public void setUser(User user) {
 		this.user = user;
 	}
 
 	@Column(name = "date", nullable = false)
-	public byte[] getDate() {
+	public LocalDateTime getDate() {
 		return this.date;
 	}
 
-	public void setDate(byte[] date) {
+	public void setDate(LocalDateTime date) {
 		this.date = date;
 	}
 
