@@ -17,4 +17,9 @@ public class SubsrciptionController {
 	public String unsubscribe(String subjectName) {
 		return "redirect:/user/" + subjectName;
 	}
+	
+	@RequestMapping(value = "/subscriptions", method = GET)
+	public String getSubscriptions() {
+		return "subscriptions";
+	}
 }

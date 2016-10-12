@@ -8,4 +8,5 @@
 	<video width="320" height="240" controls>
 	  <source src="${video.fileName}" type="video/mp4">
 	</video>
+	<c:out value="${video.date}"/>
 <c:import url="/includes/footer.jsp" />

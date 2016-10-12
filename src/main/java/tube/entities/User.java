@@ -189,7 +189,7 @@ public class User implements java.io.Serializable {
 	}
 
 	@JsonIgnore
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "users")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
 	public Set<Video> getVideos() {
 		return this.videos;
 	}
