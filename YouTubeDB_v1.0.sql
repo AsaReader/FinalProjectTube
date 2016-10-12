@@ -36,8 +36,6 @@ CREATE TABLE `subscribers` (
   `user_id` INT NOT NULL ,
   `subscribe_user_id` INT NOT NULL ,
   PRIMARY KEY (`user_id`, `subscribe_user_id`),
-  UNIQUE INDEX `user_id` (`user_id` ASC),
-  UNIQUE INDEX `subscribe_user_id` (`subscribe_user_id` ASC),
   FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,

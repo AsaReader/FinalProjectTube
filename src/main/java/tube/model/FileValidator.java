@@ -18,6 +18,9 @@ public class FileValidator implements Validator {
 			if (file.getFile().getSize() == 0) {
 				errors.rejectValue("file", "missing.file");
 			}
+			if (file.getFile().getSize() > 0 && !file.getFile().getContentType().equals("video/mp4")) {
+				errors.rejectValue("file", "type.file");
+			}
 		}
 	}
 }

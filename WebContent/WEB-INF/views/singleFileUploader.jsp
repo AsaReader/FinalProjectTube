@@ -9,13 +9,29 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<spring:url value="/resources/js/jquery-3.1.1.min.js" var="jqueryJs" />
 	<spring:url value="/resources/js/main.js" var="mainJs" />
-<title>Video File Upload</title>
-<link href="<c:url value='/static/css/bootstrap.css' />"
-	rel="stylesheet" type="text/css"></link>
-<link href="<c:url value='/static/css/app.css' />" rel="stylesheet"
-	type="text/css"></link>
-
 <title>Upload Video</title>
+<script  type='text/javascript'>
+function showFileSize() {
+		var input = document.getElementById('file');
+		var file = input.files[0].size  / 1048576;
+		if(file>0 && file<=500){
+			alert( "File size is OK!");
+			document.getElementById("submit").disabled = false;
+		}else{
+			alert("File " + input.name +" is over size. " + Math.ceil(file) + " MB.");
+			bodyAppend("p", "File  is over size!!! Max size 500MB. Please change the file.");
+			document.getElementById("submit").disabled = true;
+		}
+}
+
+function bodyAppend(tagName, innerHTML) {
+	var elm;
+	elm = document.createElement(tagName);
+	elm.innerHTML = innerHTML;
+	elm.style.color = "red";
+	document.body.appendChild(elm);
+}
+</script>
 </head>
 <body>
 
@@ -23,7 +39,6 @@
 		<h1>Video Upload</h1>
 		<sf:form commandName="fileBucket" method="POST"
 			enctype="multipart/form-data" class="form-horizontal">
-
 			<div class="row">
 				<div class="form-group col-md-12">
 					<label class="col-md-3 control-lable" for="file">Upload a
@@ -38,7 +53,7 @@
 					<br /> <br />
 					<div class="col-md-7">
 						<sf:input type="file" path="file" id="file" accept="video/mp4"
-							class="form-control input-sm" />
+							class="form-control input-sm" onchange="showFileSize()"/>
 						<div class="has-error">
 							<sf:errors path="file" class="help-inline" style="color:red;" />
 						</div>
@@ -49,15 +64,12 @@
 
 			<div class="row">
 				<div class="form-actions floatRight">
-					<input type="submit" value="Upload" class="btn btn-primary btn-sm">
+					<input type="submit" value="Upload" id="submit" class="btn btn-primary btn-sm">
 				</div>
 			</div>
 		</sf:form>
 
-		<a href="<c:url value='/user/${loggedUser.username}' />">Home</a>
 	</div>
 </body>
-	<script>
-		$("#title").attr('required', ''); 
-	</script>
+
 </html>
