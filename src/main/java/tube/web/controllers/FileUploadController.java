@@ -2,6 +2,7 @@ package tube.web.controllers;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,7 +38,6 @@ import tube.persistence.UserDAO;
 import tube.persistence.VideoDAO;
 
 @Controller
-@SessionAttributes("loggedUser")
 public class FileUploadController {
 	private static final int MAX_SIZE_FOR_UPLOAD = 524288000;
 	private static final String VIDEO_MP4 = "video/mp4";
@@ -85,9 +85,11 @@ public class FileUploadController {
 	}
 
 	@RequestMapping(value = "/singleUpload", method = RequestMethod.POST)
-	public String singleFileUpload(@Valid FileBucket fileBucket, BindingResult result, ModelMap model,
-			@ModelAttribute("loggedUser") User loggedUser, HttpServletRequest request) throws IOException {
+	public String singleFileUpload(@Valid FileBucket fileBucket, BindingResult result, ModelMap model, 
+			HttpServletRequest request, Principal principal) throws IOException {
 
+		User loggedUser = userDAO.findByUsername(principal.getName());
+		
 		String title = request.getParameter("title");
 		String descr = request.getParameter("descr");
 		String tags = request.getParameter("tags");
