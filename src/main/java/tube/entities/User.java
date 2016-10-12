@@ -50,10 +50,10 @@ public class User implements java.io.Serializable {
 	private boolean isBanned;
 	private Set<Comment> comments = new HashSet<Comment>(0);
 	private Set<Playlist> playlists = new HashSet<Playlist>(0);
-	private Set<User> usersForUserId = new HashSet<User>(0);
+	private Set<User> userSubscriptions = new HashSet<User>(0);
 	private Set<UserLikes> userLikes = new HashSet<UserLikes>(0);
 	private Set<Video> videos = new HashSet<Video>(0);
-	private Set<User> usersForSubscribeUserId = new HashSet<User>(0);
+	private Set<User> subscribers = new HashSet<User>(0);
 
 	public User() {
 	}
@@ -76,10 +76,10 @@ public class User implements java.io.Serializable {
 		this.username = username;
 		this.comments = comments;
 		this.playlists = playlists;
-		this.usersForUserId = usersForUserId;
+		this.userSubscriptions = usersForUserId;
 		this.userLikes = userLikes;
 		this.videos = videos;
-		this.usersForSubscribeUserId = usersForSubscribeUserId;
+		this.subscribers = usersForSubscribeUserId;
 	}
 
 	@Id
@@ -165,22 +165,21 @@ public class User implements java.io.Serializable {
 	}
 
 	@JsonIgnore
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "subscribers", catalog = "youtubeDB", uniqueConstraints = {
-			@UniqueConstraint(columnNames = "subscribe_user_id"),
-			@UniqueConstraint(columnNames = "user_id") }, joinColumns = {
+	@ManyToMany(fetch = FetchType.EAGER)
+	@Column(name = "subscribe_user_id")
+	@JoinTable(name = "subscribers", catalog = "youtubeDB", joinColumns = {
 					@JoinColumn(name = "subscribe_user_id", unique = true, nullable = false, updatable = false) }, inverseJoinColumns = {
 							@JoinColumn(name = "user_id", unique = true, nullable = false, updatable = false) })
-	public Set<User> getUsersesForUserId() {
-		return this.usersForUserId;
+	public Set<User> getUserSubscriptions() {
+		return this.userSubscriptions;
 	}
 
-	public void setUsersesForUserId(Set<User> usersForUserId) {
-		this.usersForUserId = usersForUserId;
+	public void setUserSubscriptions(Set<User> usersForUserId) {
+		this.userSubscriptions = usersForUserId;
 	}
 
 	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
 	public Set<UserLikes> getUserLikes() {
 		return this.userLikes;
 	}
@@ -190,7 +189,7 @@ public class User implements java.io.Serializable {
 	}
 
 	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "users")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "users")
 	public Set<Video> getVideos() {
 		return this.videos;
 	}
@@ -200,18 +199,17 @@ public class User implements java.io.Serializable {
 	}
 
 	@JsonIgnore
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "subscribers", catalog = "youtubeDB", uniqueConstraints = {
-			@UniqueConstraint(columnNames = "subscribe_user_id"),
-			@UniqueConstraint(columnNames = "user_id") }, joinColumns = {
+	@ManyToMany(fetch = FetchType.EAGER)
+	@Column(name = "user_id")
+	@JoinTable(name = "subscribers", catalog = "youtubeDB", joinColumns = {
 					@JoinColumn(name = "user_id", unique = true, nullable = false, updatable = false) }, inverseJoinColumns = {
 							@JoinColumn(name = "subscribe_user_id", unique = true, nullable = false, updatable = false) })
-	public Set<User> getUsersForSubscribeUserId() {
-		return this.usersForSubscribeUserId;
+	public Set<User> getSubscribers() {
+		return this.subscribers;
 	}
 
-	public void setUsersForSubscribeUserId(Set<User> usersesForSubscribeUserId) {
-		this.usersForSubscribeUserId = usersesForSubscribeUserId;
+	public void setSubscribers(Set<User> usersesForSubscribeUserId) {
+		this.subscribers = usersesForSubscribeUserId;
 	}
 
 }
