@@ -4,6 +4,7 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="sf" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <c:import url="/includes/header.jsp" />
+<c:import url="/includes/sidebar.jsp"/>
 	<sec:authorize access="isAuthenticated()">
 	<sec:authentication property="principal.username" var="loggedInUser"/>
 	

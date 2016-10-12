@@ -6,8 +6,6 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link href=<c:url value="css/style.css"/> rel="stylesheet" type="text/css" media="all" />
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script type="text/javascript"
 	src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 <script type="text/javascript"
@@ -39,7 +37,7 @@
 
 	<div class="wrap">
 		<div class="logo">
-			<a href=<c:url value="/"/>><img src="logo.png" alt=""></a>
+			<a href=<c:url value="/"/>><img src=<c:url value="/images/logo.png"/> alt=""></a>
 		</div>
 		<div class="search-box">
 		<sf:form method = "GET" action = "${pageContext.request.contextPath}/search"> 

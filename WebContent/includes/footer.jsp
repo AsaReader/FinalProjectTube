@@ -3,7 +3,6 @@
 	GregorianCalendar currentDate = new GregorianCalendar();
 	int currentYear = currentDate.get(Calendar.YEAR);
 %>
-<p>
 	  <footer>
             <div class="wrap">
                 <div class="about">
@@ -22,9 +21,10 @@
                     <li><a href="#">About</a></li>
                 </ul>
                 <div class="clearFloat"></div>
-                <div class="copy"><p>&copy; 2016 Georgi Chochov, Hristo Angelov & Kaloyan Tsvetkov <a href="http://w3layouts.com">W3Layouts.com</a></p></div>
+                <div class="copy"><p>&copy; 2016 Georgi Chochov, Hristo Angelov &amp; Kaloyan Tsvetkov</p> 
+                <p><a href="http://w3layouts.com">W3Layouts.com</a><p>
+                </div>
             </div>
     </footer>
-</p>
 </body>
 </html>

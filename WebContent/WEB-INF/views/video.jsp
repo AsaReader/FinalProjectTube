@@ -15,6 +15,6 @@
 	<c:out value="POSTED ON: ${video.date}"/><br/>
 	<c:out value="TAGS:"/>
 	<c:forEach var="tag" items="${video.tags}">
-	<c:out value="${tag.name} "/>
+		<c:out value="${tag.name} "/>
 	</c:forEach><br/>
 <c:import url="/includes/footer.jsp" />
