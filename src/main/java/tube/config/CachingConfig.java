@@ -12,7 +12,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import net.sf.ehcache.config.CacheConfiguration;
-import net.sf.ehcache.config.CacheConfiguration.TransactionalMode;
 
 @Configuration
 @EnableCaching
@@ -20,16 +19,24 @@ public class CachingConfig implements CachingConfigurer {
 
 	@Bean(destroyMethod = "shutdown")
 	public net.sf.ehcache.CacheManager ehCacheManager() {
+		net.sf.ehcache.config.Configuration config = new net.sf.ehcache.config.Configuration();
+		
+		config.addCache(configureCahce("userCache"));
+		config.addCache(configureCahce("videoCache"));
+		config.addCache(configureCahce("tagCache"));
+		config.addCache(configureCahce("playlistCache"));
+		config.addCache(configureCahce("commentCache"));
+
+		return net.sf.ehcache.CacheManager.newInstance(config);
+	}
+
+	private CacheConfiguration configureCahce(String cacheName) {
 		CacheConfiguration cacheConfiguration = new CacheConfiguration();
-		cacheConfiguration.setName("tubeCache");
+		cacheConfiguration.setName(cacheName);
 		cacheConfiguration.setMemoryStoreEvictionPolicy("LRU");
 		cacheConfiguration.setMaxEntriesLocalHeap(1000);
 		cacheConfiguration.timeToLiveSeconds(10000);
-		
-		net.sf.ehcache.config.Configuration config = new net.sf.ehcache.config.Configuration();
-		config.addCache(cacheConfiguration);
-
-		return net.sf.ehcache.CacheManager.newInstance(config);
+		return cacheConfiguration;
 	}
 
 	@Bean

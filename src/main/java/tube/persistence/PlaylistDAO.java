@@ -13,11 +13,11 @@ import tube.entities.Playlist;
 public interface PlaylistDAO extends JpaRepository<Playlist, Integer> {
 	
 	
-		@Cacheable("tubeCache")
+		@Cacheable("playlistCache")
 		List<Playlist> getByUserIdAndName(Integer userId,String name);
 		
 		
-		@CachePut(value = "tubeCache",key="#result.id")
+		@CachePut(value = "playlistCache",key="#result.id")
 		@Override
 		<S extends Playlist> S save(S arg0);
 		

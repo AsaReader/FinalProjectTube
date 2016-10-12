@@ -10,10 +10,10 @@ import tube.entities.Tag;
 
 public interface TagDAO extends JpaRepository<Tag, Integer>  {
 
-	@Cacheable(value = "tubeCache")
+	@Cacheable(value = "tagCache")
 	@Query(value = "SELECT * FROM tags WHERE name LIKE ?1%",nativeQuery = true)
 	List<Tag> getByName(String name);
 	
-	@Cacheable(value = "tubeCache")
+	@Cacheable(value = "tagCache")
 	Tag findByName(String name);
 }

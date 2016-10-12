@@ -8,17 +8,17 @@ import tube.entities.User;
 
 public interface UserDAO extends JpaRepository<User, Integer> {
 	
-	@Cacheable(value = "tubeCache")
+	@Cacheable(value = "userCache")
 	User findByUsername(String username);
 	
-	@Cacheable(value = "tubeCache")
+	@Cacheable(value = "userCache")
 	User findByEmail(String email);
 	
-	@Cacheable(value = "tubeCache")
+	@Cacheable(value = "userCache")
 	@Override
 	User findOne(Integer userId);
 	
-	@CachePut(value = "tubeCache", key="#result.username")
+	@CachePut(value = "userCache", key="#result.username")
 	@Override
 	<S extends User> S saveAndFlush(S user);
 	

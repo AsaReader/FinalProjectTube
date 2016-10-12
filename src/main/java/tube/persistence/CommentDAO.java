@@ -13,10 +13,10 @@ import tube.entities.Comment;
 public interface CommentDAO extends JpaRepository<Comment, Integer> {
 	
 	
-	@Cacheable(value = "tubeCache",key="#result.id" )
+	@Cacheable(value = "commentCache",key="#result.id" )
 	 List<Comment> findByVideoId (Integer videoId);
 	 
-	 @CachePut(value = "tubeCache",key="#result.id")
+	 @CachePut(value = "commentCache",key="#result.id")
 	 @Override
 	<S extends Comment> S save(S arg0);
 }
