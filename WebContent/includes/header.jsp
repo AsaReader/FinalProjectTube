@@ -90,7 +90,7 @@
 				<ul>
 					<li>
 					<div class="widget">
-						<a href="<c:url value="/singleUpload"/>">Upload</a>
+						<a href="<c:url value="/upload"/>">Upload</a>
 					</div>
 					</li>
 				</ul>
