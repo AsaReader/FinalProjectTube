@@ -5,10 +5,10 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <c:import url="/includes/header.jsp" />
 	<h1>Log in</h1>
-
+	<br/>
     <sf:form method="POST" action="${pageContext.request.contextPath}/user/login">
-		Username: <input type="text" name="username" /><br/>
-		Password: <input type="password" name="password" /><br/>
+		Username: <input type="text" name="username" /><br/><br/>
+		Password: <input type="password" name="password" /><br/><br/>
 		<input id="remember_me" name="remember-me" type="checkbox"/>
 		<label for="remember_me" class="inline">Remember me</label>
 		<input type="submit" value="Login" />

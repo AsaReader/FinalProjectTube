@@ -36,44 +36,49 @@
 </script>
 </head>
 <body>
-
-	<div class="form-container">
-		<h1>Video Upload</h1>
-		<sf:form commandName="fileBucket" method="POST"
-			enctype="multipart/form-data" class="form-horizontal">
-			<div class="row">
-				<div class="form-group col-md-12">
-					<label class="col-md-3 control-lable" for="file">Upload a
-						file</label> <br /> <br /> <label for="textinput1">Video Title:
-					</label>
-					<sf:input type="text" path="title" required="required" id="title" />
-					<br /> <br /> <label for="textinput2">Video Description:
-					</label><br />
-					<sf:textarea rows="4" cols="30" path="descr" />
-					<br /> <br /> <label for="textinput3">Video Tags: </label>
-					<sf:input type="text" path="tags" />
-					<br /> <br />
-					<div class="col-md-7">
-						<sf:input type="file" path="file" id="file" accept="video/mp4"
-							class="form-control input-sm" onchange="showFileSize()" />
-						<div class="has-error">
-							<sf:errors path="file" class="help-inline" style="color:red;" />
-						</div>
-					</div>
-					<br />
-				</div>
-			</div>
-
-			<div class="row">
-				<div class="form-actions floatRight">
-					<input type="submit" value="Upload" id="submit"
-						class="btn btn-primary btn-sm">
-				</div>
-			</div>
-		</sf:form>
+	<c:import url="/includes/header.jsp" />
+	<c:import url="/includes/sidebar.jsp"/>
+	<div class="content">
+		<div class="grids">
 		<br />
-		<a href="<c:url value='/home' />">Home</a>
+			<h2>Video Upload</h2>
+			<sf:form commandName="fileBucket" method="POST"
+				enctype="multipart/form-data" class="form-horizontal">
+				<div class="row">
+					<div class="form-group col-md-12">
+						<br /> <br /> 
+						<div class="search-box">
+						<sf:input type="text" path="title" required="required" id="title" placeholder="Title..." /></div>
+						<br /> <br />
+						<div class="search-box">
+						<sf:textarea rows="4" cols="30" path="descr" placeholder="Description..." />
+						</div>
+						<br /> <br />
+						<div class="search-box">
+						<sf:input type="text" path="tags" placeholder="Tags..." />
+						</div>
+						<br /> <br />
+						<div class="col-md-7">
+							<sf:input type="file" path="file" id="file" accept="video/mp4"
+								class="form-control input-sm" onchange="showFileSize()" />
+							<div class="has-error">
+								<sf:errors path="file" class="help-inline" style="color:red;" />
+							</div>
+						</div>
+						<br />
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="form-actions floatRight">
+						<input type="submit" value="Upload" id="submit"
+							class="btn btn-primary btn-sm">
+					</div>
+				</div>
+			</sf:form>
+		</div>
 	</div>
+	<c:import url="/includes/footer.jsp" />
 </body>
 
 </html>
