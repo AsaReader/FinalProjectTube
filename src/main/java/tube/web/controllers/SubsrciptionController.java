@@ -1,22 +1,31 @@
 package tube.web.controllers;
 
-import static org.springframework.web.bind.annotation.RequestMethod.*;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import tube.entities.User;
+import tube.entities.Video;
 import tube.persistence.UserDAO;
+import tube.persistence.VideoDAO;
 
 @Controller
 public class SubsrciptionController {
 	
 	@Autowired
 	private UserDAO userDao;
+	
+	@Autowired
+	private VideoDAO videoDao;
 
 	@RequestMapping(value = "/subscribe", method = POST)
 	public String subscribe(Principal principal, @RequestParam String username) {
@@ -28,6 +37,19 @@ public class SubsrciptionController {
 		userDao.save(subscriber);
 //		userDao.save(subject);
 		return "redirect:/user/" + subject.getUsername();
+	}
+	
+	@RequestMapping(value = "/subscribtions", method = GET)
+	public String getSubscribe(Principal principal, Model model) {
+		User subscriber = userDao.findByUsername(principal.getName());
+		List<User> subscList = subscriber.getUserSubscriptions();
+		List<Video> subscVideos = new ArrayList<Video>();
+		for (User user : subscList) {
+			subscVideos.addAll(user.getVideos());
+		}
+		subscVideos.sort((v1, v2) -> v2.getId()-v1.getId());
+		model.addAttribute("subscVideos", subscVideos);
+		return "subscriptionFeed";
 	}
 	
 	@RequestMapping(value = "/unsubscribe", method = POST)

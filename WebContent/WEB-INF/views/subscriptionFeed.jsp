@@ -1,12 +1,48 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ page session="false" %>
+<c:import url="/includes/header.jsp" />
+<c:import url="/includes/sidebar.jsp"/>
 
-</body>
-</html>
+<div class="content">
+	<div class="grids">
+		<h2>Video Results</h2>
+		<c:forEach items="${subscVideos}" var="video">
+			<div class="grid">
+				<div class="preview">
+					<a href="${pageContext.request.contextPath}/video/${video.id}"><img src="images/album.jpg" alt=""></a>
+					<div class="data">
+						<h3>
+							<a href="${pageContext.request.contextPath}/video/${video.id}"><c:out value="${video.title}"></c:out></a> 
+							<a href="${pageContext.request.contextPath}/video/${video.id}"><c:out value="${video.fileName}"></c:out></a>
+						</h3>
+					</div>
+				</div>
+			</div>
+			
+		</c:forEach>
+		<div class="clearFloat"></div>
+	</div>
+</div>
+<!-- 
+	<c:forEach items="${subscVideos}" var="video">     
+       <table>
+        <tr>
+            <td>Title :</td>
+            <td>${video.title}</td>
+        </tr>
+        <tr>
+            <td>ID :</td>
+            <td>${video.id}</td>
+        </tr>
+        <tr>
+            <td>File name :</td>
+            <td>${video.fileName}</td>
+        </tr>
+    </table>
+    <br/>
+</c:forEach>
+ -->
+<c:import url="/includes/footer.jsp" />

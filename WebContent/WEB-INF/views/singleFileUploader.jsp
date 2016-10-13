@@ -37,30 +37,34 @@
 </head>
 <body>
 	<c:import url="/includes/header.jsp" />
-	<c:import url="/includes/sidebar.jsp"/>
+	<c:import url="/includes/sidebar.jsp" />
 	<div class="content">
 		<div class="grids">
-		<br />
+			<br />
 			<h2>Video Upload</h2>
 			<sf:form commandName="fileBucket" method="POST"
 				enctype="multipart/form-data" class="form-horizontal">
 				<div class="row">
 					<div class="form-group col-md-12">
-						<br /> <br /> 
-						<div class="search-box">
-						<sf:input type="text" path="title" required="required" id="title" placeholder="Title..." /></div>
 						<br /> <br />
 						<div class="search-box">
-						<sf:textarea rows="4" cols="30" path="descr" placeholder="Description..." />
+							<sf:input type="text" path="title" required="required" id="title"
+								placeholder="Title..." />
 						</div>
 						<br /> <br />
 						<div class="search-box">
-						<sf:input type="text" path="tags" placeholder="Tags..." />
+							<sf:textarea rows="4" cols="30" path="descr"
+								placeholder="Description..." />
+						</div>
+						<br /> <br />
+						<div class="search-box">
+							<sf:input type="text" path="tags" placeholder="Tags..." />
 						</div>
 						<br /> <br />
 						<div class="col-md-7">
 							<sf:input type="file" path="file" id="file" accept="video/mp4"
-								class="form-control input-sm" onchange="showFileSize()" />
+								class="form-control input-sm" value="Browse"
+								onchange="showFileSize()" />
 							<div class="has-error">
 								<sf:errors path="file" class="help-inline" style="color:red;" />
 							</div>
@@ -68,7 +72,6 @@
 						<br />
 					</div>
 				</div>
-
 				<div class="row">
 					<div class="form-actions floatRight">
 						<input type="submit" value="Upload" id="submit"

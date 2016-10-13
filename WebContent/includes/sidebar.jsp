@@ -18,7 +18,7 @@
 				<ul>
 					<li class="active"></li>
 					<li><a href="songs.html">Home</a></li>
-					<li><a href="tones.html">Subscriptions</a></li>
+					<li><a href="./subscribtions">Subscriptions</a></li>
 					<li><a href="video.html">My Profile</a></li>
 					<li><a href="wallpaper.html">Playlists</a></li>
 				</ul>
