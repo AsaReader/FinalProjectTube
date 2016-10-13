@@ -17,9 +17,9 @@
 			<div class="widget">
 				<ul>
 					<li class="active"></li>
-					<li><a href="songs.html">Home</a></li>
-					<li><a href="./subscribtions">Subscriptions</a></li>
-					<li><a href="video.html">My Profile</a></li>
+					<li><a href="${pageContext.request.contextPath}/">Home</a></li>
+					<li><a href="${pageContext.request.contextPath}/subscribtions">Subscriptions</a></li>
+					<li><a href="${pageContext.request.contextPath}/user/me">My Profile</a></li>
 					<li><a href="wallpaper.html">Playlists</a></li>
 				</ul>
 			</div>
