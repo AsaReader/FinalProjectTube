@@ -3,8 +3,10 @@ package tube.persistence;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import tube.entities.Tag;
@@ -30,7 +32,21 @@ public interface VideoDAO extends JpaRepository<Video, Integer> {
 	Integer getLikes(Boolean bool, int videoId);
 
 	@Cacheable(value = "videoCache")
-	@Query(value = "SELECT v.* FROM videos v ORDER BY v.date DESC LIMIT 10", nativeQuery = true)
+	@Query(value = "SELECT v.* FROM videos v ORDER BY v.id DESC LIMIT 10", nativeQuery = true)
 	List<Video> getLastVideos();
 	
+	@Override
+	@Cacheable(value = "videoCache")
+	Video findOne(Integer videoId);
+	
+	@Override
+	@CacheEvict(value = "videoCache", key = "#result.id")
+	<S extends Video> S save(S video);
+	
+	@Override
+	@CacheEvict(value = "videoCache", key = "#result.id")
+	<S extends Video> S saveAndFlush(S video);
+
+	@Query(value = "UPDATE videos v SET v.views = ?1 WHERE v.id = ?2", nativeQuery = true)
+	void updateViewCount(Integer views, int videoId);
 }

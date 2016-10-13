@@ -3,6 +3,7 @@ package tube.web.controllers;
 import java.io.File;
 import java.io.IOException;
 import java.security.Principal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -75,14 +76,14 @@ public class FileUploadController {
 		return "welcome";
 	}
 
-	@RequestMapping(value = "/singleUpload", method = RequestMethod.GET)
-	public String getSingleUploadPage(ModelMap model) {
+	@RequestMapping(value = "/upload", method = RequestMethod.GET)
+	public String getuploadPage(ModelMap model) {
 		FileBucket fileModel = new FileBucket();
 		model.addAttribute("fileBucket", fileModel);
 		return "singleFileUploader";
 	}
 
-	@RequestMapping(value = "/singleUpload", method = RequestMethod.POST)
+	@RequestMapping(value = "/upload", method = RequestMethod.POST)
 	public String singleFileUpload(@Valid FileBucket fileBucket, BindingResult result, ModelMap model,
 			HttpServletRequest request, Principal principal) throws IOException {
 
@@ -154,7 +155,7 @@ public class FileUploadController {
 
 		int userID = loggedUser.getId();
 		// using copy to PC
-		Video video = new Video(userDAO.findOne(userID), LocalDateTime.now(), descr, fileName, title);
+		Video video = new Video(userDAO.findOne(userID), LocalDate.now(), descr, fileName, title);
 		video.setTags(tagSet);
 		// using copy to AWS - S3
 		// Video video = new Video(descr, url, title, userID);

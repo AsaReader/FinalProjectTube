@@ -13,6 +13,7 @@
 	<c:out value="POSTED BY: ${video.user.username}"/><br/>
 	<c:out value="DESCRIPTION: ${video.description}"/><br/>
 	<c:out value="POSTED ON: ${video.date}"/><br/>
+	<c:out value="VIEWS: ${video.views}"/><br/>
 	<c:out value="TAGS:"/>
 	<c:forEach var="tag" items="${video.tags}">
 		<c:out value="${tag.name} "/>

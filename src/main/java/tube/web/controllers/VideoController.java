@@ -20,9 +20,10 @@ public class VideoController {
 	@RequestMapping(value = "/video/{videoId}", method = GET)
 	public String playVideo(Model model , @PathVariable("videoId") int videoId ){
 		Video video = videoDao.findOne(videoId);
+		Integer currentViews = video.getViews();
+		video.setViews(currentViews == null ? 1 : ++currentViews);
+		video = videoDao.save(video);
 		model.addAttribute("video", video);
-		
-		
 		return "video";
 		
 	}

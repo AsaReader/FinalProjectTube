@@ -1,7 +1,7 @@
 package tube.entities;
 // Generated Oct 6, 2016 4:59:27 PM by Hibernate Tools 5.2.0.Beta1
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -32,10 +32,11 @@ public class Video implements java.io.Serializable {
 	
 	private Integer id;
 	private User user;
-	private LocalDateTime date;
+	private LocalDate date;
 	private String description;
 	private String fileName;
 	private String title;
+	private Integer views;
 	private Set<Playlist> playlists = new HashSet<Playlist>(0);
 	private Set<Comment> comments = new HashSet<Comment>(0);
 	private Set<Tag> tags = new HashSet<Tag>(0);
@@ -44,14 +45,14 @@ public class Video implements java.io.Serializable {
 	public Video() {
 	}
 
-	public Video(User user, LocalDateTime date, String fileName, String title) {
+	public Video(User user, LocalDate date, String fileName, String title) {
 		this.user = user;
 		this.date = date;
 		this.fileName = fileName;
 		this.title = title;
 	}
 
-	public Video(User user, LocalDateTime date, String description, String fileName, String title, Set<Playlist> playlists,
+	public Video(User user, LocalDate date, String description, String fileName, String title, Set<Playlist> playlists,
 			Set<Comment> comments, Set<Tag> tags, Set<UserLikes> userLikes) {
 		this.user = user;
 		this.date = date;
@@ -79,7 +80,7 @@ public class Video implements java.io.Serializable {
 		this.tags = tags;
 	}
 	
-	public Video(User user, LocalDateTime date, String description, String fileName, String title) {
+	public Video(User user, LocalDate date, String description, String fileName, String title) {
 		this.user = user;
 		this.date = date;
 		this.description = description;
@@ -110,11 +111,11 @@ public class Video implements java.io.Serializable {
 	}
 
 	@Column(name = "date", nullable = false)
-	public LocalDateTime getDate() {
+	public LocalDate getDate() {
 		return this.date;
 	}
 
-	public void setDate(LocalDateTime date) {
+	public void setDate(LocalDate date) {
 		this.date = date;
 	}
 
@@ -143,6 +144,15 @@ public class Video implements java.io.Serializable {
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+	
+	@Column(name = "views")
+	public Integer getViews() {
+		return views;
+	}
+
+	public void setViews(Integer views) {
+		this.views = views;
 	}
 
 	@ManyToMany(fetch = FetchType.EAGER)
