@@ -687,3 +687,7 @@ table
 select.error{
 	padding:0;
 }
+.upload{
+	width: 50%;
+    margin: 0 auto; 
+}

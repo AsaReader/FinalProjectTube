@@ -24,7 +24,7 @@ label span input {
     line-height: 0;
     font-size: 50px;
     position: absolute;
-    top: -2px;
+    top: -40px;
     left: -700px;
     opacity: 0;
     filter: alpha(opacity = 0);
@@ -83,10 +83,10 @@ label span input {
 						</div>
 						<br /> <br />
 						<div class="search-box">
-							<sf:input type="text" path="tags" placeholder="Tags..." />
+							<sf:input type="text" path="tags" placeholder="Tags..." /><br/>
 						</div>
-						<br /> <br />
-						<div class="col-md-7">
+						<br/> <br/>
+						<div class="col-md-7 upload">
 						<br />
 							<label class="filebutton">
 								<img src=<c:url value="/images/mzl.rhhhohdt.png" /> alt="HTML5 Icon" style="width:68px;height:68px;">
@@ -98,12 +98,12 @@ label span input {
 								<sf:errors path="file" class="help-inline" style="color:red;" />
 							</div>
 						</div>
-						<br />
 					</div>
-				</div>				
+				</div>	
+				<br />			
 				<div class="row">
 				<br />
-					<div class="form-actions floatRight">
+					<div class="form-actions floatRight upload">
 						<input type="submit" value="Upload" id="submit"
 							class="btn btn-primary btn-sm">
 					</div>
