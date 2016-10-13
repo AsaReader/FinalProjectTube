@@ -20,7 +20,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Table(name = "user_likes", catalog = "youtubeDB")
 public class UserLikes implements java.io.Serializable {
-
+	
+	
 	private UserLikesId id;
 	private User user;
 	private Video video;
@@ -28,12 +29,17 @@ public class UserLikes implements java.io.Serializable {
 
 	public UserLikes() {
 	}
-
-	public UserLikes(UserLikesId id, User user, Video video, boolean likeStatus) {
-		this.id = id;
+	
+	public UserLikes(User user, Video video, boolean likeStatus){
 		this.user = user;
 		this.video = video;
 		this.likeStatus = likeStatus;
+	}
+
+	public UserLikes(UserLikesId id, User user, Video video, boolean likeStatus) {
+		this(user, video, likeStatus);
+		this.id = id;
+	
 	}
 
 	@EmbeddedId
