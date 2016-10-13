@@ -52,11 +52,12 @@ label span input {
 	}
 
 	function bodyAppend(tagName, innerHTML) {
+		var theDiv = document.getElementById("div1");
 		var elm;
 		elm = document.createElement(tagName);
 		elm.innerHTML = innerHTML;
 		elm.style.color = "red";
-		document.body.appendChild(elm);
+		theDiv.appendChild(elm);
 	}
 </script>
 </head>
@@ -69,7 +70,7 @@ label span input {
 			<h2>Video Upload</h2>
 			<sf:form commandName="fileBucket" method="POST"
 				enctype="multipart/form-data" class="form-horizontal">
-				<div class="row">
+				<div class="row" id="div1">
 					<div class="form-group col-md-12">
 						<br /> <br />
 						<div class="search-box">
