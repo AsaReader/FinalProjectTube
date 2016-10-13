@@ -13,10 +13,12 @@ public class SecurityUser implements UserDetails {
 
 	private String username;
 	private String password;
+	private Integer id;
 	
 	public SecurityUser(User user) {
         if(user != null)
         {
+        	this.id = user.getId();
             this.username = user.getUsername();
             this.password = user.getPassword();
         }       
@@ -24,7 +26,6 @@ public class SecurityUser implements UserDetails {
 	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -56,6 +57,14 @@ public class SecurityUser implements UserDetails {
 	@Override
 	public boolean isEnabled() {
 		return true;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 }
