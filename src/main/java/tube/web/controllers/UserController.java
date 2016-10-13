@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import tube.entities.User;
 import tube.persistence.UserDAO;
 import tube.persistence.VideoDAO;
+import tube.security.SecurityUser;
 import tube.validations.UserValidation;
 
 @Controller
@@ -106,5 +107,5 @@ public class UserController {
 		model.addAttribute("user", userDao.findByUsername(username));
 		return "profile";
 	}
-
+	
 }

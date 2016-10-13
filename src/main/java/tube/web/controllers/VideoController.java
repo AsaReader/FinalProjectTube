@@ -15,7 +15,7 @@ import tube.persistence.VideoDAO;
 public class VideoController {
 	
 	@Autowired
-	VideoDAO videoDao;
+	private VideoDAO videoDao;
 	
 	@RequestMapping(value = "/video/{videoId}", method = GET)
 	public String playVideo(Model model , @PathVariable("videoId") int videoId ){

@@ -5,6 +5,18 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <c:import url="/includes/header.jsp" />
 <c:import url="/includes/sidebar.jsp"/>
+
+	<c:out value="SUBSCRIBERS"/>
+	<c:forEach var="sub" items="${user.subscribers}">
+		<c:out value="${sub.username}"/>
+	</c:forEach>
+	
+	<c:out value="SUBSCRIPTIONS"/>
+	<c:forEach var="sub" items="${user.userSubscriptions}">
+		<c:out value="${sub.username}"/>
+	</c:forEach>
+	
+	
 	<sec:authorize access="isAuthenticated()">
 	<sec:authentication property="principal.username" var="loggedInUser"/>
 	
@@ -17,7 +29,6 @@
 				<c:set var="subscribed" value="true" />
 			</c:if>
 		</c:forEach>
-	
 		<c:choose>
 			<c:when test="${subscribed == true}">
 				<sf:form method="post" action="${pageContext.request.contextPath}/unsubscribe">
