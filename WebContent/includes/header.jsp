@@ -16,6 +16,7 @@
 </head>
 <body>
 <header>
+
 <script type="text/javascript">
 		
 		function reloadSuggestions() {
@@ -91,6 +92,16 @@
 					<li>
 					<div class="widget">
 						<a href="<c:url value="/upload"/>">Upload</a>
+					</div>
+					</li>
+				</ul>
+			</div>
+			<div class="menu">
+				<ul>
+					<li>
+					<div class="widget">
+						<sec:authentication property="principal.username" var="loggedInUser"/>
+						<a href="<c:url value="/user/me"/>">${loggedInUser}</a>
 					</div>
 					</li>
 				</ul>
