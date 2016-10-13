@@ -10,6 +10,31 @@
 <spring:url value="/resources/js/jquery-3.1.1.min.js" var="jqueryJs" />
 <spring:url value="/resources/js/main.js" var="mainJs" />
 <title>Upload Video</title>
+<style type="text/css">
+label.filebutton {
+    width:120px;
+    height:40px;
+    overflow:hidden;
+    position:relative;
+    background-color:#ccc;
+}
+
+label span input {
+    z-index: 999;
+    line-height: 0;
+    font-size: 50px;
+    position: absolute;
+    top: -2px;
+    left: -700px;
+    opacity: 0;
+    filter: alpha(opacity = 0);
+    -ms-filter: "alpha(opacity=0)";
+    cursor: pointer;
+    _cursor: hand;
+    margin: 0;
+    padding:0;
+}
+</style>
 <script type='text/javascript'>
 	function showFileSize() {
 		var input = document.getElementById('file');
@@ -62,17 +87,22 @@
 						</div>
 						<br /> <br />
 						<div class="col-md-7">
+						<br />
+							<label class="filebutton">
+								<img src=<c:url value="/images/mzl.rhhhohdt.png" /> alt="HTML5 Icon" style="width:68px;height:68px;">
+							<span>							
 							<sf:input type="file" path="file" id="file" accept="video/mp4"
 								class="form-control input-sm" value="Browse"
-								onchange="showFileSize()" />
+								onchange="showFileSize()" /></span></label>
 							<div class="has-error">
 								<sf:errors path="file" class="help-inline" style="color:red;" />
 							</div>
 						</div>
 						<br />
 					</div>
-				</div>
+				</div>				
 				<div class="row">
+				<br />
 					<div class="form-actions floatRight">
 						<input type="submit" value="Upload" id="submit"
 							class="btn btn-primary btn-sm">
