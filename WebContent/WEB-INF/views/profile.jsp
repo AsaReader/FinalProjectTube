@@ -13,8 +13,7 @@
 	<c:if test="${loggedInUser ne user.username}">
 		<c:set var="subscribed" value="false" />
 		<c:forEach var="subscriber" items="${user.subscribers}">
-			<c:if test="${subscriber.username == user}">
-				<c:out value="${subscriber.username}"/>
+			<c:if test="${subscriber.username eq loggedInUser}">
 				<c:set var="subscribed" value="true" />
 			</c:if>
 		</c:forEach>
@@ -22,13 +21,13 @@
 		<c:choose>
 			<c:when test="${subscribed == true}">
 				<sf:form method="post" action="${pageContext.request.contextPath}/unsubscribe">
-					<input type="hidden" name="subjectName" value="${user.username}"> 
+					<input type="hidden" name="username" value="${user.username}">
 					<input type="submit" value="Unsubscribe" class="margin_left">
 				</sf:form>
 			</c:when>
 			<c:otherwise>
 				<sf:form method="post" action="${pageContext.request.contextPath}/subscribe">
-					<input type="hidden" name="subjectName" value="${user.username}">
+					<input type="hidden" name="username" value="${user.username}">
 					<input type="submit" value="Subscribe" class="margin_left">
 				</sf:form>
 			</c:otherwise>
@@ -38,7 +37,7 @@
 	
 	<sec:authorize access="isAnonymous()">
 		<sf:form method="post" action="${pageContext.request.contextPath}/subscribe">
-			<input type="hidden" name="subjectName" value="${user.username}">
+			<input type="hidden" name="subject" value="${user}">
 			<input type="submit" value="Subscribe" class="margin_left">
 		</sf:form>
 	</sec:authorize>

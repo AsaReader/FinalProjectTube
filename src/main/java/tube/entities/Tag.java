@@ -3,6 +3,8 @@ package tube.entities;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -61,7 +63,7 @@ public class Tag implements java.io.Serializable {
 	}
 
 	@JsonIgnore
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable(name = "video_has_tags", catalog = "youtubeDB", joinColumns = {
 			@JoinColumn(name = "tags_id", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "video_id", nullable = false, updatable = false) })

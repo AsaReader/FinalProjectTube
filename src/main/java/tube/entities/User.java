@@ -1,7 +1,9 @@
 package tube.entities;
 // Generated Oct 6, 2016 4:59:27 PM by Hibernate Tools 5.2.0.Beta1
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -50,7 +52,7 @@ public class User implements java.io.Serializable {
 	private boolean isBanned;
 	private Set<Comment> comments = new HashSet<Comment>(0);
 	private Set<Playlist> playlists = new HashSet<Playlist>(0);
-	private Set<User> userSubscriptions = new HashSet<User>(0);
+	private List<User> userSubscriptions = new ArrayList<User>(0);
 	private Set<UserLikes> userLikes = new HashSet<UserLikes>(0);
 	private Set<Video> videos = new HashSet<Video>(0);
 	private Set<User> subscribers = new HashSet<User>(0);
@@ -67,8 +69,8 @@ public class User implements java.io.Serializable {
 	}
 
 	public User(String email, boolean isAdmin, boolean isBanned, String password, String username,
-			Set<Comment> comments, Set<Playlist> playlists, Set<User> usersForUserId, Set<UserLikes> userLikes,
-			Set<Video> videos, Set<User> usersForSubscribeUserId) {
+			Set<Comment> comments, Set<Playlist> playlists, List<User> userSubscriptions, Set<UserLikes> userLikes,
+			Set<Video> videos, Set<User> subscribers) {
 		this.email = email;
 		this.isAdmin = isAdmin;
 		this.isBanned = isBanned;
@@ -76,10 +78,10 @@ public class User implements java.io.Serializable {
 		this.username = username;
 		this.comments = comments;
 		this.playlists = playlists;
-		this.userSubscriptions = usersForUserId;
+		this.userSubscriptions = userSubscriptions;
 		this.userLikes = userLikes;
 		this.videos = videos;
-		this.subscribers = usersForSubscribeUserId;
+		this.subscribers = subscribers;
 	}
 
 	@Id
@@ -170,11 +172,11 @@ public class User implements java.io.Serializable {
 	@JoinTable(name = "subscribers", catalog = "youtubeDB", joinColumns = {
 					@JoinColumn(name = "subscribe_user_id", unique = true, nullable = false, updatable = false) }, inverseJoinColumns = {
 							@JoinColumn(name = "user_id", unique = true, nullable = false, updatable = false) })
-	public Set<User> getUserSubscriptions() {
+	public List<User> getUserSubscriptions() {
 		return this.userSubscriptions;
 	}
 
-	public void setUserSubscriptions(Set<User> usersForUserId) {
+	public void setUserSubscriptions(List<User> usersForUserId) {
 		this.userSubscriptions = usersForUserId;
 	}
 
@@ -210,6 +212,31 @@ public class User implements java.io.Serializable {
 
 	public void setSubscribers(Set<User> usersesForSubscribeUserId) {
 		this.subscribers = usersesForSubscribeUserId;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		User other = (User) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
 	}
 
 }

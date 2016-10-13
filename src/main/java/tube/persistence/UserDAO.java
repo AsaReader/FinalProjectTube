@@ -1,8 +1,8 @@
 package tube.persistence;
 
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.*;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import tube.entities.User;
 
@@ -18,12 +18,16 @@ public interface UserDAO extends JpaRepository<User, Integer> {
 	@Override
 	User findOne(Integer userId);
 	
-	@CachePut(value = "userCache", key="#result.username")
 	@Override
+	@CacheEvict(value = "userCache", key = "#result.username")
 	<S extends User> S saveAndFlush(S user);
+	
+	@Override
+	@CacheEvict(value = "userCache", key = "#result.username", allEntries = true)
+	<S extends User> S save(S arg0);
 	
 	int countByUsername(String username);
 
 	int countByEmail(String email);
-	
+
 }

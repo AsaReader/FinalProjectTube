@@ -3,6 +3,8 @@ package tube.entities;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -57,7 +59,7 @@ public class Playlist implements java.io.Serializable {
 	}
 
 	@JsonIgnore
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
 	@JoinColumn(name = "user_id", nullable = false)
 	public User getUser() {
 		return this.user;
@@ -86,7 +88,7 @@ public class Playlist implements java.io.Serializable {
 	}
 
 	@JsonIgnore
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
 	@JoinTable(name = "playlist_videos", catalog = "youtubeDB", joinColumns = {
 			@JoinColumn(name = "playlist_id", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "video_id", nullable = false, updatable = false) })
