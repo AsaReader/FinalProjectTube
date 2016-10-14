@@ -157,7 +157,7 @@ public class User implements java.io.Serializable {
 	}
 
 	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
 	public Set<Playlist> getPlaylists() {
 		return this.playlists;
 	}

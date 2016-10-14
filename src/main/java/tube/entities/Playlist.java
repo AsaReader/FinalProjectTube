@@ -88,7 +88,7 @@ public class Playlist implements java.io.Serializable {
 	}
 
 	@JsonIgnore
-	@ManyToMany(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
 	@JoinTable(name = "playlist_videos", catalog = "youtubeDB", joinColumns = {
 			@JoinColumn(name = "playlist_id", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "video_id", nullable = false, updatable = false) })
