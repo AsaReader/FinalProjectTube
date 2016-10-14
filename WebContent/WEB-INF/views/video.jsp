@@ -8,7 +8,7 @@
 
 <c:import url="/includes/header.jsp" />
 <c:import url="/includes/sidebar.jsp" />
-<body onload="getLikes(${video.id}, ${0})"/>
+<body onload="getLikes(${video.id}, ${0})" />
 
 <video width="854" height="480" controls>
 	<source src=<c:url value="../${video.fileName}"/> type="video/mp4">
@@ -34,15 +34,63 @@
 
 
 
-<button  id="likeIt" a href="./like"
-	onclick="getLikes(${video.id}, ${1})" >Loading...</button>
-	
+<button id="likeIt" a href="./like"
+	onclick="getLikes(${video.id}, ${1})">Loading...</button>
 
 <button class="dislike-button" id="dislikeIt" a href="./dislike"
 	onclick="getDisLikes(${video.id} , ${2})">Loading...</button>
-	
-	
+
+
+
+	<textarea id="commentId" rows="2" cols="30" placeholder="Comment..."></textarea>
+	<input type="submit" placeholder="Comment" id="submit"
+		onclick="uploadComment(${video.id})" class="btn btn-primary btn-sm" />
+
+<datalist id="comments">
+</datalist>
+
+
 <script type="text/javascript">
+
+function uploadComment(videoId){
+	var comment = $("#commentId").val();
+	console.log(comment);
+	console.log(videoId);
+	
+		$.ajax({
+		
+		url: "./comment",
+		type:"POST",
+
+		data:{
+			videoId: videoId,
+			comment: comment,
+		},
+		success: function(data){
+			$("#comments").empty();
+			
+			for (index in data) {
+				var object = data[index];
+				
+				
+				var username = document.createElement('a');
+				var newLine = document.createElement("h1");
+				var linkText = document.createTextNode(username);
+				username.appendChild(linkText);
+				username.appendChild(newLine);
+				username.href = "/user/"+ username;
+				$("comments").append(username);
+				
+				var text = document.createElement("p");
+				name.innerHTML = object.text;
+				$("comments").append(text);
+			}
+		}
+		
+		});
+		
+		
+}
 
 
 
@@ -113,7 +161,9 @@ function getDisLikes(videoId, likeId){
 	
 }
 
-
+function loadComments(videoId ){
+	
+}
 
 	
 	</script>

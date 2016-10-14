@@ -88,13 +88,11 @@ public class UserLikesController {
 			userLikesDao.save(userlikes);
 
 			beforeLikes = likesCount;
-			System.out.println("B: " + likesCount + " - likesCount ");
-			System.out.println("B: " + beforeLikes + " - beforeLikes ");
+			
 			userLikesDao.save(userlikes);
 
 			likesCount = userLikesDao.countByVideoIdAndLikeStatus(videoId, true);
-			System.out.println("A: " + likesCount + " - likesCount ");
-			System.out.println("A: " + beforeLikes + " - beforeLikes ");
+		
 
 			if (beforeLikes == likesCount) {
 
