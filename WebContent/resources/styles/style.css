@@ -80,8 +80,14 @@ header{
 	padding:5px;
 	margin-right:32px;
 }
+.search-box input[type=password]{
+	width:400px;
+	padding:5px;
+	margin-right:32px;
+}
 .search-box input[type=submit],
-.search-box input[type=text]{
+.search-box input[type=text],
+.search-box input[type=password]{
 	border:none;
 	background-color:#f9f9f9;
 	outline:none;

@@ -9,20 +9,30 @@
 <div class="content">
 	<div class="grids">
 		<h2>Log in</h2>
-		<br />
 		<sf:form method="POST"
 			action="${pageContext.request.contextPath}/user/login">
-		Username: <input type="text" name="username" />
-			<br />
-			<br />
-		Password: <input type="password" name="password" />
-			<br />
-			<br />
-			<input id="remember_me" name="remember-me" type="checkbox" />
-			<label for="remember_me" class="inline">Remember me</label>
-			<input type="submit" value="Login" />
+			<div class="row" id="div1">
+				<div class="form-group col-md-12">
+					<br /> <br />
+					<div class="search-box">
+						<input type="text" name="username" placeholder="Username..." /> <br />
+						<br /> <input type="password" name="password"
+							placeholder="Password ..." /><br /> <br />
+					</div>
+				</div>
+				<br /> <br />
+				<div class="form-actions floatRight upload" align="middle">
+					<br /> <br /> <input id="remember_me" name="remember-me"
+						type="checkbox" /> <label for="remember_me"><c:out
+							value="Remember me" /></label><br />
+				</div>
+				<div class="form-actions floatRight upload" align="middle">
+				<br />
+					<input type="submit" value="Login" />
+				</div>
+			</div>
+
 		</sf:form>
-		<div class="clearFloat"></div>
 	</div>
 </div>
 

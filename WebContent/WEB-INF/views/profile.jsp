@@ -10,14 +10,16 @@
 <div class="content">
 	<div class="grids">
 		<br />
-		<h2>My Chanel</h2>
+		<h2>
+			<c:out value="${user.username}'s profile" />
+		</h2>
 
 		<sec:authorize access="isAuthenticated()">
 			<sec:authentication property="principal.username" var="loggedInUser" />
 			<br />
-			<h3>
+			<!-- <h3>
 				<c:out value="  Logged in as ${loggedInUser}" />
-			</h3>
+			</h3>  -->
 			<br />
 			<div class="grids">
 				<h2>
