@@ -26,6 +26,7 @@ body
 */
 body{
 	font-family:Arial, Helvetica, sans-serif;
+	background-color: #f2f2f2;
 }
 /*
 wrap
@@ -91,6 +92,26 @@ header{
 	border:none;
 	background-color:#f9f9f9;
 	outline:none;
+}
+
+input[type=submit] {
+	background-color: #c1c1d7;
+	border: none;
+	color: white;
+	padding: 8px 30px;
+	text-decoration: none;
+	margin: 4px 2px;
+	cursor: pointer;
+}
+
+.search-box input[type=text]:focus {
+    background-color: lightblue;
+}
+.search-box input[type=password]:focus {
+	/*
+	    border: 3px solid #555;
+	*/
+    background-color: lightblue;
 }
 .search-box input[type=submit]{
 	background-position:0 -104px;
