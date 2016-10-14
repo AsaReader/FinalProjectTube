@@ -20,10 +20,12 @@ import tube.persistence.VideoDAO;
 
 @Controller
 public class SubsrciptionController {
-	
+
+	private static final int SUBSCR_NEWEST_VIDEOS_SHOW = 10;
+
 	@Autowired
 	private UserDAO userDao;
-	
+
 	@Autowired
 	private VideoDAO videoDao;
 
@@ -33,25 +35,34 @@ public class SubsrciptionController {
 		User subject = userDao.findByUsername(username);
 		User subscriber = userDao.findByUsername(principal.getName());
 		subscriber.getUserSubscriptions().add(subject);
-//		subject.getSubscribers().add(subscriber);
+		// subject.getSubscribers().add(subscriber);
 		userDao.save(subscriber);
-//		userDao.save(subject);
+		// userDao.save(subject);
 		return "redirect:/user/" + subject.getUsername();
 	}
-	
+
 	@RequestMapping(value = "/subscribtions", method = GET)
 	public String getSubscribe(Principal principal, Model model) {
 		User subscriber = userDao.findByUsername(principal.getName());
 		List<User> subscList = subscriber.getUserSubscriptions();
-		List<Video> subscVideos = new ArrayList<Video>();
+		List<Video> allSubscVideos = new ArrayList<Video>();
 		for (User user : subscList) {
-			subscVideos.addAll(user.getVideos());
+			allSubscVideos.addAll(user.getVideos());
 		}
-		subscVideos.sort((v1, v2) -> v2.getId()-v1.getId());
-		model.addAttribute("subscVideos", subscVideos);
+		allSubscVideos.sort((v1, v2) -> v2.getId() - v1.getId());
+		int count = 0;
+		List<Video> newestTenVideoSubscr = new ArrayList<Video>();
+		for (Video video : allSubscVideos) {
+			if (count >= SUBSCR_NEWEST_VIDEOS_SHOW) {
+				break;
+			}
+			newestTenVideoSubscr.add(video);
+			count++;
+		}
+		model.addAttribute("subscVideos", newestTenVideoSubscr);
 		return "subscriptionFeed";
 	}
-	
+
 	@RequestMapping(value = "/unsubscribe", method = POST)
 	public String unsubscribe(Principal principal, @RequestParam String username) {
 		System.out.println(username);
@@ -61,7 +72,7 @@ public class SubsrciptionController {
 		userDao.save(subscriber);
 		return "redirect:/user/" + subject.getUsername();
 	}
-	
+
 	@RequestMapping(value = "/subscriptions", method = GET)
 	public String getSubscriptions() {
 		return "subscriptions";

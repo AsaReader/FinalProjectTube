@@ -1,10 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-<%@ page session="false" %>
+	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="sec"
+	uri="http://www.springframework.org/security/tags"%>
+<%@ page session="false"%>
 <c:import url="/includes/header.jsp" />
-<c:import url="/includes/sidebar.jsp"/>
+<c:import url="/includes/sidebar.jsp" />
 
 <div class="content">
 	<div class="grids">
@@ -12,16 +13,14 @@
 		<c:forEach items="${subscVideos}" var="video">
 			<div class="grid">
 				<div class="preview">
-					<a href="${pageContext.request.contextPath}/video/${video.id}"><img src="images/album.jpg" alt=""></a>
-					<div class="data">
-						<h3>
-							<a href="${pageContext.request.contextPath}/video/${video.id}"><c:out value="${video.title}"></c:out></a> 
-							<a href="${pageContext.request.contextPath}/video/${video.id}"><c:out value="${video.fileName}"></c:out></a>
-						</h3>
-					</div>
+					<a href="${pageContext.request.contextPath}/video/${video.id}">
+						<video width="150" height="90">
+							<source src=<c:url value="${video.fileName}"/> type="video/mp4">
+						</video>
+						<c:out value="${video.title}"></c:out>
+					</a> <br />
 				</div>
 			</div>
-			
 		</c:forEach>
 		<div class="clearFloat"></div>
 	</div>

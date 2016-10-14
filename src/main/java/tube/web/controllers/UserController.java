@@ -4,6 +4,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import java.security.Principal;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -22,9 +23,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import tube.entities.User;
+import tube.entities.Video;
 import tube.persistence.UserDAO;
 import tube.persistence.VideoDAO;
-import tube.security.SecurityUser;
 import tube.validations.UserValidation;
 
 @Controller
@@ -98,7 +99,11 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/me", method = GET)
-	public String getMyProfile(Principal principal) {
+	public String getMyProfile(Principal principal, Model model) {
+		User meUser = userDao.findByUsername(principal.getName());
+		List<Video> myVideos = meUser.getVideos();
+		myVideos.sort((v1, v2) -> v2.getId() - v1.getId());
+		model.addAttribute("myVideos", myVideos);
 		return "forward:/user/" + principal.getName();
 	}
 
