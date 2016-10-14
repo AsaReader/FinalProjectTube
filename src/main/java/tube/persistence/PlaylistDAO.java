@@ -22,5 +22,7 @@ public interface PlaylistDAO extends JpaRepository<Playlist, Integer> {
 		@Override
 		@Cacheable("playlistCache")
 		Playlist findOne(Integer id);
+
+		List<Playlist> findByUserId(Integer id);
 		
 }

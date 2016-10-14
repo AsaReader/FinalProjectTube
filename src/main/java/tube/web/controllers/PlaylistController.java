@@ -7,7 +7,9 @@ import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import tube.entities.Playlist;
 import tube.persistence.PlaylistDAO;
 import tube.persistence.UserDAO;
+import tube.security.SecurityUser;
 
 @Controller
 public class PlaylistController {
@@ -45,7 +48,7 @@ public class PlaylistController {
 		return "userPlaylists";
 	}
 	
-	@RequestMapping(value = "/addToPlaylist", method = GET)
+	@RequestMapping(value = "/video/addToPlaylist", method = POST)
 	public @ResponseBody String addVideoToPlaylist(@RequestParam("add") boolean addStatus, @RequestParam("playlistId") int playlistId) {
 		if (addStatus) {
 			//add video to playlist
@@ -57,10 +60,13 @@ public class PlaylistController {
 		return null;
 	}
 	
-	@RequestMapping(value = "/getPlaylists", method = GET)
-	public @ResponseBody List<Playlist> getAddablePlaylists(Principal principal, @RequestParam("videoId") String videoId) {
-		System.out.println(videoId);
-		return userDao.findByUsername(principal.getName()).getPlaylists();
+	@RequestMapping(value = "/video/getPlaylists", method = POST)
+	public @ResponseBody String getAddablePlaylists() {
+		System.err.println("hi");
+		SecurityUser user = (SecurityUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		List<Playlist> playlists = playlistDao.findByUserId(user.getId());
+		System.out.println(playlists.toString());
+		return "hello";
 	}
 	
 }

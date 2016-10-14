@@ -1,16 +1,18 @@
 package tube.entities;
 // Generated Oct 6, 2016 4:59:27 PM by Hibernate Tools 5.2.0.Beta1
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -41,7 +43,7 @@ public class Video implements java.io.Serializable {
 	private Set<Playlist> playlists = new HashSet<Playlist>(0);
 	private Set<Comment> comments = new HashSet<Comment>(0);
 	private Set<Tag> tags = new HashSet<Tag>(0);
-	private Set<UserLikes> userLikes = new HashSet<UserLikes>(0);
+	private List<UserLikes> userLikes = new ArrayList<UserLikes>(0);
 
 	public Video() {
 	}
@@ -54,7 +56,7 @@ public class Video implements java.io.Serializable {
 	}
 
 	public Video(User user, LocalDate date, String description, String fileName, String title, Set<Playlist> playlists,
-			Set<Comment> comments, Set<Tag> tags, Set<UserLikes> userLikes) {
+			Set<Comment> comments, Set<Tag> tags, List<UserLikes> userLikes) {
 		this.user = user;
 		this.date = date;
 		this.description = description;
@@ -194,11 +196,11 @@ public class Video implements java.io.Serializable {
 
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "video")
-	public Set<UserLikes> getUserLikes() {
+	public List<UserLikes> getUserLikes() {
 		return this.userLikes;
 	}
 
-	public void setUserLikes(Set<UserLikes> userLikes) {
+	public void setUserLikes(List<UserLikes> userLikes) {
 		this.userLikes = userLikes;
 	}
 
