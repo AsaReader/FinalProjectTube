@@ -51,7 +51,7 @@ public class User implements java.io.Serializable {
 	private boolean isAdmin;
 	private boolean isBanned;
 	private Set<Comment> comments = new HashSet<Comment>(0);
-	private Set<Playlist> playlists = new HashSet<Playlist>(0);
+	private List<Playlist> playlists = new ArrayList<Playlist>(0);
 	private List<User> userSubscriptions = new ArrayList<User>(0);
 	private Set<UserLikes> userLikes = new HashSet<UserLikes>(0);
 	private List<Video> videos = new ArrayList<Video>();
@@ -69,7 +69,7 @@ public class User implements java.io.Serializable {
 	}
 
 	public User(String email, boolean isAdmin, boolean isBanned, String password, String username,
-			Set<Comment> comments, Set<Playlist> playlists, List<User> userSubscriptions, Set<UserLikes> userLikes,
+			Set<Comment> comments, List<Playlist> playlists, List<User> userSubscriptions, Set<UserLikes> userLikes,
 			List<Video> videos, Set<User> subscribers) {
 		this.email = email;
 		this.isAdmin = isAdmin;
@@ -158,11 +158,11 @@ public class User implements java.io.Serializable {
 
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
-	public Set<Playlist> getPlaylists() {
+	public List<Playlist> getPlaylists() {
 		return this.playlists;
 	}
 
-	public void setPlaylists(Set<Playlist> playlists) {
+	public void setPlaylists(List<Playlist> playlists) {
 		this.playlists = playlists;
 	}
 

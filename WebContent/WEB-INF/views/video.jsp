@@ -8,7 +8,7 @@
 	<video width="854" height="480" controls>
 	  <source src=<c:url value="../${video.fileName}"/> type="video/mp4">
 	</video><br/>
-	<c:out value="${video.fileName}"/><br>
+	<div id="videoId"><c:out value="${video.fileName}"/><br></div>
 	<c:out value="TITLE: ${video.title}"/><br/>
 	<c:out value="POSTED BY: ${video.user.username}"/><br/>
 	<c:out value="DESCRIPTION: ${video.description}"/><br/>
@@ -18,4 +18,35 @@
 	<c:forEach var="tag" items="${video.tags}">
 		<c:out value="${tag.name} "/>
 	</c:forEach><br/>
+	
+	<input type="submit" value="Add to playlist" onClick="getPlaylists();"/>
+	
+	<script type="text/javascript"
+	src="http://code.jquery.com/jquery-3.1.1.min.js"></script>	
+	<script type="text/javascript">
+		function getPlaylists() {
+			$.ajax({
+				 type : "GET",
+				 contentType : "application/json", 
+				 url : "${home}addToPlaylist"
+				 data : JSON.stringify(data),
+				 dataType : 'json',
+				 timeout : 100000,
+				 success : function(data) {
+					 alert('hi');
+				 }
+				 error : function(e) {
+					 alert('oops');
+				 }
+				 done : function(e) {
+					 alert('DONE');
+				 }
+			}
+				$.getJSON( "${home}getPlaylists.get",
+					{ videoId: 'hi' },
+					function(data) {
+				alert('response received ' + data)
+			});
+		}
+	</script>
 <c:import url="/includes/footer.jsp" />
