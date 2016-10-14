@@ -8,9 +8,7 @@
 
 <c:import url="/includes/header.jsp" />
 <c:import url="/includes/sidebar.jsp" />
-
-<sec:authentication property="principal.id" var="userId" />
-
+<body onload="getLikes(${video.id}, ${0})"/>
 
 <video width="854" height="480" controls>
 	<source src=<c:url value="../${video.fileName}"/> type="video/mp4">
@@ -34,15 +32,19 @@
 </c:forEach>
 <br />
 
-<c:out value="${userId}"></c:out>
+
 
 <button  id="likeIt" a href="./like"
-	onclick="getLikes(${video.id}, ${1})" >Likes</button>
+	onclick="getLikes(${video.id}, ${1})" >Loading...</button>
 	
 
 <button class="dislike-button" id="dislikeIt" a href="./dislike"
-	onclick="getDisLikes(${video.id} , ${2})">Dislike</button>
+	onclick="getDisLikes(${video.id} , ${2})">Loading...</button>
+	
+	
 <script type="text/javascript">
+
+
 
 function getLikes(videoId, likeId){
 	var like = $("#likeIt").val();
