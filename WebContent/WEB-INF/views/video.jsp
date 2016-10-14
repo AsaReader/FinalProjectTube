@@ -41,8 +41,7 @@
 	
 
 <button class="dislike-button" id="dislikeIt" a href="./dislike"
-	onshow="getDisLikes( ${userId} , ${video.id})"
-	onclick="getDisLikes( ${userId} , ${video.id})">Dislike</button>
+	onclick="getDisLikes(${video.id} , ${2})">Dislike</button>
 <script type="text/javascript">
 
 function getLikes(videoId, likeId){
@@ -78,14 +77,45 @@ function getLikes(videoId, likeId){
 	
 }
 
-	</script>
+function getDisLikes(videoId, likeId){
+	var like = $("#dislikeIt").val();
 	
-<button class="dislike-button" id="kkk"
+	
+	console.log(likeId);
+	console.log(videoId);
+	
+
+	$.ajax({
+		
+		url: "./like",
+		type:"POST",
+
+		data:{
+			
+			videoId: videoId,
+			likeId: likeId,
+		},
+		success: function(data){
+			$("#likeIt").empty();
+			$("#dislikeIt").empty();
+			var dislikeButton = data.dislikeButton;
+			var likeButton = data.likeButton;
+			
+			$("#likeIt").append(likeButton);
+			$("#dislikeIt").append(dislikeButton);
+			
+		}
+		
+	});
+	
+}
+</script>
+
+<button class="dislike-button"
 	onclick="getPlaylists()">Add to playlist</button>
 	
 	<script type="text/javascript">
 		function getPlaylists(videoId) {
-			var like = $("#kkk").val();
 		
 			$.ajax({
 				 type : "POST",
@@ -94,6 +124,11 @@ function getLikes(videoId, likeId){
 				data:{},
 				 success : function(data) {
 					 alert('hi');
+					 for (index in data) {
+							var option = document.createElement("option");
+							option.value = data[index];
+							$("#suggestions").append(option);
+						}
 				 }
 			});
 		}
