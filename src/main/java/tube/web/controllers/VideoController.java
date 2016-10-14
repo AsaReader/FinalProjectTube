@@ -86,7 +86,7 @@ public class VideoController {
 			
 		}
 		UserLikesController.Helper helper = new Helper(dislikeButton, likeButton);	
-		model.addAttribute("helper", helper);
+		model.addAttribute("likesHelper", helper);
 		return "video";
 		
 	}

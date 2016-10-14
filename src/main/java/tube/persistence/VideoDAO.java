@@ -57,4 +57,5 @@ public interface VideoDAO extends JpaRepository<Video, Integer> {
 
 	@Query(value = "UPDATE videos v SET v.views = ?1 WHERE v.id = ?2", nativeQuery = true)
 	void updateViewCount(Integer views, int videoId);
+
 }

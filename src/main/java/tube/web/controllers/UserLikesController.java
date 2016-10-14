@@ -23,7 +23,7 @@ import tube.web.controllers.UserLikesController.Helper;
 @Controller
 public class UserLikesController {
 
-	static class Helper {
+	public static class Helper {
 
 		private String dislikeButton;
 		private String likeButton;
@@ -48,7 +48,7 @@ public class UserLikesController {
 		public void setLikeButton(String likeButton) {
 			this.likeButton = likeButton;
 		}
-
+		
 	}
 
 	@Autowired
@@ -81,7 +81,6 @@ public class UserLikesController {
 		UserLikes userlikes = new UserLikes(new UserLikesId(userId, videoId), user, video, true);
 	
 		if (likeId == 1) {
-			
 
 			int beforeLikes;
 			likesCount = userLikesDao.countByVideoIdAndLikeStatus(videoId, true);

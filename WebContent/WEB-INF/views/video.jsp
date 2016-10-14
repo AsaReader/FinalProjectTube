@@ -1,14 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib prefix="sec"
-	uri="http://www.springframework.org/security/tags"%>
+<%@ taglib prefix="sec"	uri="http://www.springframework.org/security/tags"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="sf" %>
 <%@ page session="false"%>
 <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
 
 <c:import url="/includes/header.jsp" />
 <c:import url="/includes/sidebar.jsp" />
-<body onload="getLikes(${video.id}, ${0})"/>
 
 <video width="854" height="480" controls>
 	<source src=<c:url value="../${video.fileName}"/> type="video/mp4">
@@ -27,21 +26,19 @@
 <c:out value="VIEWS: ${video.views}" />
 <br />
 <c:out value="TAGS:" />
-<c:forEach var="tag" items="${video.tags}">
-	<c:out value="${tag.name} " />
-</c:forEach>
-<br />
 
+<sec:authorize access="isAuthenticated()">
+<button class="dislike-button" id="likeIt" onclick="getLikes(${video.id}, ${1})" ><c:out value="${likesHelper.likeButton}"/></button>
 
+<button class="dislike-button" id="dislikeIt" onclick="getDisLikes(${video.id} , ${2})"><c:out value="${likesHelper.dislikeButton}"/></button>
+</sec:authorize>	
 
-<button  id="likeIt" a href="./like"
-	onclick="getLikes(${video.id}, ${1})" >Loading...</button>
-	
-
-<button class="dislike-button" id="dislikeIt" a href="./dislike"
-	onclick="getDisLikes(${video.id} , ${2})">Loading...</button>
-	
-	
+<sec:authorize access="isAnonymous()">
+<sf:form method="get" action="${pageContext.request.contextPath}/video/like">
+<input type="submit" value="<c:out value="${likesHelper.likeButton}"/>" class="margin_left">
+<input type="submit" value="<c:out value="${likesHelper.dislikeButton}"/>" class="margin_left">
+</sf:form>
+</sec:authorize>
 <script type="text/javascript">
 
 
@@ -116,6 +113,10 @@ function getDisLikes(videoId, likeId){
 <button class="dislike-button"
 	onclick="getPlaylists()">Add to playlist</button>
 	
+	
+<button class="dislike-button" id="addToPlaylist"
+	onclick="addToPlaylist(${1}, ${video.id})">Add to MyPlaylist</button>
+	
 	<script type="text/javascript">
 		function getPlaylists(videoId) {
 		
@@ -125,15 +126,35 @@ function getDisLikes(videoId, likeId){
 				 
 				data:{},
 				 success : function(data) {
-					 alert('hi');
+					 var index;
 					 for (index in data) {
-							var option = document.createElement("option");
-							option.value = data[index];
+							var playlist = document.createElement("playlist");
+							playlist.value = data[index];
 							$("#suggestions").append(option);
 						}
 				 }
 			});
 		}
+		
+		function addToPlaylist(playlistId, videoId) {
+			
+			$.ajax({
+				type : "POST",
+				url : "./addToPlaylist",
+				
+				data: {
+					videoId: videoId,
+					playlistId: playlistId,
+				},
+				
+				success : function(data) {
+					var index;
+					$("#addToPlaylist").empty();
+					$("#addToPlaylist").append(data);
+				}
+			});
+		}
+		
 	</script>
 
 
