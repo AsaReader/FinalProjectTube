@@ -39,24 +39,31 @@ public class UserLikesId implements java.io.Serializable {
 		this.videoId = videoId;
 	}
 
-	public boolean equals(Object other) {
-		if ((this == other))
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
 			return true;
-		if ((other == null))
+		if (obj == null)
 			return false;
-		if (!(other instanceof UserLikesId))
+		if (getClass() != obj.getClass())
 			return false;
-		UserLikesId castOther = (UserLikesId) other;
-
-		return (this.getUserId() == castOther.getUserId()) && (this.getVideoId() == castOther.getVideoId());
+		UserLikesId other = (UserLikesId) obj;
+		if (userId != other.userId)
+			return false;
+		if (videoId != other.videoId)
+			return false;
+		return true;
 	}
 
+	@Override
 	public int hashCode() {
-		int result = 17;
-
-		result = 37 * result + this.getUserId();
-		result = 37 * result + this.getVideoId();
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + userId;
+		result = prime * result + videoId;
 		return result;
 	}
 
+	
+	
 }
