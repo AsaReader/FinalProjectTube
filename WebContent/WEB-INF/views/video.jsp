@@ -41,12 +41,45 @@
 	
 
 <button class="dislike-button" id="dislikeIt" a href="./dislike"
-	onshow="getDisLikes( ${userId} , ${video.id})"
-	onclick="getDisLikes( ${userId} , ${video.id})">Dislike</button>
+	onclick="getDisLikes(${video.id} , ${2})">Dislike</button>
 <script type="text/javascript">
 
 function getLikes(videoId, likeId){
 	var like = $("#likeIt").val();
+	
+	
+	console.log(likeId);
+	console.log(videoId);
+	
+
+	$.ajax({
+		
+		url: "./like",
+		type:"POST",
+
+		data:{
+			
+			videoId: videoId,
+			likeId: likeId,
+		},
+		success: function(data){
+			$("#likeIt").empty();
+			$("#dislikeIt").empty();
+			var dislikeButton = data.dislikeButton;
+			var likeButton = data.likeButton;
+			
+			$("#likeIt").append(likeButton);
+			$("#dislikeIt").append(dislikeButton);
+			
+		}
+		
+	});
+	
+}
+
+
+function getDisLikes(videoId, likeId){
+	var like = $("#dislikeIt").val();
 	
 	
 	console.log(likeId);

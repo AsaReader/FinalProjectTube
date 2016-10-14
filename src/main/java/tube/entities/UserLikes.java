@@ -84,4 +84,7 @@ public class UserLikes implements java.io.Serializable {
 		this.likeStatus = likeStatus;
 	}
 
+	
+	
+
 }
