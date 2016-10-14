@@ -4,16 +4,8 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="sf" %>
 <%@ page session="false" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %> 
-<c:import url="/includes/header.jsp" />
-	<a href="?language=en">
-		English
-	</a>
-	<a href="?language=es">
-		Spanish
-	</a> 
+<c:import url="/includes/header.jsp" /> 
 	<h1><spring:message code="user.register" /></h1>
-
-
 	<sf:form method="POST" commandName="user">
 				<!-- Handle errors -->
 	
