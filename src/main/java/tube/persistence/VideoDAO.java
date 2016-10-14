@@ -6,7 +6,6 @@ import java.util.Set;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import tube.entities.Tag;
@@ -28,11 +27,15 @@ public interface VideoDAO extends JpaRepository<Video, Integer> {
 			+ "OR t.name LIKE ?1% ", nativeQuery = true)
 	List<Video> getVideosByInput(String description);
 	
+	@Cacheable(value = "videoCache")
+	@Query(value = "SELECT v.* FROM videos v ORDER BY v.views DESC LIMIT 10", nativeQuery = true)
+	List<Video> getMostWatchedVideos();
+	
 	@Query(value = "Select Count(likeStatus) from user_likes where likeStatus = ?1 AND video_id = ?2 AND user_id - ?3", nativeQuery = true)
 	Integer getLikes(Boolean bool, int videoId, int userUd);
 
 	@Cacheable(value = "videoCache")
-	@Query(value = "SELECT v.* FROM videos v ORDER BY v.id DESC LIMIT 10", nativeQuery = true)
+	@Query(value = "SELECT v.* FROM videos v ORDER BY v.id DESC LIMIT 8", nativeQuery = true)
 	List<Video> getLastVideos();
 	
 
