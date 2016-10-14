@@ -18,6 +18,7 @@ import tube.entities.Video;
 import tube.persistence.UserDAO;
 import tube.persistence.UserLikesDAO;
 import tube.persistence.VideoDAO;
+import tube.web.controllers.UserLikesController.Helper;
 
 @Controller
 public class UserLikesController {
@@ -65,6 +66,7 @@ public class UserLikesController {
 
 		String likeButton = null;
 		String dislikeButton = null;
+		if(principal != null){
 
 		Video video = videoDao.findOne(videoId);
 		String username = principal.getName();
@@ -77,43 +79,44 @@ public class UserLikesController {
 		int beforeUnlikes;
 		UserLikes userunlikes = new UserLikes(new UserLikesId(userId, videoId), user, video, false);
 		UserLikes userlikes = new UserLikes(new UserLikesId(userId, videoId), user, video, true);
+	
 		if (likeId == 1) {
+			
 
 			int beforeLikes;
 			likesCount = userLikesDao.countByVideoIdAndLikeStatus(videoId, true);
 			userLikesDao.save(userlikes);
-			
 
 			beforeLikes = likesCount;
-			System.out.println("B: " +likesCount + " - likesCount " );
-			System.out.println("B: " +beforeLikes + " - beforeLikes " );
+			System.out.println("B: " + likesCount + " - likesCount ");
+			System.out.println("B: " + beforeLikes + " - beforeLikes ");
 			userLikesDao.save(userlikes);
-			
+
 			likesCount = userLikesDao.countByVideoIdAndLikeStatus(videoId, true);
-			System.out.println("A: " +likesCount + " - likesCount " );
-			System.out.println("A: " +beforeLikes + " - beforeLikes " );
-			
-			if(beforeLikes == likesCount){
+			System.out.println("A: " + likesCount + " - likesCount ");
+			System.out.println("A: " + beforeLikes + " - beforeLikes ");
 
-			unlikesCount = userLikesDao.countByVideoIdAndLikeStatus(videoId, false);
-			
-			beforeUnlikes = unlikesCount;
-			System.out.println("Bunlikes: " + unlikesCount + " -count");
-			System.out.println("B: " + beforeUnlikes + " -before");
-			
-			userLikesDao.save(userunlikes);
+			if (beforeLikes == likesCount) {
 
-			userLikesDao.delete(userunlikes);
-			System.out.println("Aunlikes: " + unlikesCount + " -count");
-			System.out.println("A: " + beforeUnlikes + " -before");
-			unlikesCount = userLikesDao.countByVideoIdAndLikeStatus(videoId, false);
-			
-			dislikeButton = "Dislike " + unlikesCount;
-			
+				unlikesCount = userLikesDao.countByVideoIdAndLikeStatus(videoId, false);
+
+				beforeUnlikes = unlikesCount;
+				System.out.println("Bunlikes: " + unlikesCount + " -count");
+				System.out.println("B: " + beforeUnlikes + " -before");
+
+				userLikesDao.save(userunlikes);
+
+				userLikesDao.delete(userunlikes);
+				System.out.println("Aunlikes: " + unlikesCount + " -count");
+				System.out.println("A: " + beforeUnlikes + " -before");
+				unlikesCount = userLikesDao.countByVideoIdAndLikeStatus(videoId, false);
+
+				dislikeButton = "Dislike " + unlikesCount;
+
 			}
 			unlikesCount = userLikesDao.countByVideoIdAndLikeStatus(videoId, false);
 			dislikeButton = "Dislike " + unlikesCount;
-			if (beforeLikes == likesCount ) {
+			if (beforeLikes == likesCount) {
 				System.out.println("equals");
 				userLikesDao.delete(userlikes);
 				likesCount = userLikesDao.countByVideoIdAndLikeStatus(videoId, true);
@@ -125,61 +128,75 @@ public class UserLikesController {
 				likeButton = "Liked " + likesCount;
 			}
 
-			return new Helper(dislikeButton, likeButton);
 		} else {
-			int beforeDislikes = 0;
+			if (likeId == 2) {
+				int beforeDislikes = 0;
 
-			unlikesCount = userLikesDao.countByVideoIdAndLikeStatus(videoId, false);
-
-			beforeDislikes = unlikesCount;
-			System.out.println("Before unlike: " + unlikesCount);
-			userLikesDao.save(userunlikes);
-			unlikesCount = userLikesDao.countByVideoIdAndLikeStatus(videoId, false);
-			System.out.println("After unlike:   " + unlikesCount);
-			if(beforeDislikes == unlikesCount){
-
-			likesCount = userLikesDao.countByVideoIdAndLikeStatus(videoId, true);
-
-			userLikesDao.save(userlikes);
-
-			userLikesDao.delete(userlikes);
-			likesCount = userLikesDao.countByVideoIdAndLikeStatus(videoId, true);
-			likeButton = "Like " + likesCount;
-			}
-			
-			likesCount = userLikesDao.countByVideoIdAndLikeStatus(videoId, true);
-			likeButton = "Like " + likesCount;
-			
-
-			if (beforeDislikes == unlikesCount) {
-
-				userLikesDao.delete(userunlikes);
 				unlikesCount = userLikesDao.countByVideoIdAndLikeStatus(videoId, false);
-				dislikeButton = "Dislike " + unlikesCount;
+
+				beforeDislikes = unlikesCount;
+				System.out.println("Before unlike: " + unlikesCount);
+				userLikesDao.save(userunlikes);
+				unlikesCount = userLikesDao.countByVideoIdAndLikeStatus(videoId, false);
+				System.out.println("After unlike:   " + unlikesCount);
+				if (beforeDislikes == unlikesCount) {
+
+					likesCount = userLikesDao.countByVideoIdAndLikeStatus(videoId, true);
+
+					userLikesDao.save(userlikes);
+
+					userLikesDao.delete(userlikes);
+					likesCount = userLikesDao.countByVideoIdAndLikeStatus(videoId, true);
+					likeButton = "Like " + likesCount;
+				}
+
+				likesCount = userLikesDao.countByVideoIdAndLikeStatus(videoId, true);
+				likeButton = "Like " + likesCount;
+
+				if (beforeDislikes == unlikesCount) {
+
+					userLikesDao.delete(userunlikes);
+					unlikesCount = userLikesDao.countByVideoIdAndLikeStatus(videoId, false);
+					dislikeButton = "Dislike " + unlikesCount;
+
+				} else {
+					unlikesCount = userLikesDao.countByVideoIdAndLikeStatus(videoId, false);
+					dislikeButton = "Disliked " + unlikesCount;
+				}
 
 			} else {
-				unlikesCount = userLikesDao.countByVideoIdAndLikeStatus(videoId, false);
-				dislikeButton = "Disliked " + unlikesCount;
+
+				likesCount = userLikesDao.getUserLikes(userId, videoId, true);
+				unlikesCount = userLikesDao.getUserLikes(userId, videoId, false);
+
+				int totalLikes = userLikesDao.countByVideoIdAndLikeStatus(videoId, true);
+				int totalDislikes = userLikesDao.countByVideoIdAndLikeStatus(videoId, false);
+				if (likesCount == 1) {
+					likeButton = "Liked " + totalLikes;
+					dislikeButton = "Dislike " + totalDislikes;
+
+				} else {
+					if (unlikesCount == 1) {
+						likeButton = "Like " + totalLikes;
+						dislikeButton = "Disliked " + totalDislikes;
+					} else {
+						likeButton = "Like " + totalLikes;
+						dislikeButton = "Dislike " + totalDislikes;
+					}
+				}
+
 			}
-
-			return new Helper(dislikeButton, likeButton);
 		}
-
+	}else{
+		int totalLikes = userLikesDao.countByVideoIdAndLikeStatus(videoId, true);
+		int totalDislikes = userLikesDao.countByVideoIdAndLikeStatus(videoId, false);
+		likeButton = "Like " + totalLikes;
+		dislikeButton = "Dislike " + totalDislikes;
+		
 	}
+		UserLikesController.Helper helper = new Helper(dislikeButton, likeButton);
+		return helper;
 
-	@RequestMapping(value = "/video/dislike", method = POST)
-	public @ResponseBody List<UserLikes> getDisLikes(@RequestParam("username") String username,
-			@RequestParam("videoId") int videoId) {
-
-		User user = userDao.findByUsername(username);
-
-		Video video = videoDao.findOne(videoId);
-		UserLikes userlikes = new UserLikes(new UserLikesId(user.getId(), videoId), user, video, false);
-		userLikesDao.saveAndFlush(userlikes);
-
-		System.out.println(video.getUserLikes().size());
-
-		return video.getUserLikes();
 	}
 
 }

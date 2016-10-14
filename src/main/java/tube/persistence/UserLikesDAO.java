@@ -9,8 +9,7 @@ public interface UserLikesDAO extends JpaRepository<UserLikes, Integer>{
 	
 	int countByVideoIdAndLikeStatus(int videoId, boolean likeStatus);
 	
-	@Query(value = "Delete from user_likes where user_id = ?1 AND video_id = ?2 AND likeStatus = ?3", nativeQuery = true )
-	void deleteLike(int userId, int videoId, boolean isLiked); 
 	
-
+	@Query(value = "SELECT count(user_id) FROM youtubeDB.user_likes where user_id = ?1 AND video_id = ?2 And likeStatus = ?3", nativeQuery = true)
+	int getUserLikes(int userId, int videoId, boolean isLiked);
 }
