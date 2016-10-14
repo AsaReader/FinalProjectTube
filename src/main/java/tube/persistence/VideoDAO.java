@@ -27,7 +27,6 @@ public interface VideoDAO extends JpaRepository<Video, Integer> {
 			+ "OR t.name LIKE ?1% ", nativeQuery = true)
 	List<Video> getVideosByInput(String description);
 	
-	@Cacheable(value = "videoCache")
 	@Query(value = "SELECT v.* FROM videos v ORDER BY v.views DESC LIMIT 10", nativeQuery = true)
 	List<Video> getMostWatchedVideos();
 	
