@@ -11,23 +11,16 @@
 		<c:forEach items="${videos}" var="video">
 			<div class="grid">
 				<div class="preview">
-					<a href="${pageContext.request.contextPath}/video/${video.id}"><img src="images/album.jpg" alt=""></a>
-					<div class="data">
-						<h3>
-							<a href="${pageContext.request.contextPath}/video/${video.id}"><c:out value="${video.title}"></c:out></a> 
-							<a href="${pageContext.request.contextPath}/video/${video.id}"><c:out value="${video.fileName}"></c:out></a>
-						</h3>
-					</div>
+					<a href="${pageContext.request.contextPath}/video/${video.id}">
+						<video width="150" height="90">
+							<source src=<c:url value="${video.fileName}"/> type="video/mp4">
+						</video><c:out value="${video.title}"></c:out>
+					</a> <br />
 				</div>
 			</div>
-			
 		</c:forEach>
 		<div class="clearFloat"></div>
 	</div>
-	<div class="more">
-		<a href="#">More</a>
-	</div>
-	
 </div>
 
 <c:import url="/includes/footer.jsp" />

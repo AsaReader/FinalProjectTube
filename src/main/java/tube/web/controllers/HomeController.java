@@ -29,10 +29,7 @@ public class HomeController {
 	public String home(Model model) {	
 		List<Video> videosMostWatched = new ArrayList<Video>();
 //		videosMostWatched.sort((v3, v4) -> v4.getViews() - v3.getViews());
-		videosMostWatched = videoDao.getMostWatchedVideos();
-		for (Video video : videosMostWatched) {
-			System.out.println(video.getId() + " " + video.getTitle());
-		}		
+		videosMostWatched = videoDao.getMostWatchedVideos();		
 		model.addAttribute("videosMostWatched", videosMostWatched);
 		
 		List<Video> videosAll = videoDao.findAll();

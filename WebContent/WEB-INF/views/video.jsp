@@ -39,7 +39,56 @@
 <input type="submit" value="<c:out value="${likesHelper.dislikeButton}"/>" class="margin_left">
 </sf:form>
 </sec:authorize>
+
+
+	<textarea id="commentId" rows="2" cols="30" placeholder="Comment..."></textarea>
+	<input type="submit" placeholder="Comment" id="submit"
+		onclick="uploadComment(${video.id})" class="btn btn-primary btn-sm" />
+
+<datalist id="comments">
+</datalist>
+
 <script type="text/javascript">
+
+function uploadComment(videoId){
+	var comment = $("#commentId").val();
+	console.log(comment);
+	console.log(videoId);
+	
+		$.ajax({
+		
+		url: "./comment",
+		type:"POST",
+
+		data:{
+			videoId: videoId,
+			comment: comment,
+		},
+		success: function(data){
+			$("#comments").empty();
+			
+			for (index in data) {
+				var object = data[index];
+				
+				
+				var username = document.createElement('a');
+				var newLine = document.createElement("h1");
+				var linkText = document.createTextNode(username);
+				username.appendChild(linkText);
+				username.appendChild(newLine);
+				username.href = "/user/"+ username;
+				$("comments").append(username);
+				
+				var text = document.createElement("p");
+				name.innerHTML = object.text;
+				$("comments").append(text);
+			}
+		}
+		
+		});
+		
+		
+}
 
 
 
@@ -108,12 +157,16 @@ function getDisLikes(videoId, likeId){
 	});
 	
 }
+	function loadComments(videoId ){
+
+		
+	}
+
 </script>
 
+	
 <button class="dislike-button"
-	onclick="getPlaylists()">Add to playlist</button>
-	
-	
+	onclick="getPlaylists()">Add to playlist</button>	
 <button class="dislike-button" id="addToPlaylist"
 	onclick="addToPlaylist(${1}, ${video.id})">Add to MyPlaylist</button>
 	
@@ -156,8 +209,6 @@ function getDisLikes(videoId, likeId){
 		}
 		
 	</script>
-
-
 
 
 
