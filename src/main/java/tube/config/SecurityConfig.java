@@ -47,6 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/upload").authenticated()
 				.antMatchers("/user/login", "/user/register").anonymous()
 				.antMatchers("/user/me").authenticated()
+				.antMatchers("/videoDelete").authenticated()
 				.anyRequest().permitAll()
 			.and()
 			.exceptionHandling()

@@ -36,9 +36,15 @@ public interface VideoDAO extends JpaRepository<Video, Integer> {
 	@Query(value = "SELECT v.* FROM videos v ORDER BY v.id DESC LIMIT 9", nativeQuery = true)
 	List<Video> getLastVideos();
 	
+	@Query(value = "SELECT * FROM videos v WHERE v.id = ?", nativeQuery = true)
+	Video getByID(int videoId);
+	
 	@Override
-	@Cacheable(value = "videoCache")
 	Video findOne(Integer videoId);
+	
+	@Override
+	@CacheEvict(value = "videoCache", key = "#result.id")
+	void delete(Integer arg0);
 
 	@Override
 	@CacheEvict(value = "videoCache", key = "#result.id")
@@ -47,6 +53,9 @@ public interface VideoDAO extends JpaRepository<Video, Integer> {
 	@Override
 	@CacheEvict(value = "videoCache", key = "#result.id")
 	<S extends Video> S saveAndFlush(S video);
+	
+	@Query(value = "UPDATE videos v SET v.views = ?1 WHERE v.id = ?2", nativeQuery = true)
+	void updateViewCount(Integer views, int videoId);
 
 	List<Video> findByUserUsername(String username);
 

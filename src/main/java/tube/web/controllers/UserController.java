@@ -93,7 +93,6 @@ public class UserController {
 
 	@RequestMapping(value = "/me", method = GET)
 	public String getMyProfile(Principal principal, Model model) {
-		User meUser = userDao.findByUsername(principal.getName());
 		return "forward:/user/" + principal.getName();
 	}
 
