@@ -6,7 +6,7 @@
 <c:import url="/includes/header.jsp" />
 <c:import url="/includes/sidebar.jsp"/>
 	<h1><c:out value="${user.username}'s playlists"/></h1>
-	<c:forEach var="playlist" items="${user.playlists}">
+	<c:forEach var="playlist" items="${playlists}">
 		<a href="${pageContext.request.contextPath}/playlist/${playlist.id}"><c:out value="${playlist.name}"/></a><br>
 	</c:forEach>
 <c:import url="/includes/footer.jsp" />>

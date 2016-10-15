@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import tube.entities.Playlist;
+import tube.entities.User;
 import tube.entities.Video;
 import tube.persistence.PlaylistDAO;
 import tube.persistence.UserDAO;
@@ -47,11 +48,13 @@ public class PlaylistController {
 	@RequestMapping(value = "/playlists/{username}", method = GET)
 	public String getPlaylists(@PathVariable(value="username") String username, Model model) {
 		System.out.println(username);
-		List<Playlist> playlists = userDao.findByUsername(username).getPlaylists();
+		User user = userDao.findByUsername(username);
+		List<Playlist> playlists = playlistDao.findByUserId(user.getId());
 		for (Playlist playlist : playlists) {
 			System.out.println(playlist.getName());			
 		}
-		model.addAttribute("user", userDao.findByUsername(username));
+		model.addAttribute("user", user);
+		model.addAttribute("playlists", playlists);
 		return "userPlaylists";
 	}
 	
