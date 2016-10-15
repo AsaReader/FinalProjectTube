@@ -5,15 +5,20 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import java.security.Principal;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.google.common.base.Throwables;
+
 import tube.entities.User;
 import tube.entities.UserLikes;
 import tube.entities.UserLikesId;
 import tube.entities.Video;
+import tube.mail.MailMail;
 import tube.persistence.UserDAO;
 import tube.persistence.UserLikesDAO;
 import tube.persistence.VideoDAO;
@@ -21,6 +26,9 @@ import tube.web.controllers.UserLikesController.Helper;
 
 @Controller
 public class VideoController {
+	
+	private ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Mail.xml");
+	MailMail mm = (MailMail) context.getBean("mailMail");
 	
 	@Autowired
 	private VideoDAO videoDao;
@@ -33,6 +41,7 @@ public class VideoController {
 	
 	@RequestMapping(value = "/video/{videoId}", method = GET)
 	public String playVideo(Model model ,Principal principal, @PathVariable("videoId") int videoId ){
+		try{
 		Video video = videoDao.findOne(videoId);
 		Integer currentViews = video.getViews();
 		video.setViews(currentViews == null ? 1 : ++currentViews);
@@ -89,6 +98,13 @@ public class VideoController {
 		model.addAttribute("likesHelper", helper);
 		return "video";
 		
+	} catch (Exception e) {
+		
+		mm.sendMail("youplayittalents@gmail.com", "hristo.angelov89@gmail.com", "Catch an Exception",
+				Throwables.getStackTraceAsString(e));
+
+		return "redirect:/";
+	}
 	}
 
 	

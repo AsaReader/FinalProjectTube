@@ -15,6 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.FileCopyUtils;
@@ -25,9 +27,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.google.common.base.Throwables;
+
 import tube.entities.Tag;
 import tube.entities.User;
 import tube.entities.Video;
+import tube.mail.MailMail;
 import tube.model.FileBucket;
 import tube.model.FileValidator;
 import tube.model.MultiFileBucket;
@@ -40,11 +45,14 @@ import tube.persistence.VideoDAO;
 public class FileUploadController {
 	private static final int MAX_SIZE_FOR_UPLOAD = 524288000;
 	private static final String VIDEO_MP4 = "video/mp4";
-//	private static final String UPLOAD_LOCATION = "C:\\Users\\John Lemon\\Documents\\workspace-sts-3.8.2.RELEASE\\FinalProjectTube\\WebContent\\";
+	// private static final String UPLOAD_LOCATION = "C:\\Users\\John
+	// Lemon\\Documents\\workspace-sts-3.8.2.RELEASE\\FinalProjectTube\\WebContent\\";
 	private VideoDAO videoDao;
 	private TagDAO tagDao;
 	// private ApplicationContext context = new
 	// ClassPathXmlApplicationContext("Beans.xml");
+	private ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Mail.xml");
+	MailMail mm = (MailMail) context.getBean("mailMail");
 
 	@Autowired
 	public FileUploadController(VideoDAO videoDao, TagDAO tagDao) {
@@ -86,86 +94,96 @@ public class FileUploadController {
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
 	public String singleFileUpload(@Valid FileBucket fileBucket, BindingResult result, ModelMap model,
 			HttpServletRequest request, Principal principal) throws IOException {
+		try {
+			User loggedUser = userDAO.findByUsername(principal.getName());
 
-		User loggedUser = userDAO.findByUsername(principal.getName());
-		
-		String title = request.getParameter("title");
-		String descr = request.getParameter("descr");
-		String tags = request.getParameter("tags");
+						
+			String title = request.getParameter("title");
+			String descr = request.getParameter("descr");
+			String tags = request.getParameter("tags");
 
-		if (result.hasErrors()) {
-			System.out.println("validation errors");
-			return "singleFileUploader";
-		}
-
-		System.out.println("Fetching file");
-		MultipartFile multipartFile = fileBucket.getFile();
-		String fileName = loggedUser.getUsername() + LocalDateTime.now().toString().replace(":", "-") + ".mp4";
-
-		// TODO error message for wrong type and over size file
-		String ext = fileBucket.getFile().getContentType();
-		if (!VIDEO_MP4.equals(ext) || fileBucket.getFile().getSize() > MAX_SIZE_FOR_UPLOAD) {
-			return "singleFileUploader";
-		}
-
-		// Please dont use it for now!!!!!!!!!!
-		// String url = null;
-		// try {
-		// url = S3JavaSDK.uploadFileToS3AWS(fileName, multipartFile);
-		// } catch (Exception e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-
-		// copy file to computer
-		String folderPath= request.getServletContext().getRealPath("/");
-		FileCopyUtils.copy(fileBucket.getFile().getBytes(), new File (folderPath + fileName));
-
-		// Copy file to AWS - S3
-		// String fileName = multipartFile.getOriginalFilename();
-
-		title = title.trim();
-		descr = descr.trim();
-		tags = tags.trim();
-		if (title.isEmpty() || title == null) {
-			title = loggedUser.getUsername() + " " + LocalDateTime.now().toString();
-		}
-		if (descr == null) {
-			descr = "";
-		}
-		if (tags == null) {
-			descr = "";
-		}
-
-		// add video Tags
-		List<String> tagsList = Arrays.asList(tags.split(","));
-		Set<Tag> tagSet = new HashSet<Tag>();
-
-		for (String tagStr : tagsList) {
-			if (!tagStr.trim().isEmpty()) {
-				Tag tag = new Tag(tagStr.trim());
-				try {
-					tag = tagDao.save(tag);
-				} catch (Exception e) {
-					tag = tagDao.findByName(tagStr.trim());
-				}
-				tagSet.add(tag);
+			if (result.hasErrors()) {
+				System.out.println("validation errors");
+				return "singleFileUploader";
 			}
+
+			System.out.println("Fetching file");
+			MultipartFile multipartFile = fileBucket.getFile();
+			String fileName = loggedUser.getUsername() + LocalDateTime.now().toString().replace(":", "-") + ".mp4";
+
+			// TODO error message for wrong type and over size file
+			String ext = fileBucket.getFile().getContentType();
+			if (!VIDEO_MP4.equals(ext) || fileBucket.getFile().getSize() > MAX_SIZE_FOR_UPLOAD) {
+				return "singleFileUploader";
+			}
+
+			// Please dont use it for now!!!!!!!!!!
+			// String url = null;
+			// try {
+			// url = S3JavaSDK.uploadFileToS3AWS(fileName, multipartFile);
+			// } catch (Exception e) {
+			// // TODO Auto-generated catch block
+			// e.printStackTrace();
+			// }
+
+			// copy file to computer
+			String folderPath = request.getServletContext().getRealPath("/");
+			FileCopyUtils.copy(fileBucket.getFile().getBytes(), new File(folderPath + fileName));
+
+			// Copy file to AWS - S3
+			// String fileName = multipartFile.getOriginalFilename();
+
+			title = title.trim();
+			descr = descr.trim();
+			tags = tags.trim();
+			if (title.isEmpty() || title == null) {
+				title = loggedUser.getUsername() + " " + LocalDateTime.now().toString();
+			}
+			if (descr == null) {
+				descr = "";
+			}
+			if (tags == null) {
+				descr = "";
+			}
+
+			// add video Tags
+			List<String> tagsList = Arrays.asList(tags.split(","));
+			Set<Tag> tagSet = new HashSet<Tag>();
+
+			for (String tagStr : tagsList) {
+				if (!tagStr.trim().isEmpty()) {
+					Tag tag = new Tag(tagStr.trim());
+					try {
+						tag = tagDao.save(tag);
+					} catch (Exception e) {
+						tag = tagDao.findByName(tagStr.trim());
+					}
+					tagSet.add(tag);
+				}
+			}
+
+			int userID = loggedUser.getId();
+			// using copy to PC
+			Video video = new Video(userDAO.findOne(userID), LocalDate.now(), descr, fileName, title);
+			video.setTags(tagSet);
+			// using copy to AWS - S3
+			// Video video = new Video(descr, url, title, userID);
+
+			video = videoDao.saveAndFlush(video);
+			// int id = videoJDBCTemplate.addVideo(video);
+			// video.setId(id);
+
+			model.addAttribute("fileName", fileName);
+			return "success";
+		} catch (Exception e) {
+			
+			mm.sendMail("youplayittalents@gmail.com",
+			 		   "hristo.angelov89@gmail.com",
+			 		   "Catch an Exception",
+			  		  Throwables.getStackTraceAsString(e));
+
+			return "redirect:/";
 		}
-
-		int userID = loggedUser.getId();
-		// using copy to PC
-		Video video = new Video(userDAO.findOne(userID), LocalDate.now(), descr, fileName, title);
-		video.setTags(tagSet);
-		// using copy to AWS - S3
-		// Video video = new Video(descr, url, title, userID);
-
-		video = videoDao.saveAndFlush(video);
-		// int id = videoJDBCTemplate.addVideo(video);
-		// video.setId(id);
-
-		model.addAttribute("fileName", fileName);
-		return "success";
 	}
 
 	@RequestMapping(value = "/multiUpload", method = RequestMethod.GET)
@@ -176,8 +194,8 @@ public class FileUploadController {
 	}
 
 	@RequestMapping(value = "/multiUpload", method = RequestMethod.POST)
-	public String multiFileUpload(@Valid MultiFileBucket multiFileBucket, BindingResult result, ModelMap model, HttpServletRequest request)
-			throws IOException {
+	public String multiFileUpload(@Valid MultiFileBucket multiFileBucket, BindingResult result, ModelMap model,
+			HttpServletRequest request) throws IOException {
 
 		if (result.hasErrors()) {
 			System.out.println("validation errors in multi upload");
@@ -185,11 +203,11 @@ public class FileUploadController {
 		} else {
 			System.out.println("Fetching files");
 			List<String> fileNames = new ArrayList<String>();
-			String folderPath= request.getServletContext().getRealPath("/");
+			String folderPath = request.getServletContext().getRealPath("/");
 			// Now do something with file...
 			for (FileBucket bucket : multiFileBucket.getFiles()) {
 				FileCopyUtils.copy(bucket.getFile().getBytes(),
-						new File (folderPath + bucket.getFile().getOriginalFilename()));
+						new File(folderPath + bucket.getFile().getOriginalFilename()));
 				fileNames.add(bucket.getFile().getOriginalFilename());
 			}
 
