@@ -18,7 +18,8 @@
 <br />
 <c:out value="TITLE: ${video.title}" />
 <br />
-<c:out value="POSTED BY: ${video.user.username}" />
+<c:out value="POSTED BY: " />
+<a href="../user/${video.user.username}"><c:out value="${video.user.username}" /></a>
 <br />
 <c:out value="DESCRIPTION: ${video.description}" />
 <br />
@@ -267,6 +268,13 @@ function getDisLikes(videoId, likeId){
 					$("#addToPlaylist").append(data);
 				}
 			});
+		}
+		
+		function showProfile(username){
+			
+			
+
+
 		}
 		
 	</script>
