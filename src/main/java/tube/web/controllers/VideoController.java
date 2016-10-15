@@ -101,7 +101,7 @@ public class VideoController {
 
 		} catch (Exception e) {
 
-			mm.sendMail("youplayittalents@gmail.com", "hristo.angelov89@gmail.com", "Catch an Exception",
+			mm.sendMail("youplayittalents@gmail.com", MailMail.EMAIL_RECEPIENT, "Catch an Exception",
 					Throwables.getStackTraceAsString(e));
 
 			return "redirect:/";
@@ -118,7 +118,7 @@ public class VideoController {
 			resp.setStatus(200);
 			}
 		} catch (Exception e) {
-			mm.sendMail("youplayittalents@gmail.com", "hristo.angelov89@gmail.com", "Catch an Exception",
+			mm.sendMail("youplayittalents@gmail.com", MailMail.EMAIL_RECEPIENT, "Catch an Exception",
 					Throwables.getStackTraceAsString(e));
 		}
 	}

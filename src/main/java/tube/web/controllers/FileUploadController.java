@@ -178,7 +178,7 @@ public class FileUploadController {
 		} catch (Exception e) {
 			
 			mm.sendMail("youplayittalents@gmail.com",
-			 		   "hristo.angelov89@gmail.com",
+					MailMail.EMAIL_RECEPIENT,
 			 		   "Catch an Exception",
 			  		  Throwables.getStackTraceAsString(e));
 
