@@ -56,10 +56,17 @@
 	<div class="grids">
 		<br />
 		<h1>
-			<c:out value="${user.username}'s profile" /> 
-			<c:if test="${user.username ne loggedInUser}">
-				<button class="dislike-button" id="subscribe" onclick="subscribe('${user.username}')"><c:out value="${subscribeButton}"/></button>
-			</c:if>
+			<c:out value="${user.username}'s profile" />
+			<sec:authorize access="isAuthenticated()"><br>
+				<c:if test="${user.username ne loggedInUser}">
+					<button class="dislike-button" id="subscribe" onclick="subscribe('${user.username}')"><c:out value="${subscribeButton}"/></button>
+				</c:if>
+			</sec:authorize>
+			<sec:authorize access="isAnonymous()">
+				<sf:form method="post" action="${pageContext.request.contextPath}/subscribe">
+					<input type="submit" class="dislike-button" value="<c:out value="${subscribeButton}"/>"/>
+				</sf:form>
+			</sec:authorize>
 		</h1>
 
 			<div class="grids">
