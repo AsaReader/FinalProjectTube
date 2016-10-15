@@ -74,6 +74,7 @@ public class Video implements java.io.Serializable {
 		this.fileName = fileName;
 		this.title = title;
 		this.user = user;
+		this.date = LocalDate.now();
 	}
 
 	public Video(String description, String fileName, String title, User user, Set<Tag> tags) {
@@ -82,6 +83,7 @@ public class Video implements java.io.Serializable {
 		this.title = title;
 		this.user = user;
 		this.tags = tags;
+		this.date = LocalDate.now();
 	}
 	
 	public Video(User user, LocalDate date, String description, String fileName, String title) {

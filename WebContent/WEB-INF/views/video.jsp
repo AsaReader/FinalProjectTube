@@ -13,11 +13,8 @@
 
 
 <video width="854" height="480" controls>
-	<source src=<c:url value="../${video.fileName}"/> type="video/mp4">
+	<source src=<c:url value="${video.fileName}"/> type="video/mp4">
 </video>
-<br />
-<c:out value="${video.fileName}" />
-<br>
 <c:out value="TITLE: ${video.title}" />
 <br />
 <c:out value="POSTED BY: ${video.user.username}" />

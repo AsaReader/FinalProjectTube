@@ -46,8 +46,11 @@ public class S3JavaSDK {
 //			PutObjectRequest putRequest1 = new PutObjectRequest(BUCKET_NAME, fileName, file);
 //			PutObjectResult response1 = s3Client.putObject(putRequest1);
 //			System.out.println("Uploaded object encryption status is " + response1.getSSEAlgorithm());
-
-		return s3Object.getObjectContent().getHttpRequest().getURI().toString();
+		
+		String url = s3Object.getObjectContent().getHttpRequest().getURI().toString();
+		url = url.replace("https", "http");
+		
+		return url;
 	}
 
 	public static void serverSideEncryption() throws Exception {
