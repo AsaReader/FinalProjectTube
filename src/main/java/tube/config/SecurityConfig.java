@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 
 import tube.security.TubeUserService;
 
@@ -48,6 +49,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/user/me").authenticated()
 				.anyRequest().permitAll()
 			.and()
+			.exceptionHandling()
+				.accessDeniedPage("/403")
+			.and()
 			.rememberMe()
 				.tokenValiditySeconds(FOUR_WEEKS);
 	}
@@ -67,4 +71,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			return new BCryptPasswordEncoder();
 		}
 	}
+	
 }
