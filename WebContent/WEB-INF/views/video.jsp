@@ -11,10 +11,11 @@
 <c:import url="/includes/sidebar.jsp" />
 <body onload="uploadComment(${video.id})" />
 
-
+<div class="upload" >
 <video width="854" height="480" controls>
 	<source src=<c:url value="${video.fileName}"/> type="video/mp4">
 </video>
+<br />
 <c:out value="TITLE: ${video.title}" />
 <br />
 <c:out value="POSTED BY: ${video.user.username}" />
@@ -26,9 +27,11 @@
 <c:out value="VIEWS: ${video.views}" />
 <br />
 <c:out value="TAGS:" />
+</div>
 
 <div class="content">
 	<div class="grids">
+
 		<sec:authorize access="isAuthenticated()">
 			<p>
 				<button class="dislike-button" id="likeIt"
