@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -158,7 +159,7 @@ public class Video implements java.io.Serializable {
 		this.views = views;
 	}
 
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@JsonIgnore
 	@JoinTable(name = "playlist_videos", catalog = "youtubeDB", joinColumns = {
 			@JoinColumn(name = "video_id", nullable = false, updatable = false) }, inverseJoinColumns = {
@@ -172,7 +173,7 @@ public class Video implements java.io.Serializable {
 	}
 
 	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "video")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "video", cascade = CascadeType.REMOVE)
 	public Set<Comment> getComments() {
 		return this.comments;
 	}
@@ -182,7 +183,7 @@ public class Video implements java.io.Serializable {
 	}
 	
 	@JsonIgnore
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@JoinTable(name = "video_has_tags", catalog = "youtubeDB", joinColumns = {
 			@JoinColumn(name = "video_id", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "tags_id", nullable = false, updatable = false) })
@@ -195,7 +196,7 @@ public class Video implements java.io.Serializable {
 	}
 
 	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "video")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "video", cascade = CascadeType.REMOVE)
 	public List<UserLikes> getUserLikes() {
 		return this.userLikes;
 	}

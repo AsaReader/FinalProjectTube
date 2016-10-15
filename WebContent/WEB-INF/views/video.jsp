@@ -9,6 +9,7 @@
 
 <c:import url="/includes/header.jsp" />
 <c:import url="/includes/sidebar.jsp" />
+<body onload="uploadComment(${video.id})" />
 
 <video width="854" height="480" controls>
 	<source src=<c:url value="../${video.fileName}"/> type="video/mp4">
@@ -58,18 +59,30 @@
 <input type="submit" placeholder="Comment" id="submit"
 	onclick="uploadComment(${video.id})" class="btn btn-primary btn-sm" />
 
-<datalist id="comments">
-</datalist>
+
+<sec:authorize access="isAuthenticated()">
+	<button class="dislike-button" onclick="getPlaylists()">Add to
+		playlist</button>
+	<button class="dislike-button" id="addToPlaylist"
+		onclick="addToPlaylist(${1}, ${video.id})">Add to MyPlaylist</button>
+</sec:authorize>
+
+<div class="grid" id="comments"></div>
+
 
 <script type="text/javascript">
 
-function uploadComment(videoId){
+function uploadComment(videoId, userId){
+	
 	var comment = $("#commentId").val();
+	var size = comment.length;
+	
 	console.log(comment);
 	console.log(videoId);
+	console.log(userId);
+
+	$.ajax({
 	
-		$.ajax({
-		
 		url: "./comment",
 		type:"POST",
 
@@ -77,30 +90,63 @@ function uploadComment(videoId){
 			videoId: videoId,
 			comment: comment,
 		},
-		success: function(data){
+		success: function(data, userId){
 			$("#comments").empty();
-			
+			console.log(data);
+			console.log(userId);
 			for (index in data) {
 				var object = data[index];
-				
-				
+				var container = document.createElement("div");
+				container.id = object.id;
 				var username = document.createElement('a');
 				var newLine = document.createElement("h1");
 				var linkText = document.createTextNode(username);
 				username.appendChild(linkText);
 				username.appendChild(newLine);
-				username.href = "/user/"+ username;
-				$("comments").append(username);
-				
+				username.title = name;
+				username.href = "index.html";
+				username.innerHTML = object.username;
+				username.appendChild(document.createElement("h1"));
+				container.appendChild(username);
 				var text = document.createElement("p");
-				name.innerHTML = object.text;
-				$("comments").append(text);
+				text.innerHTML = object.text;
+				var size = text.length;
+				container.appendChild(text);
+				var commentUserId = object.commentUserId;
+				var currentUserId = object.currentUserId;
+				console.log(currentUserId);
+				var videoUserId = object.videoUserId;
+				console.log(videoUserId);
+				var x = document.createElement("input");
+				var commentId = object.commentId;
+				if(commentUserId == currentUserId || currentUserId == videoUserId){
+					x.type = "submit";
+					x.value = "delete";
+					x.onclick = function(event) {
+						var id = event.target.parentNode.id;
+						console.log(id);
+						$.ajax({
+						    url: './delete',
+						    
+						    data:{
+						    	id:id,
+						    },
+						    		 
+						    type: 'POST',
+						    success: function(result) {
+						    	document.getElementById(event.target.parentNode.id).remove();
+						    }
+						});
+					};
+					container.appendChild(x);
+				}
+				
+				container.appendChild(document.createElement("hr"));
+				$("#comments").append(container);
+				console.log(object);
 			}
 		}
-		
-		});
-		
-		
+	});
 }
 
 
@@ -172,16 +218,6 @@ function getDisLikes(videoId, likeId){
 		
 	}
 
-</script>
-
-<sec:authorize access="isAuthenticated()">
-	<button class="dislike-button" onclick="getPlaylists()">Add to
-		playlist</button>
-	<button class="dislike-button" id="addToPlaylist"
-		onclick="addToPlaylist(${1}, ${video.id})">Add to MyPlaylist</button>
-</sec:authorize>
-
-<script type="text/javascript">
 		function getPlaylists(videoId) {
 		
 			$.ajax({

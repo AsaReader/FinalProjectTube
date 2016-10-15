@@ -18,6 +18,7 @@ public interface UserDAO extends JpaRepository<User, Integer> {
 	@Override
 	User findOne(Integer userId);
 	
+	
 	@Override
 	@CacheEvict(value = "userCache", key = "#result.username")
 	<S extends User> S saveAndFlush(S user);
@@ -25,6 +26,9 @@ public interface UserDAO extends JpaRepository<User, Integer> {
 	@Override
 	@CacheEvict(value = "userCache", key = "#result.username", allEntries = true)
 	<S extends User> S save(S arg0);
+	
+	@Query(value = "SELECT * FROM videos v JOIN users u ON (v.user_id = u.id) WHERE v.id = ?1 ", nativeQuery = true)
+	User getUserByVideoId(int videoId);
 	
 	int countByUsername(String username);
 
