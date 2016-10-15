@@ -33,7 +33,7 @@
 	function deleteVideo(id){
 		var x = document.getElementById(id);
 		console.log(id , x.getAttribute('id'));
-		
+		alert(x.getAttribute('id'));
 		$.ajax({
 			type: 'POST',
 		    url: '../videoDelete',
@@ -74,8 +74,9 @@
 						<c:forEach items="${videos}" var="video">
 							<div class="grid">
 								<div class="preview">
-								<a href="#" onclick="deleteVideo(${videoM.id});return false;"
-								id="${videoM.id}">Delete</a>
+								<c:if test="${user.username eq loggedInUser}">
+								<a href="#" onclick="deleteVideo(${video.id});return false;"
+								id="${video.id}">Delete</a></c:if>
 									<a class="preview-title" href="${pageContext.request.contextPath}/video/${video.id}">
 										<video width="150" height="90">
 											<source src=<c:url value="${video.fileName}"/>

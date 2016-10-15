@@ -36,9 +36,6 @@ public interface VideoDAO extends JpaRepository<Video, Integer> {
 	@Query(value = "SELECT v.* FROM videos v ORDER BY v.id DESC LIMIT 9", nativeQuery = true)
 	List<Video> getLastVideos();
 	
-	@Query(value = "SELECT * FROM videos v WHERE v.id = ?", nativeQuery = true)
-	Video getByID(int videoId);
-	
 	@Override
 	Video findOne(Integer videoId);
 	

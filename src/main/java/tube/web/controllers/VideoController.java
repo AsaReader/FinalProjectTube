@@ -112,9 +112,11 @@ public class VideoController {
 	protected void doDelete(@RequestParam("videoId") int videoId, Principal principal, HttpServletResponse resp)
 			throws ServletException, IOException {
 		try {
-			Video video = videoDao.getByID(videoId);
+			Video video = videoDao.findOne(videoId);
+			if (principal !=null && video.getUser().equals(userDao.findByUsername(principal.getName()))) {
 			videoDao.delete(video);
 			resp.setStatus(200);
+			}
 		} catch (Exception e) {
 			mm.sendMail("youplayittalents@gmail.com", "hristo.angelov89@gmail.com", "Catch an Exception",
 					Throwables.getStackTraceAsString(e));
