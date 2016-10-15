@@ -28,6 +28,27 @@
 			}
 		});
 	}
+	
+	function deleteVideo(id){
+		var x = document.getElementById(id);
+		console.log(id , x.getAttribute('id'));
+		
+		$.ajax({
+			type: 'POST',
+		    url: '../videoDelete',
+		   
+		    data:{
+		    	videoId : id,
+		    },
+		    success: function(){
+				console.log("hi");
+				location.reload();
+			}
+
+		}).done(function(){
+			console.log("check");
+		});
+	}
 </script>
 
 <div class="content">
@@ -53,6 +74,8 @@
 				<c:forEach items="${myVideos}" var="videoM">
 					<div class="grid">
 						<div class="preview">
+						<a href="#" onclick="deleteVideo(${videoM.id});return false;"
+								id="${videoM.id}">Delete</a>
 							<a href="${pageContext.request.contextPath}/video/${videoM.id}">
 								<video width="150" height="90">
 									<source src=<c:url value="${videoM.fileName}"/>
