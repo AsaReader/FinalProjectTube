@@ -40,11 +40,8 @@ label span input {
 		var input = document.getElementById('file');
 		var file = input.files[0].size / 1048576;
 		if (file > 0 && file <= 500) {
-			alert("File size is OK!");
 			document.getElementById("submit").disabled = false;
 		} else {
-			alert("File " + input.name + " is over size. " + Math.ceil(file)
-					+ " MB.");
 			bodyAppend("p",
 					"File  is over size!!! Max size 500MB. Please change the file.");
 			document.getElementById("submit").disabled = true;

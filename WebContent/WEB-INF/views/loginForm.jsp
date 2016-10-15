@@ -17,7 +17,7 @@
 					<div class="search-box">
 						<input type="text" name="username" placeholder="Username..." /> <br />
 						<br /> <input type="password" name="password"
-							placeholder="Password ..." /><br /> <br />
+							placeholder="Password..." /><br /> <br />
 					</div>
 				</div>
 				<br /> <br />

@@ -28,9 +28,10 @@
 <c:out value="TAGS:" />
 
 <sec:authorize access="isAuthenticated()">
+<p>
 <button class="dislike-button" id="likeIt" onclick="getLikes(${video.id}, ${1})" ><c:out value="${likesHelper.likeButton}"/></button>
-
 <button class="dislike-button" id="dislikeIt" onclick="getDisLikes(${video.id} , ${2})"><c:out value="${likesHelper.dislikeButton}"/></button>
+</p>
 </sec:authorize>	
 
 <sec:authorize access="isAnonymous()">
@@ -164,11 +165,12 @@ function getDisLikes(videoId, likeId){
 
 </script>
 
-	
+<sec:authorize access="isAuthorized()">	
 <button class="dislike-button"
 	onclick="getPlaylists()">Add to playlist</button>	
 <button class="dislike-button" id="addToPlaylist"
 	onclick="addToPlaylist(${1}, ${video.id})">Add to MyPlaylist</button>
+</sec:authorize>
 	
 	<script type="text/javascript">
 		function getPlaylists(videoId) {
