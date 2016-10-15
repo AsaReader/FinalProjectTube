@@ -102,7 +102,7 @@ public class UserController {
 	@RequestMapping(value = "/me", method = GET)
 	public String getMyProfile(Principal principal, Model model) {
 		User meUser = userDao.findByUsername(principal.getName());
-		List<Video> myVideos = meUser.getVideos();
+		List<Video> myVideos = videoDAO.getVideosByUser(meUser.getId());
 		myVideos.sort((v1, v2) -> v2.getId() - v1.getId());
 		model.addAttribute("myVideos", myVideos);
 		return "forward:/user/" + principal.getName();
