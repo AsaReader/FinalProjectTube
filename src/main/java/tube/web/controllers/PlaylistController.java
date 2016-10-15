@@ -60,7 +60,7 @@ public class PlaylistController {
 		Playlist playlist = playlistDao.findOne(playlistId);
 		System.out.println(playlist);
 		//check if video is in playlist, returns true if present, false if absent
-		boolean addStatus = playlist.getVideos().stream().filter((video) -> video.getId() == videoId).count() > 0;
+		boolean addStatus = playlist.getVideos().stream().anyMatch((video) -> video.getId() == videoId);
 		String buttonValue = "";
 		if (addStatus) {
 			playlist.getVideos().remove(videoDao.findOne(videoId));

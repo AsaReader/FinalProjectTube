@@ -7,23 +7,48 @@
 <c:import url="/includes/header.jsp" />
 <c:import url="/includes/sidebar.jsp" />
 
+<sec:authorize access="isAuthenticated()">
+	<sec:authentication property="principal.username" var="loggedInUser" />
+</sec:authorize>
+
+<script type="text/javascript">
+	function subscribe(username) {
+		
+		$.ajax({
+			type : "POST",
+			url : "${pageContext.request.contextPath}/subscribe",
+			
+			data: {
+				username: username,
+			},
+			
+			success : function(data) {
+				$("#subscribe").empty();
+				$("#subscribe").append(data);
+			}
+		});
+	}
+</script>
+
 <div class="content">
 	<div class="grids">
 		<br />
 		<h2>
-			<c:out value="${user.username}'s profile" />
+			<c:out value="${user.username}'s profile" /> 
+			<c:if test="${user.username ne loggedInUser}">
+				<button class="dislike-button" id="subscribe" onclick="subscribe('${user.username}')"><c:out value="${subscribeButton}"/></button>
+				
+				
+				<sf:form method="post" action="${pageContext.request.contextPath}/subscribe">
+					<input type="hidden" name="username" value="${user.username}">
+					<input type="submit" value="NON ${subscribeButton}" class="margin_left">
+				</sf:form>
+			</c:if>
 		</h2>
 
-		<sec:authorize access="isAuthenticated()">
-			<sec:authentication property="principal.username" var="loggedInUser" />
-			<br />
-			<!-- <h3>
-				<c:out value="  Logged in as ${loggedInUser}" />
-			</h3>  -->
-			<br />
 			<div class="grids">
 				<h2>
-					<c:out value="My Videos" />
+					<c:out value="${user.username}'s Videos" />
 				</h2>
 				<c:forEach items="${myVideos}" var="videoM">
 					<div class="grid">
@@ -41,8 +66,17 @@
 			</div>
 			<div class="grids">
 				<h2>
-					<c:out value="My Info" />
+					<c:out value="${user.username}'s Info" />
 				</h2>
+				<h2><c:out value="SUBSCRIBERS" /></h2>
+				<c:forEach var="sub" items="${user.subscribers}">
+					<p><c:out value="${sub.username}" /></p>
+				</c:forEach>
+		
+				<h2><c:out value="SUBSCRIPTIONS" /></h2>
+				<c:forEach var="sub" items="${user.userSubscriptions}">
+					<p><c:out value="${sub.username}" /></p>
+				</c:forEach>
 				<c:if test="${loggedInUser ne user.username}">
 					<c:set var="subscribed" value="false" />
 					<c:forEach var="subscriber" items="${user.subscribers}">
@@ -59,44 +93,11 @@
 							</sf:form>
 						</c:when>
 						<c:otherwise>
-							<sf:form method="post"
-								action="${pageContext.request.contextPath}/subscribe">
-								<input type="hidden" name="username" value="${user.username}">
-								<input type="submit" value="Subscribe" class="margin_left">
-							</sf:form>
+							
 						</c:otherwise>
 					</c:choose>
 				</c:if>
 			</div>
-		</sec:authorize>
-
-		<c:out value="SUBSCRIBERS" />
-		<c:forEach var="sub" items="${user.subscribers}">
-			<c:out value="${sub.username}" />
-		</c:forEach>
-
-		<c:out value="SUBSCRIPTIONS" />
-		<c:forEach var="sub" items="${user.userSubscriptions}">
-			<c:out value="${sub.username}" />
-		</c:forEach>
-
-		<sec:authorize access="isAnonymous()">
-			<sf:form method="post"
-				action="${pageContext.request.contextPath}/subscribe">
-				<input type="hidden" name="subject" value="${user}">
-				<input type="submit" value="Subscribe" class="margin_left">
-			</sf:form>
-		</sec:authorize>
-		<h1>
-			<c:out value="${user.username}'s profile" />
-		</h1>
-
-		<c:out value="${user.username}" />
-		<br />
-		<c:out value="${user.email}" />
-		<br />
-		<c:out value="${user.id}" />
-		<br />
 	</div>
 </div>
 <c:import url="/includes/footer.jsp" />

@@ -165,7 +165,7 @@ function getDisLikes(videoId, likeId){
 
 </script>
 
-<sec:authorize access="isAuthorized()">	
+<sec:authorize access="isAuthenticated()">	
 <button class="dislike-button"
 	onclick="getPlaylists()">Add to playlist</button>	
 <button class="dislike-button" id="addToPlaylist"

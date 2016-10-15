@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import tube.entities.User;
 import tube.entities.Video;
+import tube.model.SubscribeButton;
 import tube.persistence.UserDAO;
 import tube.persistence.VideoDAO;
 import tube.validations.UserValidation;
@@ -108,8 +109,10 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/{username}", method = GET)
-	public String getProfile(@PathVariable String username, Model model) {
-		model.addAttribute("user", userDao.findByUsername(username));
+	public String getProfile(@PathVariable String username, Model model, @Autowired SubscribeButton subsButton, Principal principal) {
+		User subject = userDao.findByUsername(username);
+		model.addAttribute("user", subject);
+		model.addAttribute("subscribeButton", subsButton.getButtonType(subject, principal, userDao).getValue());
 		return "profile";
 	}
 	

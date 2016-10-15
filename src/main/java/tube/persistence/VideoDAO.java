@@ -27,25 +27,19 @@ public interface VideoDAO extends JpaRepository<Video, Integer> {
 			+ "OR t.name LIKE ?1% ", nativeQuery = true)
 	List<Video> getVideosByInput(String description);
 	
-	@Query(value = "SELECT v.* FROM videos v ORDER BY v.views DESC LIMIT 10", nativeQuery = true)
+	@Query(value = "SELECT v.* FROM videos v ORDER BY v.views DESC LIMIT 9", nativeQuery = true)
 	List<Video> getMostWatchedVideos();
 	
 	@Query(value = "Select Count(likeStatus) from user_likes where likeStatus = ?1 AND video_id = ?2 AND user_id - ?3", nativeQuery = true)
 	Integer getLikes(Boolean bool, int videoId, int userUd);
 
-	@Cacheable(value = "videoCache")
-	@Query(value = "SELECT v.* FROM videos v ORDER BY v.id DESC LIMIT 8", nativeQuery = true)
+	@Query(value = "SELECT v.* FROM videos v ORDER BY v.id DESC LIMIT 9", nativeQuery = true)
 	List<Video> getLastVideos();
-	
-
 	
 	@Override
 	@Cacheable(value = "videoCache")
 	Video findOne(Integer videoId);
 
-	
-	
-	
 	@Override
 	@CacheEvict(value = "videoCache", key = "#result.id")
 	<S extends Video> S save(S video);
@@ -53,8 +47,5 @@ public interface VideoDAO extends JpaRepository<Video, Integer> {
 	@Override
 	@CacheEvict(value = "videoCache", key = "#result.id")
 	<S extends Video> S saveAndFlush(S video);
-
-	@Query(value = "UPDATE videos v SET v.views = ?1 WHERE v.id = ?2", nativeQuery = true)
-	void updateViewCount(Integer views, int videoId);
 
 }
