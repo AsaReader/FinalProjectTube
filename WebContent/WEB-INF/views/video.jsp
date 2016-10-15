@@ -1,8 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib prefix="sec"	uri="http://www.springframework.org/security/tags"%>
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="sf" %>
+<%@ taglib prefix="sec"
+	uri="http://www.springframework.org/security/tags"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="sf"%>
 <%@ page session="false"%>
 <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
 
@@ -28,23 +29,34 @@
 <c:out value="TAGS:" />
 
 <sec:authorize access="isAuthenticated()">
-<p>
-<button class="dislike-button" id="likeIt" onclick="getLikes(${video.id}, ${1})" ><c:out value="${likesHelper.likeButton}"/></button>
-<button class="dislike-button" id="dislikeIt" onclick="getDisLikes(${video.id} , ${2})"><c:out value="${likesHelper.dislikeButton}"/></button>
-</p>
-</sec:authorize>	
+	<p>
+		<button class="dislike-button" id="likeIt"
+			onclick="getLikes(${video.id}, ${1})">
+			<c:out value="${likesHelper.likeButton}" />
+		</button>
+		<button class="dislike-button" id="dislikeIt"
+			onclick="getDisLikes(${video.id} , ${2})">
+			<c:out value="${likesHelper.dislikeButton}" />
+		</button>
+	</p>
+</sec:authorize>
 
 <sec:authorize access="isAnonymous()">
-<sf:form method="get" action="${pageContext.request.contextPath}/video/like">
-<input type="submit" value="<c:out value="${likesHelper.likeButton}"/>" class="margin_left">
-<input type="submit" value="<c:out value="${likesHelper.dislikeButton}"/>" class="margin_left">
-</sf:form>
+	<sf:form method="get"
+		action="${pageContext.request.contextPath}/video/like">
+		<input type="submit"
+			value="<c:out value="${likesHelper.likeButton}"/>"
+			class="margin_left">
+		<input type="submit"
+			value="<c:out value="${likesHelper.dislikeButton}"/>"
+			class="margin_left">
+	</sf:form>
 </sec:authorize>
 
 
-	<textarea id="commentId" rows="2" cols="30" placeholder="Comment..."></textarea>
-	<input type="submit" placeholder="Comment" id="submit"
-		onclick="uploadComment(${video.id})" class="btn btn-primary btn-sm" />
+<textarea id="commentId" rows="2" cols="30" placeholder="Comment..."></textarea>
+<input type="submit" placeholder="Comment" id="submit"
+	onclick="uploadComment(${video.id})" class="btn btn-primary btn-sm" />
 
 <datalist id="comments">
 </datalist>
@@ -129,10 +141,8 @@ function getLikes(videoId, likeId){
 function getDisLikes(videoId, likeId){
 	var like = $("#dislikeIt").val();
 	
-	
 	console.log(likeId);
 	console.log(videoId);
-	
 
 	$.ajax({
 		
@@ -159,20 +169,19 @@ function getDisLikes(videoId, likeId){
 	
 }
 	function loadComments(videoId ){
-
 		
 	}
 
 </script>
 
-<sec:authorize access="isAuthenticated()">	
-<button class="dislike-button"
-	onclick="getPlaylists()">Add to playlist</button>	
-<button class="dislike-button" id="addToPlaylist"
-	onclick="addToPlaylist(${1}, ${video.id})">Add to MyPlaylist</button>
+<sec:authorize access="isAuthenticated()">
+	<button class="dislike-button" onclick="getPlaylists()">Add to
+		playlist</button>
+	<button class="dislike-button" id="addToPlaylist"
+		onclick="addToPlaylist(${1}, ${video.id})">Add to MyPlaylist</button>
 </sec:authorize>
-	
-	<script type="text/javascript">
+
+<script type="text/javascript">
 		function getPlaylists(videoId) {
 		
 			$.ajax({

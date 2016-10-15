@@ -167,6 +167,19 @@ content
 	-webkit-box-shadow:0 0 10px #f2f2f2;
 	box-shadow:0 0 10px #f2f2f2;
 }
+.content h1{
+	font-size:22px;
+	font-weight:bold;
+	text-shadow:0 0 5px #eee;
+	letter-spacing:.5px;
+	padding:5px 0;
+	margin:10px 15px 0 15px;
+	border-bottom:1px dotted #eee;
+}
+.content h1,
+.content h1 a{
+	color:#5d5d5d;
+}
 .content h2{
 	font-size:18px;
 	font-weight:bold;
@@ -179,6 +192,14 @@ content
 .content h2,
 .content h2 a{
 	color:#5d5d5d;
+}
+.content p{
+	font-size:15px;
+	font-weight:bold;
+	text-shadow:0 0 5px #eee;
+	letter-spacing:.5px;
+	padding:1px 0;
+	margin: 5px 15px 0 25px;
 }
 .more a,
 .more span{
@@ -234,6 +255,12 @@ grid
 	padding:0 10px 0 0;
 	border-right:1px solid #eee;
 	margin-right:10px;
+}
+.preview-title{
+	font-size:12px;
+	font-weight:bold;
+	text-shadow:0 0 5px #eee;
+	letter-spacing:.5px;
 }
 .single .data-table{
 	float:left;

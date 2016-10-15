@@ -33,22 +33,14 @@ import tube.validations.UserValidation;
 @RequestMapping("/user")
 public class UserController {
 
+	@Autowired
 	private UserDAO userDao;
-	// private ApplicationContext context = new
-	// ClassPathXmlApplicationContext("Beans.xml");
-	// private UserJDBCTemplate userJDBCTemplate = (UserJDBCTemplate)
-	// context.getBean("UserJDBCTemplate");
+	
+	@Autowired
+	private VideoDAO videoDao;
 
 	public UserController() {
 	}
-
-	@Autowired
-	public UserController(UserDAO userDao) {
-		this.userDao = userDao;
-	}
-
-	@Autowired
-	VideoDAO videoDAO;
 
 	@RequestMapping(value = "/login", method = GET)
 	public String showLoginForm() {
@@ -102,15 +94,15 @@ public class UserController {
 	@RequestMapping(value = "/me", method = GET)
 	public String getMyProfile(Principal principal, Model model) {
 		User meUser = userDao.findByUsername(principal.getName());
-		List<Video> myVideos = meUser.getVideos();
-		myVideos.sort((v1, v2) -> v2.getId() - v1.getId());
-		model.addAttribute("myVideos", myVideos);
 		return "forward:/user/" + principal.getName();
 	}
 
 	@RequestMapping(value = "/{username}", method = GET)
 	public String getProfile(@PathVariable String username, Model model, @Autowired SubscribeButton subsButton, Principal principal) {
 		User subject = userDao.findByUsername(username);
+		List<Video> videos = videoDao.findByUserUsername(username);
+		videos.sort((v1, v2) -> v2.getId() - v1.getId());
+		model.addAttribute("videos", videos);
 		model.addAttribute("user", subject);
 		model.addAttribute("subscribeButton", subsButton.getButtonType(subject, principal, userDao).getValue());
 		return "profile";

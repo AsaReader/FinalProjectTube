@@ -48,4 +48,6 @@ public interface VideoDAO extends JpaRepository<Video, Integer> {
 	@CacheEvict(value = "videoCache", key = "#result.id")
 	<S extends Video> S saveAndFlush(S video);
 
+	List<Video> findByUserUsername(String username);
+
 }

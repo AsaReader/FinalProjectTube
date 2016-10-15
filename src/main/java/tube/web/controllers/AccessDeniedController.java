@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class AccessDeniedController {
 
-	@RequestMapping("/403")
+	@RequestMapping("/denied")
 	public String denyAccess(){
 		return "403";
 	}

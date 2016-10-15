@@ -50,7 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.anyRequest().permitAll()
 			.and()
 			.exceptionHandling()
-				.accessDeniedPage("/403")
+				.accessDeniedPage("/denied")
 			.and()
 			.rememberMe()
 				.tokenValiditySeconds(FOUR_WEEKS);
