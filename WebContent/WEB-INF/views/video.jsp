@@ -11,7 +11,8 @@
 <c:import url="/includes/sidebar.jsp" />
 <body onload="uploadComment(${video.id})" />
 
-<video width="854" height="480" controls>
+
+	<video width="854" height="480" controls>
 	<source src=<c:url value="../${video.fileName}"/> type="video/mp4">
 </video>
 <br />
@@ -29,44 +30,52 @@
 <br />
 <c:out value="TAGS:" />
 
-<sec:authorize access="isAuthenticated()">
-	<button class="dislike-button" id="likeIt"
-		onclick="getLikes(${video.id}, ${1})">
-		<c:out value="${likesHelper.likeButton}" />
-	</button>
+<div class="content">
+	<div class="grids">
+		<sec:authorize access="isAuthenticated()">
+			<button class="dislike-button" id="likeIt"
+					onclick="getLikes(${video.id}, ${1})">
+				<c:out value="${likesHelper.likeButton}" />
+			</button>
 
-	<button class="dislike-button" id="dislikeIt"
-		onclick="getDisLikes(${video.id} , ${2})">
-		<c:out value="${likesHelper.dislikeButton}" />
-	</button>
-</sec:authorize>
+			<button class="dislike-button" id="dislikeIt"
+					onclick="getDisLikes(${video.id} , ${2})">
+				<c:out value="${likesHelper.dislikeButton}" />
+			</button>
+		</sec:authorize>
+<br />
+		<sec:authorize access="isAnonymous()">
+			<sf:form method="get"
+					action="${pageContext.request.contextPath}/video/like">
+				<input type="submit"
+						value="<c:out value="${likesHelper.likeButton}"/>"
+						class="margin_left">
+				<input type="submit"
+						value="<c:out value="${likesHelper.dislikeButton}"/>"
+						class="margin_left">
+			</sf:form>
+		</sec:authorize>
 
-<sec:authorize access="isAnonymous()">
-	<sf:form method="get"
-		action="${pageContext.request.contextPath}/video/like">
-		<input type="submit"
-			value="<c:out value="${likesHelper.likeButton}"/>"
-			class="margin_left">
-		<input type="submit"
-			value="<c:out value="${likesHelper.dislikeButton}"/>"
-			class="margin_left">
-	</sf:form>
-</sec:authorize>
+		<button class="dislike-button" onclick="getPlaylists()">Add
+			to playlist</button>
+		<button class="dislike-button" id="addToPlaylist"
+				onclick="addToPlaylist(${1}, ${video.id})">Add to MyPlaylist</button>
+		<div class="clearFloat"></div>
+		<div class="grid">
+			<div class="preview">
+				<textarea id="commentId" rows="2" cols="30" placeholder="Comment..."></textarea>
+				<input type="submit" placeholder="Comment" id="submit"
+						onclick="uploadComment(${video.id})"
+						class="btn btn-primary btn-sm" /><br /><br />
+			</div>
+		</div>
+		<br />
 
 
-<textarea id="commentId" rows="2" cols="30" placeholder="Comment..."></textarea>
-<input type="submit" placeholder="Comment" id="submit"
-	onclick="uploadComment(${video.id})" class="btn btn-primary btn-sm" />
-
-
-<button class="dislike-button" onclick="getPlaylists()">Add to
-	playlist</button>
-<button class="dislike-button" id="addToPlaylist"
-	onclick="addToPlaylist(${1}, ${video.id})">Add to MyPlaylist</button>
-
-
-<div class = "grid" id="comments"></div>
-
+		<div class="clearFloat"></div>
+		<div class="grid" id="comments"></div>
+	</div>
+</div>
 <script type="text/javascript">
 
 
