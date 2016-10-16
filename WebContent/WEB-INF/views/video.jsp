@@ -10,8 +10,8 @@
 <head>
 <title><c:out value="YouPlay - Watch ${video.title}" /></title>
 </head>
-
-<body onload="playlistButtonValue(${video.id}), uploadComment(${video.id})" />
+<body onload=" uploadComment(${video.id})"/>
+<body onload=" uploadComment(${video.id} , playlistButtonValue(${video.id}))" />
 <div class="upload">
 	<video width="854" height="480" controls>
 		<source src=<c:url value="${video.fileName}"/> type="video/mp4">
@@ -146,12 +146,17 @@ function playlistButtonValue( videoId) {
 function uploadComment(videoId){
 	
 	var comment = $("#commentId").val();
+	if(comment == null){
+		console.log('vleze');
+		comment = '';
+	}
+	
 	$("#commentId").val('');
-	var size = comment.length;
+	
 	
 	console.log(comment);
 	console.log(videoId);
-	console.log(userId);
+	
 
 	$.ajax({
 	
@@ -162,10 +167,10 @@ function uploadComment(videoId){
 			videoId: videoId,
 			comment: comment,
 		},
-		success: function(data, userId){
+		success: function(data){
 			$("#comments").empty();
 			console.log(data);
-			console.log(userId);
+		
 			for (index in data) {
 				var object = data[index];
 				var container = document.createElement("div");
