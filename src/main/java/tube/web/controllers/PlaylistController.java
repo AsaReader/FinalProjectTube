@@ -6,6 +6,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import java.security.Principal;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.sound.midi.SysexMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +49,6 @@ public class PlaylistController {
 	
 	@RequestMapping(value = "/playlists/{username}", method = GET)
 	public String getPlaylists(@PathVariable(value="username") String username, Model model) {
-		System.out.println(username);
 		User user = userDao.findByUsername(username);
 		List<Playlist> playlists = playlistDao.findByUserId(user.getId());
 		for (Playlist playlist : playlists) {
@@ -61,7 +62,6 @@ public class PlaylistController {
 	@RequestMapping(value = "/video/addToPlaylist", method = POST)
 	public @ResponseBody String addVideoToPlaylist(@RequestParam("playlistId") int playlistId, @RequestParam("videoId") int videoId) {
 		Playlist playlist = playlistDao.findOne(playlistId);
-		System.out.println(playlist);
 		//check if video is in playlist, returns true if present, false if absent
 		boolean addStatus = playlist.getVideos().stream().anyMatch((video) -> video.getId() == videoId);
 		String buttonValue = "";
@@ -85,4 +85,11 @@ public class PlaylistController {
 		return playlists;
 	}
 	
+	@RequestMapping(value = "/newPlaylist", method = POST)
+	public String createNewPlaylist(Principal principal, @RequestParam("playlistName") String playlistName) {
+		User user = userDao.findByUsername(principal.getName());
+		Playlist newPlaylist = new Playlist(user, true, playlistName);
+		playlistDao.insertPlaylist(newPlaylist);
+		return "redirect:/playlists/" + principal.getName();
+	}
 }
