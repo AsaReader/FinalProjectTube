@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,8 +34,6 @@ public class VideoRestController {
 		return videoList;
 	}
 	
-	
-
 	@RequestMapping(value = "/title/{text}", method = GET)
 	public @ResponseBody List<String> getVideoTitles(@PathVariable("text") String query) {
 		List<Video> videoList = videoDao.getByTitle(query);

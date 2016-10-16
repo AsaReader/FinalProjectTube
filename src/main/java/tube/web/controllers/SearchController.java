@@ -47,6 +47,38 @@ public class SearchController {
 			return "redirect:/";
 		}
 	}
+	
+	@RequestMapping("/getJson")
+	public String getListOfVideos(Model model, String input, String sortBy) {
+		try {
+			List<Video> videos = videoDao.getVideosByInput(input);
+			List<String> sorts = new ArrayList<String>();
+			sorts.add("Views");
+			sorts.add("Date");
+			if(sortBy.equals("Views")){
+				videos.sort((v1,v2)->v2.getViews() - v1.getViews());
+				sorts.sort((s1,s2)->s2.compareTo(s1));
+				
+			}else{
+				videos.sort((v1,v2)->v2.getDate().compareTo(v1.getDate()));
+				sorts.sort((s1,s2)->s1.compareTo(s2));
+			}
+			model.addAttribute("sorts", sorts);
+			model.addAttribute("videos", videos);
+			System.err.println("text to search : " + input);
+			
+			return "restService";
+			
+		} catch (Exception e) {
+			
+			mm.sendMail("youplayittalents@gmail.com", MailMail.EMAIL_RECEPIENT, "Catch an Exception",
+					Throwables.getStackTraceAsString(e));
+
+			return "redirect:/";
+		}
+	}
+	
+
 	@RequestMapping("/sort")
 	public String sortVideos(Model model, String input, String sortBy) {
 		try {

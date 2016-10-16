@@ -10,7 +10,7 @@
 <head>
 <title><c:out value="YouPlay - Watch ${video.title}" /></title>
 </head>
-<body onload="uploadComment(${video.id})" />
+
 <body onload="playlistButtonValue(${video.id}), uploadComment(${video.id})" />
 <div class="upload">
 	<video width="854" height="480" controls>
