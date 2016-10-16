@@ -161,7 +161,7 @@ public class Video implements java.io.Serializable {
 		this.views = views;
 	}
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JsonIgnore
 	@JoinTable(name = "playlist_videos", catalog = "youtubeDB", joinColumns = {
 			@JoinColumn(name = "video_id", nullable = false, updatable = false) }, inverseJoinColumns = {

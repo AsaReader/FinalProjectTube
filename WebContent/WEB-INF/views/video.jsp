@@ -29,6 +29,9 @@
 <c:out value="VIEWS: ${video.views}" />
 <br />
 <c:out value="TAGS:" />
+	<c:forEach var="tag" items="${tags}">
+		<a href="${pageContext.request.contextPath}/search?input=${tag.name}"><c:out value="${tag.name}"/></a>
+	</c:forEach>
 </div>
 
 <div class="content">

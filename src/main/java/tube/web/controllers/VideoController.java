@@ -25,6 +25,7 @@ import tube.entities.UserLikes;
 import tube.entities.UserLikesId;
 import tube.entities.Video;
 import tube.mail.MailMail;
+import tube.persistence.TagDAO;
 import tube.persistence.UserDAO;
 import tube.persistence.UserLikesDAO;
 import tube.persistence.VideoDAO;
@@ -40,10 +41,13 @@ public class VideoController {
 	private VideoDAO videoDao;
 
 	@Autowired
-	UserDAO userDao;
+	private UserDAO userDao;
 
 	@Autowired
-	UserLikesDAO userLikesDao;
+	private UserLikesDAO userLikesDao;
+	
+	@Autowired
+	private TagDAO tagDao;
 
 	@RequestMapping(value = "/video/{videoId}", method = GET)
 	public String playVideo(Model model, Principal principal, @PathVariable("videoId") int videoId) {
@@ -97,6 +101,7 @@ public class VideoController {
 			}
 			UserLikesController.Helper helper = new Helper(dislikeButton, likeButton);
 			model.addAttribute("likesHelper", helper);
+			model.addAttribute("tags", tagDao.findByVideoId(video.getId()));
 			return "video";
 
 		} catch (Exception e) {
