@@ -6,14 +6,9 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import java.security.Principal;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.sound.midi.SysexMessage;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +17,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import tube.entities.Playlist;
 import tube.entities.User;
-import tube.entities.Video;
 import tube.persistence.PlaylistDAO;
 import tube.persistence.UserDAO;
 import tube.persistence.VideoDAO;
@@ -51,9 +45,6 @@ public class PlaylistController {
 	public String getPlaylists(@PathVariable(value="username") String username, Model model) {
 		User user = userDao.findByUsername(username);
 		List<Playlist> playlists = playlistDao.findByUserId(user.getId());
-		for (Playlist playlist : playlists) {
-			System.out.println(playlist.getName());			
-		}
 		model.addAttribute("user", user);
 		model.addAttribute("playlists", playlists);
 		return "userPlaylists";
@@ -67,7 +58,6 @@ public class PlaylistController {
 		String buttonValue = "";
 		if (addStatus) {
 			playlist.getVideos().remove(videoDao.findOne(videoId));
-			System.err.println(playlist.toString());
 			buttonValue = "Add to " + playlist.getName();
 		} else {
 			playlist.getVideos().add(videoDao.findOne(videoId));
