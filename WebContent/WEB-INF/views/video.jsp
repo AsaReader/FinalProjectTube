@@ -8,34 +8,45 @@
 <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
 
 <c:import url="/includes/header.jsp" />
-<c:import url="/includes/sidebar.jsp" />
-<head><title><c:out value="YouPlay - Watch ${video.title}"/></title></head>
+<head>
+<title><c:out value="YouPlay - Watch ${video.title}" /></title>
+</head>
 <body onload="uploadComment(${video.id})" />
 
-<div class="upload" >
-<video width="854" height="480" controls>
-	<source src=<c:url value="${video.fileName}"/> type="video/mp4">
-</video>
-<br />
-<c:out value="TITLE: ${video.title}" />
-<br />
-<c:out value="POSTED BY: " />
-<a href="../user/${video.user.username}"><c:out value="${video.user.username}" /></a>
-<br />
-<c:out value="DESCRIPTION: ${video.description}" />
-<br />
-<c:out value="POSTED ON: ${video.date}" />
-<br />
-<c:out value="VIEWS: ${video.views}" />
-<br />
-<c:out value="TAGS:" />
-	<c:forEach var="tag" items="${tags}">
-		<a href="${pageContext.request.contextPath}/search?input=${tag.name}"><c:out value="${tag.name}"/></a>
-	</c:forEach>
-</div>
+<div class="upload">
+	<video width="854" height="480" controls>
+		<source src=<c:url value="${video.fileName}"/> type="video/mp4">
+	</video>
+	<br />
 
-<div class="content">
-	<div class="grids">
+	<div class="content">
+		<div class="grids">
+			<h1>
+				<c:out value="${video.title} - ${video.views} views" />
+			</h1>
+			<h2>
+				<c:out value="Posted by " />
+				<a href="../user/${video.user.username}"><c:out
+						value="${video.user.username}" /></a>
+				<c:out value=" on ${video.date}" />
+			</h2>
+			<h2>
+				<c:out value="Description:" />
+			</h2>
+			<p>
+				<c:out value="${video.description}" />
+			</p>
+			<h2>
+				<c:out value="Tags:" />
+			</h2>
+			<p>
+				<c:forEach var="tag" items="${tags}">
+					<a
+						href="${pageContext.request.contextPath}/search?input=${tag.name}"><c:out
+							value="${tag.name}" /></a>
+				</c:forEach>
+			</p>
+		</div>
 
 		<sec:authorize access="isAuthenticated()">
 			<p>
