@@ -23,4 +23,8 @@ public interface TagDAO extends JpaRepository<Tag, Integer>  {
 			+ "WHERE v.id = ?1", nativeQuery = true)
 	@Cacheable(value = "tagCache")
 	List<Tag> findByVideoId(Integer id);
+
+	@Query(value = "SELECT DISTINCT t.* FROM tags t "
+			+ "WHERE t.name LIKE ?1%", nativeQuery = true)
+	List<Tag> getTagsByInput(String query);
 }

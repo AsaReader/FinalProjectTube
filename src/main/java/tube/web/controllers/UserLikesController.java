@@ -2,11 +2,8 @@ package tube.web.controllers;
 
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
-import java.io.IOException;
 import java.security.Principal;
-import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.google.common.base.Throwables;
-
 import tube.entities.User;
 import tube.entities.UserLikes;
 import tube.entities.UserLikesId;
@@ -27,13 +22,12 @@ import tube.mail.MailMail;
 import tube.persistence.UserDAO;
 import tube.persistence.UserLikesDAO;
 import tube.persistence.VideoDAO;
-import tube.web.controllers.UserLikesController.Helper;
 
 @Controller
 public class UserLikesController {
 
 	private ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Mail.xml");
-	private MailMail mm = (MailMail) context.getBean("mailMail");
+	private MailMail mailSender = (MailMail) context.getBean("mailMail");
 
 	public static class Helper {
 
@@ -207,8 +201,7 @@ public class UserLikesController {
 			return helper;
 
 		} catch (Exception e) {
-			mm.sendMail("youplayittalents@gmail.com", MailMail.EMAIL_RECEPIENT, "Catch an Exception",
-					Throwables.getStackTraceAsString(e));
+			mailSender.handle(e);
 			return null;
 		}
 	}

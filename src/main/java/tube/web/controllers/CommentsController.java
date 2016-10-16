@@ -1,24 +1,19 @@
 package tube.web.controllers;
 
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
-import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
+
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.google.common.base.Throwables;
 
 import tube.entities.Comment;
 import tube.entities.User;
@@ -42,7 +37,7 @@ public class CommentsController {
 	VideoDAO videoDao;
 	
 	private ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Mail.xml");
-	private MailMail mm = (MailMail) context.getBean("mailMail");
+	private MailMail mailSender = (MailMail) context.getBean("mailMail");
 
 	public static class CommentHolder {
 		private String username;
@@ -118,20 +113,19 @@ public class CommentsController {
 		try{
 		String username;
 		String text;
-	
-
-		String loggedUsername = principal.getName();
-		User user = userDao.findByUsername(loggedUsername);
-		int currentUserId = user.getId();
-		Video video = videoDao.getOne(videoId);
-
-		
 		User videoUser = userDao.getUserByVideoId(videoId);
 		int videoUserId = videoUser.getId();
-
-		Comment comment = new Comment(user, video, commentText);
-		if (commentText.length() != 0) {
-			commentDao.save(comment);
+		int currentUserId = -1;
+		if(principal != null) {
+			String loggedUsername = principal.getName();
+			User user = userDao.findByUsername(loggedUsername);
+			currentUserId = user.getId();
+			Video video = videoDao.getOne(videoId);
+	
+			Comment comment = new Comment(user, video, commentText);
+			if (commentText.length() != 0) {
+				commentDao.save(comment);
+			}
 		}
 
 		List<CommentsController.CommentHolder> commentsAndUsername = new ArrayList<CommentsController.CommentHolder>();
@@ -145,8 +139,6 @@ public class CommentsController {
 			}
 		
 			User comentator = com.getUsers();
-
-		
 			username = comentator.getUsername();
 			text = com.getText();
 			int commentUserId = comentator.getId();
@@ -157,12 +149,7 @@ public class CommentsController {
 		return commentsAndUsername;
 		
 		} catch (Exception e) {
-			
-			mm.sendMail("youplayittalents@gmail.com",
-					MailMail.EMAIL_RECEPIENT,
-			 		   "Catch an Exception",
-			  		  Throwables.getStackTraceAsString(e));
-			//TODO
+			mailSender.handle(e);
 			return null;
 		}
 	}

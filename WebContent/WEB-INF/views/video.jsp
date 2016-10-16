@@ -10,7 +10,6 @@
 <head>
 <title><c:out value="YouPlay - Watch ${video.title}" /></title>
 </head>
-<body onload="uploadComment(${video.id})" />
 <body onload="playlistButtonValue(${video.id}), uploadComment(${video.id})" />
 <div class="upload">
 	<video width="854" height="480" controls>
@@ -73,26 +72,27 @@
 		</sec:authorize>
 		
 		<sec:authorize access="isAuthenticated()">
-		<select  id="playlistId" onclick="playlistButtonValue(${video.id})"  >
-		
-		<c:forEach items = "${playlists}" var = "playlist">
-			<option value="${playlist.id}"><c:out value = " ${playlist.name}"/></option>
-			</c:forEach>
-		</select >
-		<button class="dislike-button" id = "addToPlaylist"
-			onclick="addToPlaylist(${video.id})"></button>
-		
-		
-		<div class="clearFloat"></div>
-		<div class="grid">
-			<div class="preview">
-				<textarea id="commentId" rows="2" cols="30" placeholder="Comment..."></textarea>
-				<input type="submit" placeholder="Comment" id="submit"
-					onclick="uploadComment(${video.id})" class="btn btn-primary btn-sm" /><br />
-				<br />
+			<c:if test="${not empty playlists}">
+				<select  id="playlistId" onclick="playlistButtonValue(${video.id})"  >
+				
+				<c:forEach items = "${playlists}" var = "playlist">
+					<option value="${playlist.id}"><c:out value = " ${playlist.name}"/></option>
+					</c:forEach>
+				</select >
+				<button class="dislike-button" id = "addToPlaylist"
+					onclick="addToPlaylist(${video.id})"></button>
+			</c:if>
+			
+			<div class="clearFloat"></div>
+			<div class="grid">
+				<div class="preview">
+					<textarea id="commentId" rows="2" cols="30" placeholder="Comment..."></textarea>
+					<input type="submit" placeholder="Comment" id="submit"
+						onclick="uploadComment(${video.id})" class="btn btn-primary btn-sm" /><br />
+					<br />
+				</div>
 			</div>
-		</div>
-		<br />
+			<br />
 		</sec:authorize>
 
 		<div class="grid" id="playlists"></div>
@@ -142,7 +142,7 @@ function playlistButtonValue( videoId) {
 	});
 }
 
-function uploadComment(videoId, userId){
+function uploadComment(videoId){
 	
 	var comment = $("#commentId").val();
 	$("#commentId").val('');
