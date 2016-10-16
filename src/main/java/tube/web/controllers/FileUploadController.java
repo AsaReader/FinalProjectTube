@@ -117,17 +117,17 @@ public class FileUploadController {
 			}
 
 
-			 String url = null;
-			 try {
-			 url = S3JavaSDK.uploadFileToS3AWS(fileName, multipartFile);
-			 } catch (Exception e) {
-			 // TODO Auto-generated catch block
-			 e.printStackTrace();
-			 }
+//			 String url = null;
+//			 try {
+//			 url = S3JavaSDK.uploadFileToS3AWS(fileName, multipartFile);
+//			 } catch (Exception e) {
+//			 // TODO Auto-generated catch block
+//			 e.printStackTrace();
+//			 }
 
 			// copy file to computer
-//			String folderPath = request.getServletContext().getRealPath("/");
-//			FileCopyUtils.copy(fileBucket.getFile().getBytes(), new File(folderPath + fileName));
+			String folderPath = request.getServletContext().getRealPath("/");
+			FileCopyUtils.copy(fileBucket.getFile().getBytes(), new File(folderPath + fileName));
 
 			// Copy file to AWS - S3
 			// String fileName = multipartFile.getOriginalFilename();
@@ -162,10 +162,10 @@ public class FileUploadController {
 			}
 
 			// using copy to PC
-//			Video video = new Video(loggedUser, LocalDate.now(), descr, fileName, title);
+			Video video = new Video(loggedUser, LocalDate.now(), descr, fileName, title);
 			
 			// using copy to AWS - S3
-			 Video video = new Video(descr, url, title, loggedUser);
+//			 Video video = new Video(descr, url, title, loggedUser);
 			 
 			video.setTags(tagSet);
 			video = videoDao.saveAndFlush(video);

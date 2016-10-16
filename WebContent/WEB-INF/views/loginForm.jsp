@@ -27,13 +27,15 @@
 							value="Remember me" /></label><br />
 				</div>
 				<div class="form-actions floatRight upload" align="middle">
-				<br />
-					<input type="submit" value="Login" />
+					<br /> <input type="submit" value="Login" />
+				</div>
+				<div class="form-actions floatRight upload" align="middle">
+					<br /> <br /> <a href="<c:url value="../forgotenpassword"/>">Forgotten Password?</a>
 				</div>
 			</div>
-
-		</sf:form>
 	</div>
+
+	</sf:form>
 </div>
 
 <c:import url="/includes/footer.jsp" />
