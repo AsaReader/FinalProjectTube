@@ -6,7 +6,10 @@
 <%@ page session="false"%>
 <c:import url="/includes/header.jsp" />
 <c:import url="/includes/sidebar.jsp" />
-
+<sec:authorize access="isAuthenticated()">
+	<sec:authentication property="principal.username" var="loggedInUser" />
+</sec:authorize>
+<head><title><c:out value="YouPlay - ${loggedInUser}'s Subscriptions"/></title></head>
 <div class="content">
 	<div class="grids">
 		<h2>Video Results</h2>

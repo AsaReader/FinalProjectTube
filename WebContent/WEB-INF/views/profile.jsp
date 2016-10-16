@@ -7,7 +7,7 @@
 	uri="http://www.springframework.org/security/tags"%>
 <c:import url="/includes/header.jsp" />
 <c:import url="/includes/sidebar.jsp" />
-
+<head><title><c:out value="YouPlay - ${user.username}"/></title></head>
 <sec:authorize access="isAuthenticated()">
 	<sec:authentication property="principal.username" var="loggedInUser" />
 </sec:authorize>
@@ -32,8 +32,6 @@
 	
 	function deleteVideo(id){
 		var x = document.getElementById(id);
-		console.log(id , x.getAttribute('id'));
-		alert(x.getAttribute('id'));
 		$.ajax({
 			type: 'POST',
 		    url: '../videoDelete',

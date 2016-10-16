@@ -6,6 +6,7 @@
 <%@ page session="false"%>
 <c:import url="/includes/header.jsp" />
 <c:import url="/includes/sidebar.jsp" />
+<head><title><c:out value="YouPlay"/></title></head>
 <div class="content">
 	<div class="grids">
 		<h2>Latest Videos</h2>

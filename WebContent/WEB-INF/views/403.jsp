@@ -5,6 +5,7 @@
 <%@ taglib prefix="sec"	uri="http://www.springframework.org/security/tags"%>
 <c:import url="/includes/header.jsp" />
 <c:import url="/includes/sidebar.jsp" />
+<head><title><c:out value="YouPlay - Access Denied"/></title></head>
 <div class="content">
 	<div class="grids">
 		<h2>

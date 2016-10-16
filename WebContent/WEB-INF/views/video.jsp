@@ -9,6 +9,7 @@
 
 <c:import url="/includes/header.jsp" />
 <c:import url="/includes/sidebar.jsp" />
+<head><title><c:out value="YouPlay - Watch ${video.title}"/></title></head>
 <body onload="uploadComment(${video.id})" />
 
 <div class="upload" >
