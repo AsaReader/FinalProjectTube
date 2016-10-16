@@ -118,7 +118,9 @@ public class VideoController {
 			throws ServletException, IOException {
 		try {
 			Video video = videoDao.findOne(videoId);
-			if (principal !=null && video.getUser().equals(userDao.findByUsername(principal.getName()))) {
+			video.setTags(null);
+			video.setPlaylists(null);
+			if (principal !=null && video.getUser().equals(userDao.findByUsername(principal.getName()))) {			
 			videoDao.delete(video);
 			resp.setStatus(200);
 			}

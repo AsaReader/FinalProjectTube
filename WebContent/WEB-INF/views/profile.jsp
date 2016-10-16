@@ -40,7 +40,6 @@
 		    	videoId : id,
 		    },
 		    success: function(){
-				console.log("hi");
 				location.reload();
 			}
 
