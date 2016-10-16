@@ -55,5 +55,8 @@ public interface VideoDAO extends JpaRepository<Video, Integer> {
 	void updateViewCount(Integer views, int videoId);
 
 	List<Video> findByUserUsername(String username);
+	
+	@Query(value = "DELETE FROM video_has_tags WHERE video_id=?", nativeQuery = true)
+	void deleteVideoTags(int videoId);
 
 }

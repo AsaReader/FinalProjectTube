@@ -32,8 +32,7 @@
 	
 	function deleteVideo(id){
 		var x = document.getElementById(id);
-		console.log(id , x.getAttribute('id'));
-		alert(x.getAttribute('id'));
+
 		$.ajax({
 			type: 'POST',
 		    url: '../videoDelete',
@@ -42,7 +41,6 @@
 		    	videoId : id,
 		    },
 		    success: function(){
-				console.log("hi");
 				location.reload();
 			}
 
