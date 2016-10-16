@@ -8,9 +8,9 @@
 <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
 
 <c:import url="/includes/header.jsp" />
-<c:import url="/includes/sidebar.jsp" />
-<body onload="uploadComment(${video.id})" />
-
+ 
+<body onload="playlistButtonValue(${video.id}), uploadComment(${video.id})" />
+  
 
 <video width="854" height="480" controls>
 	<source src=<c:url value="../${video.fileName}"/> type="video/mp4">
@@ -56,11 +56,16 @@
 					class="margin_left">
 			</sf:form>
 		</sec:authorize>
-
-		<button class="dislike-button" onclick="getPlaylists()">Add
-			to playlist</button>
-		<button class="dislike-button" id="addToPlaylist"
-			onclick="addToPlaylist(${1}, ${video.id})">Add to MyPlaylist</button>
+		<select  id="playlistId" onclick="playlistButtonValue(${video.id})"  >
+		
+		<c:forEach items = "${playlists}" var = "playlist">
+			<option value="${playlist.id}"><c:out value = " ${playlist.name}"/></option>
+			</c:forEach>
+		</select >
+		<button class="dislike-button" id = "addToPlaylist"
+			onclick="addToPlaylist(${video.id})"></button>
+		
+		
 		<div class="clearFloat"></div>
 		<div class="grid">
 			<div class="preview">
@@ -75,20 +80,59 @@
 		<sec:authorize access="isAuthenticated()">
 			<button class="dislike-button" onclick="getPlaylists()">Add
 				to playlist</button>
-			<button class="dislike-button" id="addToPlaylist"
-				onclick="addToPlaylist(${1}, ${video.id})">Add to
-				MyPlaylist</button>
-		</sec:authorize>
 
+		</sec:authorize>
+		<div class="grid" id="playlists"></div>
 		<div class="clearFloat"></div>
 		<div class="grid" id="comments"></div>
 	</div>
 </div>
 <script type="text/javascript">
+function addToPlaylist(videoId) {
+	var playlistId =  $( "#playlistId option:selected" ).val();
+	
+	console.log(playlistId);
+	$.ajax({
+		type : "POST",
+		url : "./addToPlaylist",
+		
+		data: {
+			videoId: videoId,
+			playlistId: playlistId,
+		},
+		
+		success : function(data) {
+			var index;
+			$("#addToPlaylist").empty();
+			$("#addToPlaylist").append(data);
+		}
+	});
+}
+function playlistButtonValue( videoId) {
+	var playlistId =  $( "#playlistId option:selected" ).val();
+	
+	console.log(playlistId);
+	$.ajax({
+		type : "POST",
+		url : "./changePlaylistButtonValue",
+		
+		data: {
+			videoId: videoId,
+			playlistId: playlistId,
+		},
+		
+		success : function(data) {
+			var index;
+			$("#addToPlaylist").empty();
+			$("#addToPlaylist").append(data);
+		}
+	});
+}
 
 function uploadComment(videoId, userId){
 	
 	var comment = $("#commentId").val();
+	$("#commentId").val('');
 	var size = comment.length;
 	
 	console.log(comment);
@@ -242,6 +286,7 @@ function getDisLikes(videoId, likeId){
 				 success : function(data) {
 					 var index;
 					 for (index in data) {
+						 	
 							var playlist = document.createElement("playlist");
 							playlist.value = data[index];
 							$("#suggestions").append(option);
@@ -250,24 +295,7 @@ function getDisLikes(videoId, likeId){
 			});
 		}
 		
-		function addToPlaylist(playlistId, videoId) {
-			
-			$.ajax({
-				type : "POST",
-				url : "./addToPlaylist",
-				
-				data: {
-					videoId: videoId,
-					playlistId: playlistId,
-				},
-				
-				success : function(data) {
-					var index;
-					$("#addToPlaylist").empty();
-					$("#addToPlaylist").append(data);
-				}
-			});
-		}
+	
 		
 	</script>
 

@@ -31,38 +31,40 @@ public class PlaylistController {
 
 	@Autowired
 	private PlaylistDAO playlistDao;
-	
+
 	@Autowired
 	private UserDAO userDao;
-	
+
 	@Autowired
 	private VideoDAO videoDao;
-	
+
 	@RequestMapping(value = "/playlist/{playlistId}", method = GET)
-	public String getPlaylist(@PathVariable(value="playlistId") int playlistId, Model model) {
+	public String getPlaylist(@PathVariable(value = "playlistId") int playlistId, Model model) {
 		Playlist playlist = playlistDao.findOne(playlistId);
 		model.addAttribute("playlist", playlist);
 		return "playlist";
 	}
-	
+
 	@RequestMapping(value = "/playlists/{username}", method = GET)
-	public String getPlaylists(@PathVariable(value="username") String username, Model model) {
+	public String getPlaylists(@PathVariable(value = "username") String username, Model model) {
 		System.out.println(username);
 		User user = userDao.findByUsername(username);
 		List<Playlist> playlists = playlistDao.findByUserId(user.getId());
 		for (Playlist playlist : playlists) {
-			System.out.println(playlist.getName());			
+			System.out.println(playlist.getName());
 		}
 		model.addAttribute("user", user);
 		model.addAttribute("playlists", playlists);
 		return "userPlaylists";
 	}
-	
+
 	@RequestMapping(value = "/video/addToPlaylist", method = POST)
-	public @ResponseBody String addVideoToPlaylist(@RequestParam("playlistId") int playlistId, @RequestParam("videoId") int videoId) {
+	public @ResponseBody String addVideoToPlaylist(@RequestParam("playlistId") int playlistId,
+			@RequestParam("videoId") int videoId) {
 		Playlist playlist = playlistDao.findOne(playlistId);
 		System.out.println(playlist);
-		//check if video is in playlist, returns true if present, false if absent
+		// check if video is in playlist, returns true if present, false if
+		// absent
 		boolean addStatus = playlist.getVideos().stream().anyMatch((video) -> video.getId() == videoId);
 		String buttonValue = "";
 		if (addStatus) {
@@ -75,14 +77,36 @@ public class PlaylistController {
 		}
 		playlistDao.save(playlist);
 		return buttonValue;
-		
+
 	}
-	
+
+	@RequestMapping(value = "/video/changePlaylistButtonValue", method = POST)
+	public @ResponseBody String changePlaylistButtonValue(@RequestParam("playlistId") int playlistId,
+			@RequestParam("videoId") int videoId) {
+		Playlist playlist = playlistDao.findOne(playlistId);
+		System.out.println(playlist);
+		// check if video is in playlist, returns true if present, false if
+		// absent
+		boolean addStatus = playlist.getVideos().stream().anyMatch((video) -> video.getId() == videoId);
+		String buttonValue = "";
+		if (addStatus) {
+
+			buttonValue = "Remove from " + playlist.getName();
+		} else {
+			buttonValue = "Add to " + playlist.getName();
+
+		}
+
+		return buttonValue;
+
+	}
+
 	@RequestMapping(value = "/video/getPlaylists", method = POST)
 	public @ResponseBody List<Playlist> getAddablePlaylists() {
-		SecurityUser user = (SecurityUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		SecurityUser user = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		List<Playlist> playlists = playlistDao.findByUserId(user.getId());
+
 		return playlists;
 	}
-	
+
 }
