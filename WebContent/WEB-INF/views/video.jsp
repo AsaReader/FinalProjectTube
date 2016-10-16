@@ -6,32 +6,47 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="sf"%>
 <%@ page session="false"%>
 <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
-
 <c:import url="/includes/header.jsp" />
- 
+<head>
+<title><c:out value="YouPlay - Watch ${video.title}" /></title>
+</head>
+<body onload="uploadComment(${video.id})" />
 <body onload="playlistButtonValue(${video.id}), uploadComment(${video.id})" />
-  
+<div class="upload">
+	<video width="854" height="480" controls>
+		<source src=<c:url value="${video.fileName}"/> type="video/mp4">
+	</video>
+	<br />
 
-<video width="854" height="480" controls>
-	<source src=<c:url value="../${video.fileName}"/> type="video/mp4">
-</video>
-<br />
-<c:out value="${video.fileName}" />
-<br>
-<c:out value="TITLE: ${video.title}" />
-<br />
-<c:out value="POSTED BY: ${video.user.username}" />
-<br />
-<c:out value="DESCRIPTION: ${video.description}" />
-<br />
-<c:out value="POSTED ON: ${video.date}" />
-<br />
-<c:out value="VIEWS: ${video.views}" />
-<br />
-<c:out value="TAGS:" />
+	<div class="content">
+		<div class="grids">
+			<h1>
+				<c:out value="${video.title} - ${video.views} views" />
+			</h1>
+			<h2>
+				<c:out value="Posted by " />
+				<a href="../user/${video.user.username}"><c:out
+						value="${video.user.username}" /></a>
+				<c:out value=" on ${video.date}" />
+			</h2>
+			<h2>
+				<c:out value="Description:" />
+			</h2>
+			<p>
+				<c:out value="${video.description}" />
+			</p>
+			<h2>
+				<c:out value="Tags:" />
+			</h2>
+			<p>
+				<c:forEach var="tag" items="${tags}">
+					<a
+						href="${pageContext.request.contextPath}/search?input=${tag.name}"><c:out
+							value="${tag.name}" /></a>
+				</c:forEach>
+			</p>
+		</div>
 
-<div class="content">
-	<div class="grids">
 		<sec:authorize access="isAuthenticated()">
 			<p>
 				<button class="dislike-button" id="likeIt"
@@ -56,6 +71,8 @@
 					class="margin_left">
 			</sf:form>
 		</sec:authorize>
+		
+		<sec:authorize access="isAuthenticated()">
 		<select  id="playlistId" onclick="playlistButtonValue(${video.id})"  >
 		
 		<c:forEach items = "${playlists}" var = "playlist">
@@ -76,12 +93,8 @@
 			</div>
 		</div>
 		<br />
-
-		<sec:authorize access="isAuthenticated()">
-			<button class="dislike-button" onclick="getPlaylists()">Add
-				to playlist</button>
-
 		</sec:authorize>
+
 		<div class="grid" id="playlists"></div>
 		<div class="clearFloat"></div>
 		<div class="grid" id="comments"></div>
@@ -296,6 +309,13 @@ function getDisLikes(videoId, likeId){
 		}
 		
 	
+		
+		function showProfile(username){
+			
+			
+
+
+		}
 		
 	</script>
 

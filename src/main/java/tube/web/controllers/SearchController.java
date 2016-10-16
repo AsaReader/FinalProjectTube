@@ -22,7 +22,7 @@ public class SearchController {
 	
 	
 	private ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Mail.xml");
-	MailMail mm = (MailMail) context.getBean("mailMail");
+	private MailMail mm = (MailMail) context.getBean("mailMail");
 
 	@Autowired
 	VideoDAO videoDao;

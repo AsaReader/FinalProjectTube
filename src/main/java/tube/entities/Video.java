@@ -40,10 +40,10 @@ public class Video implements java.io.Serializable {
 	private String description;
 	private String fileName;
 	private String title;
-	private Integer views;
-	private Set<Playlist> playlists = new HashSet<Playlist>(0);
-	private Set<Comment> comments = new HashSet<Comment>(0);
-	private Set<Tag> tags = new HashSet<Tag>(0);
+	private Integer views = 0;
+	private List<Playlist> playlists = new ArrayList<Playlist>(0);
+	private List<Comment> comments = new ArrayList<Comment>(0);
+	private List<Tag> tags = new ArrayList<Tag>(0);
 	private List<UserLikes> userLikes = new ArrayList<UserLikes>(0);
 
 	public Video() {
@@ -56,8 +56,8 @@ public class Video implements java.io.Serializable {
 		this.title = title;
 	}
 
-	public Video(User user, LocalDate date, String description, String fileName, String title, Set<Playlist> playlists,
-			Set<Comment> comments, Set<Tag> tags, List<UserLikes> userLikes) {
+	public Video(User user, LocalDate date, String description, String fileName, String title, List<Playlist> playlists,
+			List<Comment> comments, List<Tag> tags, List<UserLikes> userLikes) {
 		this.user = user;
 		this.date = date;
 		this.description = description;
@@ -74,14 +74,16 @@ public class Video implements java.io.Serializable {
 		this.fileName = fileName;
 		this.title = title;
 		this.user = user;
+		this.date = LocalDate.now();
 	}
 
-	public Video(String description, String fileName, String title, User user, Set<Tag> tags) {
+	public Video(String description, String fileName, String title, User user, List<Tag> tags) {
 		this.description = description;
 		this.fileName = fileName;
 		this.title = title;
 		this.user = user;
 		this.tags = tags;
+		this.date = LocalDate.now();
 	}
 	
 	public Video(User user, LocalDate date, String description, String fileName, String title) {
@@ -159,39 +161,39 @@ public class Video implements java.io.Serializable {
 		this.views = views;
 	}
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JsonIgnore
 	@JoinTable(name = "playlist_videos", catalog = "youtubeDB", joinColumns = {
 			@JoinColumn(name = "video_id", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "playlist_id", nullable = false, updatable = false) })
-	public Set<Playlist> getPlaylists() {
+	public List<Playlist> getPlaylists() {
 		return this.playlists;
 	}
 
-	public void setPlaylists(Set<Playlist> playlists) {
+	public void setPlaylists(List<Playlist> playlists) {
 		this.playlists = playlists;
 	}
 
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "video", cascade = CascadeType.REMOVE)
-	public Set<Comment> getComments() {
+	public List<Comment> getComments() {
 		return this.comments;
 	}
 
-	public void setComments(Set<Comment> comments) {
+	public void setComments(List<Comment> comments) {
 		this.comments = comments;
 	}
 	
 	@JsonIgnore
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "video_has_tags", catalog = "youtubeDB", joinColumns = {
 			@JoinColumn(name = "video_id", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "tags_id", nullable = false, updatable = false) })
-	public Set<Tag> getTags() {
+	public List<Tag> getTags() {
 		return this.tags;
 	}
 
-	public void setTags(Set<Tag> tags) {
+	public void setTags(List<Tag> tags) {
 		this.tags = tags;
 	}
 

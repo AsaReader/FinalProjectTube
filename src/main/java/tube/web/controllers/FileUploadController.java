@@ -3,7 +3,6 @@ package tube.web.controllers;
 import java.io.File;
 import java.io.IOException;
 import java.security.Principal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,13 +39,12 @@ import tube.model.MultiFileValidator;
 import tube.persistence.TagDAO;
 import tube.persistence.UserDAO;
 import tube.persistence.VideoDAO;
+import tube.s3.S3JavaSDK;
 
 @Controller
 public class FileUploadController {
 	private static final int MAX_SIZE_FOR_UPLOAD = 524288000;
 	private static final String VIDEO_MP4 = "video/mp4";
-	// private static final String UPLOAD_LOCATION = "C:\\Users\\John
-	// Lemon\\Documents\\workspace-sts-3.8.2.RELEASE\\FinalProjectTube\\WebContent\\";
 	private VideoDAO videoDao;
 	private TagDAO tagDao;
 	// private ApplicationContext context = new
@@ -117,18 +115,18 @@ public class FileUploadController {
 				return "singleFileUploader";
 			}
 
-			// Please dont use it for now!!!!!!!!!!
-			// String url = null;
-			// try {
-			// url = S3JavaSDK.uploadFileToS3AWS(fileName, multipartFile);
-			// } catch (Exception e) {
-			// // TODO Auto-generated catch block
-			// e.printStackTrace();
-			// }
+
+			 String url = null;
+			 try {
+			 url = S3JavaSDK.uploadFileToS3AWS(fileName, multipartFile);
+			 } catch (Exception e) {
+			 // TODO Auto-generated catch block
+			 e.printStackTrace();
+			 }
 
 			// copy file to computer
-			String folderPath = request.getServletContext().getRealPath("/");
-			FileCopyUtils.copy(fileBucket.getFile().getBytes(), new File(folderPath + fileName));
+//			String folderPath = request.getServletContext().getRealPath("/");
+//			FileCopyUtils.copy(fileBucket.getFile().getBytes(), new File(folderPath + fileName));
 
 			// Copy file to AWS - S3
 			// String fileName = multipartFile.getOriginalFilename();
@@ -148,7 +146,7 @@ public class FileUploadController {
 
 			// add video Tags
 			List<String> tagsList = Arrays.asList(tags.split(","));
-			Set<Tag> tagSet = new HashSet<Tag>();
+			List<Tag> tagSet = new ArrayList<Tag>();
 
 			for (String tagStr : tagsList) {
 				if (!tagStr.trim().isEmpty()) {
@@ -162,19 +160,19 @@ public class FileUploadController {
 				}
 			}
 
-			int userID = loggedUser.getId();
 			// using copy to PC
-			Video video = new Video(userDAO.findOne(userID), LocalDate.now(), descr, fileName, title);
-			video.setTags(tagSet);
+//			Video video = new Video(loggedUser, LocalDate.now(), descr, fileName, title);
+			
 			// using copy to AWS - S3
-			// Video video = new Video(descr, url, title, userID);
-
+			 Video video = new Video(descr, url, title, loggedUser);
+			 
+			video.setTags(tagSet);
 			video = videoDao.saveAndFlush(video);
 			// int id = videoJDBCTemplate.addVideo(video);
 			// video.setId(id);
 
 			model.addAttribute("fileName", fileName);
-			return "success";
+			return "redirect:/video/" + video.getId();
 		} catch (Exception e) {
 			
 			mm.sendMail("youplayittalents@gmail.com",

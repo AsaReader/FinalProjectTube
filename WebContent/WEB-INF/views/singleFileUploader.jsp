@@ -9,7 +9,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <spring:url value="/resources/js/jquery-3.1.1.min.js" var="jqueryJs" />
 <spring:url value="/resources/js/main.js" var="mainJs" />
-<title>Upload Video</title>
+<title><c:out value="YouPlay - Video Upload"/></title>
 <style type="text/css">
 label.filebutton {
     width:120px;
@@ -109,7 +109,4 @@ label span input {
 			</sf:form>
 		</div>
 	</div>
-	<c:import url="/includes/footer.jsp" />
-</body>
-
-</html>
+<c:import url="/includes/footer.jsp" />

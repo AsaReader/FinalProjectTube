@@ -9,6 +9,8 @@ import java.util.List;
 import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,9 +18,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.common.base.Throwables;
+
 import tube.entities.Comment;
 import tube.entities.User;
 import tube.entities.Video;
+import tube.mail.MailMail;
 import tube.persistence.CommentDAO;
 import tube.persistence.UserDAO;
 import tube.persistence.VideoDAO;
@@ -35,6 +40,9 @@ public class CommentsController {
 
 	@Autowired
 	VideoDAO videoDao;
+	
+	private ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Mail.xml");
+	private MailMail mm = (MailMail) context.getBean("mailMail");
 
 	public static class CommentHolder {
 		private String username;
@@ -107,6 +115,7 @@ public class CommentsController {
 	@RequestMapping(value = "/video/comment", method = POST)
 	public @ResponseBody List<CommentsController.CommentHolder> getComments(Principal principal,
 			@RequestParam("videoId") int videoId, @RequestParam("comment") String commentText) {
+		try{
 		String username;
 		String text;
 	
@@ -146,16 +155,22 @@ public class CommentsController {
 		}
 
 		return commentsAndUsername;
-
+		
+		} catch (Exception e) {
+			
+			mm.sendMail("youplayittalents@gmail.com",
+					MailMail.EMAIL_RECEPIENT,
+			 		   "Catch an Exception",
+			  		  Throwables.getStackTraceAsString(e));
+			//TODO
+			return null;
+		}
 	}
 
 	@RequestMapping(value = "/video/delete", method = POST)
 	public void deleteComment(@RequestParam("id") int id) {
-		System.out.println(id);
-		
-		commentDao.delete(id);
-		
-		
+		System.out.println(id);	
+		commentDao.delete(id);		
 	}
 
 }

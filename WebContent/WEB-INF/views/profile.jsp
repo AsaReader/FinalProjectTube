@@ -7,7 +7,7 @@
 	uri="http://www.springframework.org/security/tags"%>
 <c:import url="/includes/header.jsp" />
 <c:import url="/includes/sidebar.jsp" />
-
+<head><title><c:out value="YouPlay - ${user.username}"/></title></head>
 <sec:authorize access="isAuthenticated()">
 	<sec:authentication property="principal.username" var="loggedInUser" />
 </sec:authorize>
@@ -32,8 +32,6 @@
 	
 	function deleteVideo(id){
 		var x = document.getElementById(id);
-		console.log(id , x.getAttribute('id'));
-		alert(x.getAttribute('id'));
 		$.ajax({
 			type: 'POST',
 		    url: '../videoDelete',
@@ -42,7 +40,6 @@
 		    	videoId : id,
 		    },
 		    success: function(){
-				console.log("hi");
 				location.reload();
 			}
 
@@ -58,9 +55,16 @@
 		<h1>
 			<c:out value="${user.username}'s profile" />
 			<sec:authorize access="isAuthenticated()"><br>
-				<c:if test="${user.username ne loggedInUser}">
-					<button class="dislike-button" id="subscribe" onclick="subscribe('${user.username}')"><c:out value="${subscribeButton}"/></button>
-				</c:if>
+				<c:choose>
+					<c:when test="${user.username ne loggedInUser}">
+						<button class="dislike-button" id="subscribe" onclick="subscribe('${user.username}')"><c:out value="${subscribeButton}"/></button>
+					</c:when>
+					<c:otherwise>
+						<sf:form method="post" action="${pageContext.request.contextPath}/changePassword">
+							<input type="submit" class="dislike-button" value="<c:out value="Change password"/>"/>
+						</sf:form>
+					</c:otherwise>
+				</c:choose>
 			</sec:authorize>
 			<sec:authorize access="isAnonymous()">
 				<sf:form method="post" action="${pageContext.request.contextPath}/subscribe">
@@ -97,6 +101,19 @@
 					</c:otherwise>
 				</c:choose>
 				<div class="clearFloat"></div>
+			</div>
+			<div class="grids">
+				<h2><c:out value="${user.username}'s playlists (${fn:length(playlists)})" /></h2>
+				<c:choose>
+					<c:when test="${empty playlists}">
+						<p><c:out value="No playlists yet."></c:out></p>
+					</c:when>
+					<c:otherwise>
+						<c:forEach var="playlist" items="${playlists}">
+							<p><a href="${pageContext.request.contextPath}/playlist/${playlist.id}"><c:out value="${playlist.name} (${fn:length(playlist.videos)})" /></a></p>
+						</c:forEach>
+					</c:otherwise>
+				</c:choose>
 			</div>
 			<div class="grids">
 				<h2><c:out value="${user.username}'s subscribers (${fn:length(user.subscribers)})" /></h2>

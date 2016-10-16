@@ -6,6 +6,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <c:import url="/includes/header.jsp" />
 <c:import url="/includes/sidebar.jsp" />
+<head><title><c:out value="YouPlay - Registration" /></title></head>
 <div class="content">
 	<div class="grids">
 		<h2>

@@ -39,6 +39,13 @@ public class Playlist implements java.io.Serializable {
 		this.user = user;
 		this.name = name;
 	}
+	
+	public Playlist(User user, Boolean isDeletable, String name) {
+		super();
+		this.user = user;
+		this.isDeletable = isDeletable;
+		this.name = name;
+	}
 
 	public Playlist(User user, Boolean isDeletable, String name, Set<Video> videos) {
 		this.user = user;

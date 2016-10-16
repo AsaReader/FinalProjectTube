@@ -2,8 +2,8 @@
 <Context>
     <Resource name="jdbc/tubeDS" auth="Container" 
         driverClassName="com.mysql.jdbc.Driver" 
-        url="jdbc:mysql://localhost:3306/youtubeDB?useSSL=false" 
-        username="root" password="003131" 
+        url="jdbc:mysql://dbinstance.c5eopwhywzmj.us-west-2.rds.amazonaws.com:3306/youtubeDB?useSSL=false" 
+        username="admin" password="useradmin1" 
         maxTotal="100" maxIdle="30" maxWaitMillis="10000" 
         logAbandoned="true" removeAbandonedOnBorrow="true" 
         removeAbandonedTimeout="60" type="javax.sql.DataSource" />  

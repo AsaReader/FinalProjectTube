@@ -30,6 +30,7 @@ import tube.entities.UserLikesId;
 import tube.entities.Video;
 import tube.mail.MailMail;
 import tube.persistence.PlaylistDAO;
+import tube.persistence.TagDAO;
 import tube.persistence.UserDAO;
 import tube.persistence.UserLikesDAO;
 import tube.persistence.VideoDAO;
@@ -40,19 +41,22 @@ import tube.web.controllers.UserLikesController.Helper;
 public class VideoController {
 
 	private ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Mail.xml");
-	MailMail mm = (MailMail) context.getBean("mailMail");
+	private MailMail mm = (MailMail) context.getBean("mailMail");
 
 	@Autowired
 	VideoDAO videoDao;
 
 	@Autowired
-	UserDAO userDao;
+	private UserDAO userDao;
 
 	@Autowired
 	PlaylistDAO playlistDao;
 	
 	@Autowired
-	UserLikesDAO userLikesDao;
+	private UserLikesDAO userLikesDao;
+	
+	@Autowired
+	private TagDAO tagDao;
 
 	@RequestMapping(value = "/video/{videoId}", method = GET)
 	public String playVideo(Model model, Principal principal, @PathVariable("videoId") int videoId) {
@@ -104,19 +108,22 @@ public class VideoController {
 				dislikeButton = "Dislike " + totalDislikes;
 
 			}
+			if (principal!=null){
 			SecurityUser user = (SecurityUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			List<Playlist> playlists = playlistDao.findByUserId(user.getId());
 			model.addAttribute("playlists", playlists);
+			}
 			UserLikesController.Helper helper = new Helper(dislikeButton, likeButton);
 			model.addAttribute("likesHelper", helper);
+			model.addAttribute("tags", tagDao.findByVideoId(video.getId()));
 			return "video";
 
 		} catch (Exception e) {
 
 			mm.sendMail("youplayittalents@gmail.com", MailMail.EMAIL_RECEPIENT, "Catch an Exception",
 					Throwables.getStackTraceAsString(e));
-
-			return "redirect:/";
+			model.addAttribute("missing", "video");
+			return "notFound";
 		}
 	}
 	
@@ -128,7 +135,9 @@ public class VideoController {
 			throws ServletException, IOException {
 		try {
 			Video video = videoDao.findOne(videoId);
-			if (principal !=null && video.getUser().equals(userDao.findByUsername(principal.getName()))) {
+			video.setTags(null);
+			video.setPlaylists(null);
+			if (principal !=null && video.getUser().equals(userDao.findByUsername(principal.getName()))) {			
 			videoDao.delete(video);
 			resp.setStatus(200);
 			}

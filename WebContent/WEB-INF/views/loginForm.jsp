@@ -6,8 +6,7 @@
 	uri="http://www.springframework.org/security/tags"%>
 <c:import url="/includes/header.jsp" />
 <c:import url="/includes/sidebar.jsp" />
-
-
+<head><title><c:out value="YouPlay - Login" /></title></head>
 <div class="content">
 	<div class="grids">
 		<h2>Log in</h2>
@@ -29,11 +28,13 @@
 							value="Remember me" /></label><br />
 				</div>
 				<div class="form-actions floatRight upload" align="middle">
-				<br />
-					<input type="submit" value="Login" />
+					<br /> <input type="submit" value="Login" />
+				</div>
+				<div class="form-actions floatRight upload" align="middle">
+					<br /> <br /> <a href="<c:url value="../forgotenpassword"/>">Forgotten
+						Password?</a>
 				</div>
 			</div>
-
 		</sf:form>
 	</div>
 </div>

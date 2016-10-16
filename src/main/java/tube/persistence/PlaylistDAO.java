@@ -25,4 +25,5 @@ public interface PlaylistDAO extends JpaRepository<Playlist, Integer> {
 
 		List<Playlist> findByUserId(Integer id);
 		
+		void insertPlaylist(Playlist playlist);
 }

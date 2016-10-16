@@ -6,12 +6,9 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import java.security.Principal;
 import java.util.List;
 
-import javax.sound.midi.SysexMessage;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +17,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import tube.entities.Playlist;
 import tube.entities.User;
-import tube.entities.Video;
 import tube.persistence.PlaylistDAO;
 import tube.persistence.UserDAO;
 import tube.persistence.VideoDAO;
@@ -46,13 +42,9 @@ public class PlaylistController {
 	}
 
 	@RequestMapping(value = "/playlists/{username}", method = GET)
-	public String getPlaylists(@PathVariable(value = "username") String username, Model model) {
-		System.out.println(username);
+	public String getPlaylists(@PathVariable(value="username") String username, Model model) {
 		User user = userDao.findByUsername(username);
 		List<Playlist> playlists = playlistDao.findByUserId(user.getId());
-		for (Playlist playlist : playlists) {
-			System.out.println(playlist.getName());
-		}
 		model.addAttribute("user", user);
 		model.addAttribute("playlists", playlists);
 		return "userPlaylists";
@@ -62,14 +54,11 @@ public class PlaylistController {
 	public @ResponseBody String addVideoToPlaylist(@RequestParam("playlistId") int playlistId,
 			@RequestParam("videoId") int videoId) {
 		Playlist playlist = playlistDao.findOne(playlistId);
-		System.out.println(playlist);
-		// check if video is in playlist, returns true if present, false if
-		// absent
+		//check if video is in playlist - returns true if present, false if absent
 		boolean addStatus = playlist.getVideos().stream().anyMatch((video) -> video.getId() == videoId);
 		String buttonValue = "";
 		if (addStatus) {
 			playlist.getVideos().remove(videoDao.findOne(videoId));
-			System.err.println(playlist.toString());
 			buttonValue = "Add to " + playlist.getName();
 		} else {
 			playlist.getVideos().add(videoDao.findOne(videoId));
@@ -108,5 +97,12 @@ public class PlaylistController {
 
 		return playlists;
 	}
-
+	
+	@RequestMapping(value = "/newPlaylist", method = POST)
+	public String createNewPlaylist(Principal principal, @RequestParam("playlistName") String playlistName) {
+		User user = userDao.findByUsername(principal.getName());
+		Playlist newPlaylist = new Playlist(user, true, playlistName);
+		playlistDao.insertPlaylist(newPlaylist);
+		return "redirect:/playlists/" + principal.getName();
+	}
 }
