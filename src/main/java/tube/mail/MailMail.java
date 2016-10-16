@@ -4,7 +4,7 @@ import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 
 public class MailMail {
-	public static final String EMAIL_RECEPIENT = "rijudrarak@gmail.com";
+	public static final String EMAIL_RECEPIENT = "youplay.office@gmail.com";
 
 	private MailSender mailSender;
 

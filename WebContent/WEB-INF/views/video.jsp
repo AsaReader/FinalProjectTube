@@ -11,16 +11,15 @@
 <c:import url="/includes/sidebar.jsp" />
 <body onload="uploadComment(${video.id})" />
 
-
+<div class="upload" >
 <video width="854" height="480" controls>
-	<source src=<c:url value="../${video.fileName}"/> type="video/mp4">
+	<source src=<c:url value="${video.fileName}"/> type="video/mp4">
 </video>
 <br />
-<c:out value="${video.fileName}" />
-<br>
 <c:out value="TITLE: ${video.title}" />
 <br />
-<c:out value="POSTED BY: ${video.user.username}" />
+<c:out value="POSTED BY: " />
+<a href="../user/${video.user.username}"><c:out value="${video.user.username}" /></a>
 <br />
 <c:out value="DESCRIPTION: ${video.description}" />
 <br />
@@ -29,9 +28,11 @@
 <c:out value="VIEWS: ${video.views}" />
 <br />
 <c:out value="TAGS:" />
+</div>
 
 <div class="content">
 	<div class="grids">
+
 		<sec:authorize access="isAuthenticated()">
 			<p>
 				<button class="dislike-button" id="likeIt"
@@ -267,6 +268,13 @@ function getDisLikes(videoId, likeId){
 					$("#addToPlaylist").append(data);
 				}
 			});
+		}
+		
+		function showProfile(username){
+			
+			
+
+
 		}
 		
 	</script>
