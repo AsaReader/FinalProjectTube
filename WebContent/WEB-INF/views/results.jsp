@@ -19,8 +19,8 @@
 	<div class="grids">
 		<h2>Video Results</h2>
 		<c:choose>
-			<c:when test="${empty vidoes}">
-				<p><c:out value="Couldn't find any videos with that name or tag."/></p>
+			<c:when test="${empty videos}">
+				<p><c:out value="Couldn't find any videos with that name, tag or posted by that user."/></p>
 			</c:when>
 			<c:otherwise>
 				<c:forEach items="${videos}" var="video">
@@ -32,10 +32,10 @@
 								</video>
 								<c:out value="${video.title} (${video.views})"></c:out>
 							</a><br>
-								<c:out value="by "/>
-								<a href="${pageContext.request.contextPath}/user/${video.user.username}">
-									<c:out value="${video.user.username}"/>
-								</a>
+							<c:out value="by "/>
+							<a href="${pageContext.request.contextPath}/user/${video.user.username}">
+								<c:out value="${video.user.username}"/>
+							</a>
 						</div>
 					</div>
 				</c:forEach>

@@ -19,9 +19,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.google.common.base.Throwables;
 
 import tube.entities.Playlist;
 import tube.entities.User;
@@ -41,7 +38,7 @@ import tube.web.controllers.UserLikesController.Helper;
 public class VideoController {
 
 	private ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Mail.xml");
-	private MailMail mm = (MailMail) context.getBean("mailMail");
+	private MailMail mailSender = (MailMail) context.getBean("mailMail");
 
 	@Autowired
 	VideoDAO videoDao;
@@ -119,11 +116,8 @@ public class VideoController {
 			return "video";
 
 		} catch (Exception e) {
-
-			mm.sendMail("youplayittalents@gmail.com", MailMail.EMAIL_RECEPIENT, "Catch an Exception",
-					Throwables.getStackTraceAsString(e));
 			model.addAttribute("missing", "video");
-			return "notFound";
+			return mailSender.handle(e);
 		}
 	}
 	
@@ -142,8 +136,7 @@ public class VideoController {
 			resp.setStatus(200);
 			}
 		} catch (Exception e) {
-			mm.sendMail("youplayittalents@gmail.com", MailMail.EMAIL_RECEPIENT, "Catch an Exception",
-					Throwables.getStackTraceAsString(e));
+			mailSender.handle(e);
 		}
 	}
 

@@ -12,8 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.google.common.base.Throwables;
-
 import tube.entities.Video;
 import tube.mail.MailMail;
 import tube.persistence.VideoDAO;
@@ -25,7 +23,7 @@ public class HomeController {
 	private static final int LIMIT_OF_NEW_VIDEOS_SHOW = 12;
 	private VideoDAO videoDao;
 	private ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Mail.xml");
-	private MailMail mm = (MailMail) context.getBean("mailMail");
+	private MailMail mailSender = (MailMail) context.getBean("mailMail");
 
 	@Autowired
 	public HomeController(VideoDAO videoDao) {
@@ -55,11 +53,7 @@ public class HomeController {
 			model.addAttribute("videosLast", videosLast);
 			return "home";
 		} catch (Exception e) {
-
-			mm.sendMail("youplayittalents@gmail.com", MailMail.EMAIL_RECEPIENT, "Catch an Exception",
-					Throwables.getStackTraceAsString(e));
-
-			return "redirect:/";
+			return mailSender.handle(e);
 		}
 	}
 }

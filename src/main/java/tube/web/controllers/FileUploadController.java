@@ -1,14 +1,11 @@
 package tube.web.controllers;
 
-import java.io.File;
 import java.io.IOException;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -18,7 +15,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -26,15 +22,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.google.common.base.Throwables;
-
 import tube.entities.Tag;
 import tube.entities.User;
 import tube.entities.Video;
 import tube.mail.MailMail;
 import tube.model.FileBucket;
 import tube.model.FileValidator;
-import tube.model.MultiFileBucket;
 import tube.model.MultiFileValidator;
 import tube.persistence.TagDAO;
 import tube.persistence.UserDAO;
@@ -47,10 +40,8 @@ public class FileUploadController {
 	private static final String VIDEO_MP4 = "video/mp4";
 	private VideoDAO videoDao;
 	private TagDAO tagDao;
-	// private ApplicationContext context = new
-	// ClassPathXmlApplicationContext("Beans.xml");
 	private ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Mail.xml");
-	MailMail mm = (MailMail) context.getBean("mailMail");
+	MailMail mailSender = (MailMail) context.getBean("mailMail");
 
 	@Autowired
 	public FileUploadController(VideoDAO videoDao, TagDAO tagDao) {
@@ -120,17 +111,10 @@ public class FileUploadController {
 			 try {
 			 url = S3JavaSDK.uploadFileToS3AWS(fileName, multipartFile);
 			 } catch (Exception e) {
-			 // TODO Auto-generated catch block
 			 e.printStackTrace();
 			 }
 
-			// copy file to computer
-//			String folderPath = request.getServletContext().getRealPath("/");
-//			FileCopyUtils.copy(fileBucket.getFile().getBytes(), new File(folderPath + fileName));
-
 			// Copy file to AWS - S3
-			// String fileName = multipartFile.getOriginalFilename();
-
 			title = title.trim();
 			descr = descr.trim();
 			tags = tags.trim();
@@ -160,9 +144,6 @@ public class FileUploadController {
 				}
 			}
 
-			// using copy to PC
-//			Video video = new Video(loggedUser, LocalDate.now(), descr, fileName, title);
-			
 			// using copy to AWS - S3
 			 Video video = new Video(descr, url, title, loggedUser);
 			 
@@ -174,43 +155,7 @@ public class FileUploadController {
 			model.addAttribute("fileName", fileName);
 			return "redirect:/video/" + video.getId();
 		} catch (Exception e) {
-			
-			mm.sendMail("youplayittalents@gmail.com",
-					MailMail.EMAIL_RECEPIENT,
-			 		   "Catch an Exception",
-			  		  Throwables.getStackTraceAsString(e));
-
-			return "redirect:/";
-		}
-	}
-
-	@RequestMapping(value = "/multiUpload", method = RequestMethod.GET)
-	public String getMultiUploadPage(ModelMap model) {
-		MultiFileBucket filesModel = new MultiFileBucket();
-		model.addAttribute("multiFileBucket", filesModel);
-		return "multiFileUploader";
-	}
-
-	@RequestMapping(value = "/multiUpload", method = RequestMethod.POST)
-	public String multiFileUpload(@Valid MultiFileBucket multiFileBucket, BindingResult result, ModelMap model,
-			HttpServletRequest request) throws IOException {
-
-		if (result.hasErrors()) {
-			System.out.println("validation errors in multi upload");
-			return "multiFileUploader";
-		} else {
-			System.out.println("Fetching files");
-			List<String> fileNames = new ArrayList<String>();
-			String folderPath = request.getServletContext().getRealPath("/");
-			// Now do something with file...
-			for (FileBucket bucket : multiFileBucket.getFiles()) {
-				FileCopyUtils.copy(bucket.getFile().getBytes(),
-						new File(folderPath + bucket.getFile().getOriginalFilename()));
-				fileNames.add(bucket.getFile().getOriginalFilename());
-			}
-
-			model.addAttribute("fileNames", fileNames);
-			return "multiSuccess";
+			return mailSender.handle(e);
 		}
 	}
 }

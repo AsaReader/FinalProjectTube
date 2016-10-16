@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.google.common.base.Throwables;
-
 import tube.entities.User;
 import tube.mail.MailMail;
 import tube.mail.PasswordGenerator;
@@ -27,7 +25,7 @@ import tube.persistence.UserDAO;
 public class PasswordControler {
 
 	private ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Mail.xml");
-	MailMail mm = (MailMail) context.getBean("mailMail");
+	MailMail mailSender = (MailMail) context.getBean("mailMail");
 
 	@Autowired
 	UserDAO userDAO;
@@ -53,7 +51,7 @@ public class PasswordControler {
 			String send = "Your new password for YouPlay is: " + newPassword;
 			System.out.println(send);
 
-			mm.sendMail("youplayittalents@gmail.com", userTemp.getEmail(), "Change Password in YouPlay", send);
+			mailSender.sendMail("youplayittalents@gmail.com", userTemp.getEmail(), "Change Password in YouPlay", send);
 			String criptPass = passwordEncoder.encode(newPassword);
 			userTemp.setPassword(criptPass);
 			userDAO.saveAndFlush(userTemp);
@@ -67,9 +65,7 @@ public class PasswordControler {
 			return "forgotenPassword";
 
 		} catch (Exception e) {
-			mm.sendMail("youplayittalents@gmail.com", MailMail.EMAIL_RECEPIENT, "Catch an Exception",
-					Throwables.getStackTraceAsString(e));
-			return "redirect:/";
+			return mailSender.handle(e);
 		}
 	}
 
@@ -125,9 +121,7 @@ public class PasswordControler {
 			return "changePassword";
 
 		} catch (Exception e) {
-			mm.sendMail("youplayittalents@gmail.com", MailMail.EMAIL_RECEPIENT, "Catch an Exception",
-					Throwables.getStackTraceAsString(e));
-			return "redirect:/";
+			return mailSender.handle(e);
 		}
 	}
 }

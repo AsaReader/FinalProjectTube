@@ -3,6 +3,8 @@ package tube.mail;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 
+import com.google.common.base.Throwables;
+
 public class MailMail {
 	public static final String EMAIL_RECEPIENT = "youplay.office@gmail.com";
 
@@ -21,5 +23,11 @@ public class MailMail {
 		message.setSubject(subject);
 		message.setText(msg);
 		mailSender.send(message);
+	}
+
+	public String handle(Exception e) {
+		this.sendMail("youplayittalents@gmail.com", MailMail.EMAIL_RECEPIENT, "Catch an Exception",
+				Throwables.getStackTraceAsString(e));
+		return "redirect:/";
 	}
 }
