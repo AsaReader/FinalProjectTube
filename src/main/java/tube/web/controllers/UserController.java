@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import tube.entities.User;
 import tube.entities.Video;
 import tube.model.SubscribeButton;
+import tube.persistence.PlaylistDAO;
 import tube.persistence.UserDAO;
 import tube.persistence.VideoDAO;
 import tube.validations.UserValidation;
@@ -38,6 +39,9 @@ public class UserController {
 	
 	@Autowired
 	private VideoDAO videoDao;
+	
+	@Autowired
+	private PlaylistDAO playlistDao;
 
 	public UserController() {
 	}
@@ -103,6 +107,7 @@ public class UserController {
 		videos.sort((v1, v2) -> v2.getId() - v1.getId());
 		model.addAttribute("videos", videos);
 		model.addAttribute("user", subject);
+		model.addAttribute("playlists", playlistDao.findByUserId(subject.getId()));
 		model.addAttribute("subscribeButton", subsButton.getButtonType(subject, principal, userDao).getValue());
 		return "profile";
 	}
