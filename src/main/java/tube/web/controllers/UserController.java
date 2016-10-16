@@ -103,10 +103,15 @@ public class UserController {
 	@RequestMapping(value = "/{username}", method = GET)
 	public String getProfile(@PathVariable String username, Model model, @Autowired SubscribeButton subsButton, Principal principal) {
 		User subject = userDao.findByUsername(username);
+			System.out.println("\tusername = " + username);
 		List<Video> videos = videoDao.findByUserUsername(username);
 		videos.sort((v1, v2) -> v2.getId() - v1.getId());
 		model.addAttribute("videos", videos);
 		model.addAttribute("user", subject);
+			System.out.println("\tuserDao = " + userDao);
+			System.out.println("\tsubject = " + subject);
+			System.out.println("\tsubject ID = " + subject.getId());
+			System.out.println("\tplaylists = " + playlistDao.findByUserId(subject.getId()));
 		model.addAttribute("playlists", playlistDao.findByUserId(subject.getId()));
 		model.addAttribute("subscribeButton", subsButton.getButtonType(subject, principal, userDao).getValue());
 		return "profile";

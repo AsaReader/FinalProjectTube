@@ -62,7 +62,7 @@ public class PlaylistController {
 	@RequestMapping(value = "/video/addToPlaylist", method = POST)
 	public @ResponseBody String addVideoToPlaylist(@RequestParam("playlistId") int playlistId, @RequestParam("videoId") int videoId) {
 		Playlist playlist = playlistDao.findOne(playlistId);
-		//check if video is in playlist, returns true if present, false if absent
+		//check if video is in playlist - returns true if present, false if absent
 		boolean addStatus = playlist.getVideos().stream().anyMatch((video) -> video.getId() == videoId);
 		String buttonValue = "";
 		if (addStatus) {

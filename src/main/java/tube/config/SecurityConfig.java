@@ -45,6 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.POST, "/subscribe").authenticated()
 				.antMatchers("/newPlaylist").authenticated()
 				.antMatchers("/video/like").authenticated()
+				.antMatchers("/changePassword").authenticated()
 				.antMatchers("/upload").authenticated()
 				.antMatchers("/user/login", "/user/register").anonymous()
 				.antMatchers("/user/me").authenticated()

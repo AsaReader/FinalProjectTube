@@ -148,7 +148,7 @@ public class FileUploadController {
 
 			// add video Tags
 			List<String> tagsList = Arrays.asList(tags.split(","));
-			Set<Tag> tagSet = new HashSet<Tag>();
+			List<Tag> tagSet = new ArrayList<Tag>();
 
 			for (String tagStr : tagsList) {
 				if (!tagStr.trim().isEmpty()) {
@@ -173,8 +173,7 @@ public class FileUploadController {
 			// int id = videoJDBCTemplate.addVideo(video);
 			// video.setId(id);
 
-			model.addAttribute("fileName", fileName);
-			return "success";
+			return "redirect:/video/" + video.getId();
 		} catch (Exception e) {
 			
 			mm.sendMail("youplayittalents@gmail.com",

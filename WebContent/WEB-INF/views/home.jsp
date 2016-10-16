@@ -15,8 +15,13 @@
 					<a href="${pageContext.request.contextPath}/video/${videoL.id}">
 						<video width="150" height="90">
 							<source src=<c:url value="${videoL.fileName}"/> type="video/mp4">
-						</video><c:out value="${videoL.title}"></c:out>
-					</a> <br />
+						</video>
+						<c:out value="${videoL.title} (${videoL.views})"></c:out>
+					</a>
+					<c:out value="by "/>
+					<a href="${pageContext.request.contextPath}/user/${videoL.user.username}">
+						<c:out value="${videoL.user.username}"/>
+					</a>
 				</div>
 			</div>
 		</c:forEach>
@@ -31,8 +36,13 @@
 					<a href="${pageContext.request.contextPath}/video/${videoW.id}">
 						<video width="150" height="90">
 							<source src=<c:url value="${videoW.fileName}"/> type="video/mp4">
-						</video> <c:out value="${videoW.title}"></c:out>
-					</a> <br />
+						</video>
+						<c:out value="${videoW.title} (${videoW.views})"></c:out>
+					</a>
+						<c:out value="by "/>
+						<a href="${pageContext.request.contextPath}/user/${videoW.user.username}">
+							<c:out value="${videoW.user.username}"/>
+						</a>
 				</div>
 			</div>
 		</c:forEach>

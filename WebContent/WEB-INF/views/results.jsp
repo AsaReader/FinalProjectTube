@@ -14,8 +14,13 @@
 					<a href="${pageContext.request.contextPath}/video/${video.id}">
 						<video width="150" height="90">
 							<source src=<c:url value="${video.fileName}"/> type="video/mp4">
-						</video><c:out value="${video.title}"></c:out>
-					</a> <br />
+						</video>
+						<c:out value="${video.title} (${video.views})"></c:out>
+					</a><br>
+						<c:out value="by "/>
+						<a href="${pageContext.request.contextPath}/user/${video.user.username}">
+							<c:out value="${video.user.username}"/>
+						</a>
 				</div>
 			</div>
 		</c:forEach>
