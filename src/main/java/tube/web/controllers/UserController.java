@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -22,8 +24,11 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.google.common.base.Throwables;
+
 import tube.entities.User;
 import tube.entities.Video;
+import tube.mail.MailMail;
 import tube.model.SubscribeButton;
 import tube.persistence.PlaylistDAO;
 import tube.persistence.UserDAO;
@@ -43,6 +48,9 @@ public class UserController {
 	@Autowired
 	private PlaylistDAO playlistDao;
 
+	private ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Mail.xml");
+	private MailMail mm = (MailMail) context.getBean("mailMail");
+	
 	public UserController() {
 	}
 
@@ -102,19 +110,26 @@ public class UserController {
 
 	@RequestMapping(value = "/{username}", method = GET)
 	public String getProfile(@PathVariable String username, Model model, @Autowired SubscribeButton subsButton, Principal principal) {
-		User subject = userDao.findByUsername(username);
-			System.out.println("\tusername = " + username);
-		List<Video> videos = videoDao.findByUserUsername(username);
-		videos.sort((v1, v2) -> v2.getId() - v1.getId());
-		model.addAttribute("videos", videos);
-		model.addAttribute("user", subject);
-			System.out.println("\tuserDao = " + userDao);
-			System.out.println("\tsubject = " + subject);
-			System.out.println("\tsubject ID = " + subject.getId());
-			System.out.println("\tplaylists = " + playlistDao.findByUserId(subject.getId()));
-		model.addAttribute("playlists", playlistDao.findByUserId(subject.getId()));
-		model.addAttribute("subscribeButton", subsButton.getButtonType(subject, principal, userDao).getValue());
-		return "profile";
+		try{
+			User subject = userDao.findByUsername(username);
+				System.out.println("\tusername = " + username);
+			List<Video> videos = videoDao.findByUserUsername(username);
+			videos.sort((v1, v2) -> v2.getId() - v1.getId());
+			model.addAttribute("videos", videos);
+			model.addAttribute("user", subject);
+				System.out.println("\tuserDao = " + userDao);
+				System.out.println("\tsubject = " + subject);
+				System.out.println("\tsubject ID = " + subject.getId());
+				System.out.println("\tplaylists = " + playlistDao.findByUserId(subject.getId()));
+			model.addAttribute("playlists", playlistDao.findByUserId(subject.getId()));
+			model.addAttribute("subscribeButton", subsButton.getButtonType(subject, principal, userDao).getValue());
+			return "profile";
+		} catch(Exception e) {
+			model.addAttribute("missing", username);
+			mm.sendMail("youplayittalents@gmail.com", MailMail.EMAIL_RECEPIENT, "Catch an Exception",
+					Throwables.getStackTraceAsString(e));
+			return "notFound";
+		}
 	}
 	
 }

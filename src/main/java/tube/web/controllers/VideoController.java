@@ -35,7 +35,7 @@ import tube.web.controllers.UserLikesController.Helper;
 public class VideoController {
 
 	private ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Mail.xml");
-	MailMail mm = (MailMail) context.getBean("mailMail");
+	private MailMail mm = (MailMail) context.getBean("mailMail");
 
 	@Autowired
 	private VideoDAO videoDao;
@@ -108,8 +108,8 @@ public class VideoController {
 
 			mm.sendMail("youplayittalents@gmail.com", MailMail.EMAIL_RECEPIENT, "Catch an Exception",
 					Throwables.getStackTraceAsString(e));
-
-			return "redirect:/";
+			model.addAttribute("missing", "video");
+			return "notFound";
 		}
 	}
 

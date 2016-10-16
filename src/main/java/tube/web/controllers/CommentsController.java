@@ -42,7 +42,7 @@ public class CommentsController {
 	VideoDAO videoDao;
 	
 	private ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Mail.xml");
-	MailMail mm = (MailMail) context.getBean("mailMail");
+	private MailMail mm = (MailMail) context.getBean("mailMail");
 
 	public static class CommentHolder {
 		private String username;

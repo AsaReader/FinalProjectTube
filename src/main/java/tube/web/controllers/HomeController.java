@@ -25,7 +25,7 @@ public class HomeController {
 	private static final int LIMIT_OF_NEW_VIDEOS_SHOW = 12;
 	private VideoDAO videoDao;
 	private ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Mail.xml");
-	MailMail mm = (MailMail) context.getBean("mailMail");
+	private MailMail mm = (MailMail) context.getBean("mailMail");
 
 	@Autowired
 	public HomeController(VideoDAO videoDao) {
