@@ -10,8 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.google.common.base.Throwables;
-
 import tube.entities.Video;
 import tube.mail.MailMail;
 import tube.persistence.VideoDAO;
@@ -19,32 +17,24 @@ import tube.persistence.VideoDAO;
 @Controller
 public class SearchController {
 	
-	
-	
 	private ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Mail.xml");
-	private MailMail mm = (MailMail) context.getBean("mailMail");
+	private MailMail mailSender = (MailMail) context.getBean("mailMail");
 
 	@Autowired
-	VideoDAO videoDao;
-
+	private VideoDAO videoDao;
+	
 	@RequestMapping("/search")
 	public String getVideosByInput(Model model, String input) {
 		try {
 			List<Video> videos = videoDao.getVideosByInput(input);
 			model.addAttribute("videos", videos);
-			System.err.println("text to search : " + input);
 			List<String> sorts = new ArrayList<String>();
 			sorts.add("Views");
 			sorts.add("Date");
 			model.addAttribute("sorts", sorts);
 			return "results";
-			
 		} catch (Exception e) {
-			
-			mm.sendMail("youplayittalents@gmail.com", MailMail.EMAIL_RECEPIENT, "Catch an Exception",
-					Throwables.getStackTraceAsString(e));
-
-			return "redirect:/";
+			return mailSender.handle(e);
 		}
 	}
 	@RequestMapping("/sort")
@@ -65,15 +55,10 @@ public class SearchController {
 			model.addAttribute("sorts", sorts);
 			model.addAttribute("videos", videos);
 			System.err.println("text to search : " + input);
-			
 			return "results";
 			
 		} catch (Exception e) {
-			
-			mm.sendMail("youplayittalents@gmail.com", MailMail.EMAIL_RECEPIENT, "Catch an Exception",
-					Throwables.getStackTraceAsString(e));
-
-			return "redirect:/";
+			return mailSender.handle(e);
 		}
 	}
 
