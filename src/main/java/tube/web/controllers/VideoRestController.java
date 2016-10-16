@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import tube.entities.Video;
+import tube.model.SearchResultParser;
+import tube.persistence.TagDAO;
 import tube.persistence.UserDAO;
 import tube.persistence.VideoDAO;
 
@@ -23,6 +25,12 @@ public class VideoRestController {
 
 	@Autowired
 	UserDAO userDao;
+	
+	@Autowired
+	TagDAO tagDao;
+	
+	@Autowired
+	SearchResultParser resultParser;
 
 	@RequestMapping(value = "/prefix/{text}", method = GET)
 	public @ResponseBody List<Video> getVideo(@PathVariable("text") String query) {
@@ -30,18 +38,14 @@ public class VideoRestController {
 		return videoList;
 	}
 	
-	
-
 	@RequestMapping(value = "/title/{text}", method = GET)
 	public @ResponseBody List<String> getVideoTitles(@PathVariable("text") String query) {
-		List<Video> videoList = videoDao.getByTitle(query);
-		List<String> titles = new ArrayList<String>();
-		for (Video video : videoList) {
-			titles.add(video.getTitle());
-			System.out.println(query);
-			System.out.println(video.getTitle());
-		}
-		return titles;
+		List<String> results = resultParser.getTitles(videoDao.getByInput(query));
+		System.out.println(results);
+		results.addAll(resultParser.getTagNames(tagDao.getTagsByInput(query)));
+		System.out.println(results);
+		results.addAll(resultParser.getUsernames(userDao.getUsersByInput(query)));
+		System.out.println(results);
+		return results;
 	}
-
 }

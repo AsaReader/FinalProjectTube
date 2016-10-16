@@ -17,15 +17,16 @@ public interface VideoDAO extends JpaRepository<Video, Integer> {
 	
 	@Cacheable(value = "videoCache")
 	@Query(value = "SELECT * FROM videos WHERE title LIKE ?1%",nativeQuery = true)
-	List<Video> getByTitle(String title);
+	List<Video> getByInput(String title);
 	
-	@Cacheable(value = "videoCache")
 	@Query(value = "SELECT DISTINCT v.* FROM videos v "
 			+ "JOIN video_has_tags vt ON (v.id = vt.video_id) "
 			+ "JOIN tags t ON (t.id = vt.tags_id) "
+			+ "JOIN users u ON (u.id = v.user_id) "
 			+ "WHERE v.title LIKE ?1% "
-			+ "OR t.name LIKE ?1% ", nativeQuery = true)
-	List<Video> getVideosByInput(String description);
+			+ "OR t.name LIKE ?1% "
+			+ "OR u.username LIKE ?1% ", nativeQuery = true)
+	List<Video> getVideosByInput(String input);
 	
 	@Query(value = "SELECT v.* FROM videos v ORDER BY v.views DESC LIMIT 9", nativeQuery = true)
 	List<Video> getMostWatchedVideos();

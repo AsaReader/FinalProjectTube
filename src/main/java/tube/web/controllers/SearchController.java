@@ -25,7 +25,7 @@ public class SearchController {
 	
 	@RequestMapping("/search")
 	public String getVideosByInput(Model model, String input) {
-		try {
+//		try {
 			List<Video> videos = videoDao.getVideosByInput(input);
 			model.addAttribute("videos", videos);
 			List<String> sorts = new ArrayList<String>();
@@ -33,13 +33,13 @@ public class SearchController {
 			sorts.add("Date");
 			model.addAttribute("sorts", sorts);
 			return "results";
-		} catch (Exception e) {
-			return mailSender.handle(e);
-		}
+//		} catch (Exception e) {
+//			return mailSender.handle(e);
+//		}
 	}
 	@RequestMapping("/sort")
 	public String sortVideos(Model model, String input, String sortBy) {
-		try {
+//		try {
 			List<Video> videos = videoDao.getVideosByInput(input);
 			List<String> sorts = new ArrayList<String>();
 			sorts.add("Views");
@@ -57,9 +57,9 @@ public class SearchController {
 			System.err.println("text to search : " + input);
 			return "results";
 			
-		} catch (Exception e) {
-			return mailSender.handle(e);
-		}
+//		} catch (Exception e) {
+//			return mailSender.handle(e);
+//		}
 	}
 
 

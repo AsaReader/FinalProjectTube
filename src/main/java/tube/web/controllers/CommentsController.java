@@ -113,20 +113,19 @@ public class CommentsController {
 		try{
 		String username;
 		String text;
-	
-
-		String loggedUsername = principal.getName();
-		User user = userDao.findByUsername(loggedUsername);
-		int currentUserId = user.getId();
-		Video video = videoDao.getOne(videoId);
-
-		
 		User videoUser = userDao.getUserByVideoId(videoId);
 		int videoUserId = videoUser.getId();
-
-		Comment comment = new Comment(user, video, commentText);
-		if (commentText.length() != 0) {
-			commentDao.save(comment);
+		int currentUserId = -1;
+		if(principal != null) {
+			String loggedUsername = principal.getName();
+			User user = userDao.findByUsername(loggedUsername);
+			currentUserId = user.getId();
+			Video video = videoDao.getOne(videoId);
+	
+			Comment comment = new Comment(user, video, commentText);
+			if (commentText.length() != 0) {
+				commentDao.save(comment);
+			}
 		}
 
 		List<CommentsController.CommentHolder> commentsAndUsername = new ArrayList<CommentsController.CommentHolder>();
@@ -140,8 +139,6 @@ public class CommentsController {
 			}
 		
 			User comentator = com.getUsers();
-
-		
 			username = comentator.getUsername();
 			text = com.getText();
 			int commentUserId = comentator.getId();
