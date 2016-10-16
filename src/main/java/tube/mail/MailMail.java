@@ -6,6 +6,8 @@ import org.springframework.mail.SimpleMailMessage;
 import com.google.common.base.Throwables;
 
 public class MailMail {
+	private static final String EMAIL_SENDER = "youplayittalents@gmail.com";
+
 	public static final String EMAIL_RECEPIENT = "youplay.office@gmail.com";
 
 	private MailSender mailSender;
@@ -26,7 +28,7 @@ public class MailMail {
 	}
 
 	public String handle(Exception e) {
-		this.sendMail("youplayittalents@gmail.com", MailMail.EMAIL_RECEPIENT, "Catch an Exception",
+		this.sendMail(EMAIL_SENDER, MailMail.EMAIL_RECEPIENT, "Catch an Exception",
 				Throwables.getStackTraceAsString(e));
 		return "redirect:/";
 	}
