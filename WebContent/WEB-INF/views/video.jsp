@@ -161,8 +161,8 @@ function uploadComment(videoId, userId){
 				var linkText = document.createTextNode(username);
 				username.appendChild(linkText);
 				username.appendChild(newLine);
-				username.title = name;
-				username.href = "index.html";
+			
+				username.href = "${pageContext.request.contextPath}/user/"+object.username;
 				username.innerHTML = object.username;
 				username.appendChild(document.createElement("h1"));
 				container.appendChild(username);

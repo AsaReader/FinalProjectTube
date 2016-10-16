@@ -6,6 +6,8 @@
 	uri="http://www.springframework.org/security/tags"%>
 <c:import url="/includes/header.jsp" />
 <c:import url="/includes/sidebar.jsp" />
+
+
 <div class="content">
 	<div class="grids">
 		<h2>Log in</h2>

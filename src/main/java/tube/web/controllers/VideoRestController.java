@@ -32,13 +32,17 @@ public class VideoRestController {
 		List<Video> videoList = videoDao.getVideosByInput(query);
 		return videoList;
 	}
+	
+	
 
 	@RequestMapping(value = "/title/{text}", method = GET)
 	public @ResponseBody List<String> getVideoTitles(@PathVariable("text") String query) {
-		List<Video> videoList = videoDao.getVideosByInput(query);
+		List<Video> videoList = videoDao.getByTitle(query);
 		List<String> titles = new ArrayList<String>();
 		for (Video video : videoList) {
 			titles.add(video.getTitle());
+			System.out.println(query);
+			System.out.println(video.getTitle());
 		}
 		return titles;
 	}
