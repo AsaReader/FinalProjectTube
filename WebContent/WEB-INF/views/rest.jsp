@@ -27,54 +27,69 @@
 		</div>
 
 
-	</div>
 
-	<div class="content">
-		<div class="search-box">
-			<sf:form method="GET"
-				action="${pageContext.request.contextPath}/getJson">
-				<input type="text" class="icon" name="input" id="text"
-					onkeypress="getLink()" placeholder="search..." />
-				<input type="submit" value="" class="icon">
 
-			</sf:form>
+
+
+		<div class="content">
+
+			<div class="preview">
+
+				<div class="search-box">
+					<sf:form method="GET"
+						action="${pageContext.request.contextPath}/getJson">
+						<input type="text" class="icon" name="input" id="text"
+							onkeypress="getLink()" placeholder="search..." />
+
+
+					</sf:form>
+				</div>
+			</div>
+			<br><br><br><br><br><br><br><br><br><br><br><br>
+			<h1>Get your video list here:</h1>
+			
+			<div class="preview">
+				<h2>
+				<div  class="preview" id="link"></div>
+				</h2>
+
+				<div id="listOfVideos"></div>
+			</div>
 		</div>
+
 	</div>
-	<c:out value="Get your videos data on this link:" />
-	<div id="link"></div>
 
 
 	<script type="text/javascript">
 		function getLink() {
-			$("#text").empty();
+			$("#link").empty();
 
 			var search = $("#text").val();
-			
+			if(search.length != 0){
+
 			var pieces = location.pathname.split("/")[1];
-			
+
 			var host = location.host;
-	
-			var link1 = location.host + pieces +"/prefix/" + search;
-			
-			
-		
+
+			var link1 = 'http://' + location.host + '/' + pieces + "/prefix/"
+					+ search;
+
 			console.log(link1);
-			
+
 			var link = document.createElement('a');
 			var newLine = document.createElement("h1");
 			var linkText = document.createTextNode(link);
 			link.appendChild(linkText);
 			link.appendChild(newLine);
 			link.title = name;
-			link.href = link;
+			link.href = link1;
 			link.innerHTML = link1;
 			link.appendChild(document.createElement("h1"));
-			$("#link").append(link)
+			$("#link").append(link);
+			}
 
 		}
 	</script>
-
-
-
 </body>
 </html>
+<c:import url="/includes/footer.jsp" />
