@@ -26,7 +26,7 @@ public interface UserDAO extends JpaRepository<User, Integer> {
 	<S extends User> S saveAndFlush(S user);
 	
 	@Override
-	@CacheEvict(value = "userCache", key = "#result.username", allEntries = true)
+	@CacheEvict(value = "userCache", key = "#result.username")
 	<S extends User> S save(S arg0);
 	
 	@Query(value = "SELECT * FROM videos v JOIN users u ON (v.user_id = u.id) WHERE v.id = ?1 ", nativeQuery = true)

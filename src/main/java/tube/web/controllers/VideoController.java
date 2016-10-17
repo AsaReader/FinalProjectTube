@@ -132,8 +132,8 @@ public class VideoController {
 			video.setTags(null);
 			video.setPlaylists(null);
 			if (principal !=null && video.getUser().equals(userDao.findByUsername(principal.getName()))) {			
-			videoDao.delete(video);
-			resp.setStatus(200);
+				videoDao.delete(video);
+				resp.setStatus(200);
 			}
 		} catch (Exception e) {
 			mailSender.handle(e);

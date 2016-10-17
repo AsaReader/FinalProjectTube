@@ -142,13 +142,10 @@ public class FileUploadController {
 				}
 			}
 
-			// using copy to AWS - S3
 			Video video = new Video(descr, url, title, loggedUser);
 
 			video.setTags(tagSet);
 			video = videoDao.saveAndFlush(video);
-			// int id = videoJDBCTemplate.addVideo(video);
-			// video.setId(id);
 
 			model.addAttribute("fileName", fileName);
 			return "redirect:/video/" + video.getId();

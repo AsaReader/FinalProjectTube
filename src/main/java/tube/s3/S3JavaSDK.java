@@ -31,21 +31,6 @@ public class S3JavaSDK {
 
 			System.out.println(s3Object.getObjectContent().getHttpRequest().getURI().toString());
 			System.out.println(s3Object.getObjectContent().getHttpRequest().getURI().toString().length());
-			/*
-			 * remember this is a new bucket and "folders" dont exist in S3,
-			 * they are logical entities derived from the path specified in the
-			 * key. S3 is just a key value store. they are created on the fly
-			 * when we upload an object with a specific key path Also, the
-			 * folder setting in the console on the S3 folder for server side
-			 * encryption is a slightly misleading instruction to encrypt the
-			 * selected resources - it does NOT set a persistant setting on all
-			 * resources uploaded into that folder
-			 */
-			// PutObjectRequest putRequest1 = new PutObjectRequest(BUCKET_NAME,
-			// fileName, file);
-			// PutObjectResult response1 = s3Client.putObject(putRequest1);
-			// System.out.println("Uploaded object encryption status is " +
-			// response1.getSSEAlgorithm());
 
 			String url = s3Object.getObjectContent().getHttpRequest().getURI().toString();
 			url = url.replace("https", "http");
