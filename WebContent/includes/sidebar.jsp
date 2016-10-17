@@ -26,6 +26,7 @@
 					<li><a href="${pageContext.request.contextPath}/user/me">My Profile</a></li>
 					<li><a href="${pageContext.request.contextPath}/playlists/${loggedInUser}">Playlists</a></li>
 				</sec:authorize>
+					<li><a href="${pageContext.request.contextPath}/restService">Rest Service</a></li>
 				</ul>
 			</div>
 		</div>

@@ -35,7 +35,7 @@ public class CommentsController {
 
 	@Autowired
 	VideoDAO videoDao;
-	
+
 	private ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Mail.xml");
 	private MailMail mailSender = (MailMail) context.getBean("mailMail");
 
@@ -47,7 +47,8 @@ public class CommentsController {
 		private int currentUserId;
 		private int id;
 
-		public CommentHolder(String username, String text, int commentUserId, int id, int videoUserId, int currentUserId) {
+		public CommentHolder(String username, String text, int commentUserId, int id, int videoUserId,
+				int currentUserId) {
 			super();
 			this.username = username;
 			this.text = text;
@@ -110,44 +111,46 @@ public class CommentsController {
 	@RequestMapping(value = "/video/comment", method = POST)
 	public @ResponseBody List<CommentsController.CommentHolder> getComments(Principal principal,
 			@RequestParam("videoId") int videoId, @RequestParam("comment") String commentText) {
-		try{
-		String username;
-		String text;
-		User videoUser = userDao.getUserByVideoId(videoId);
-		int videoUserId = videoUser.getId();
-		int currentUserId = -1;
-		if(principal != null) {
-			String loggedUsername = principal.getName();
-			User user = userDao.findByUsername(loggedUsername);
-			currentUserId = user.getId();
-			Video video = videoDao.getOne(videoId);
-	
-			Comment comment = new Comment(user, video, commentText);
-			if (commentText.length() != 0) {
-				commentDao.save(comment);
+		try {
+			String username;
+			String text;
+			User videoUser = userDao.getUserByVideoId(videoId);
+			int videoUserId = videoUser.getId();
+			int currentUserId = -1;
+			if (principal != null) {
+				String loggedUsername = principal.getName();
+				User user = userDao.findByUsername(loggedUsername);
+				currentUserId = user.getId();
+				Video video = videoDao.getOne(videoId);
+			
+				Comment comment = new Comment(user, video, commentText);
+				if (commentText.length() != 0) {
+					commentDao.save(comment);
+				}
 			}
-		}
 
-		List<CommentsController.CommentHolder> commentsAndUsername = new ArrayList<CommentsController.CommentHolder>();
-	
-		List<Comment> comments = commentDao.findByVideoId(videoId);
-		comments.sort((c1, c2) -> c2.getId() - c1.getId());
-	
-		for (Comment com : comments) {
-			if (com.getText().length() == 0) {
-				continue;
-			}
-		
-			User comentator = com.getUsers();
-			username = comentator.getUsername();
-			text = com.getText();
-			int commentUserId = comentator.getId();
-			int commentId = com.getId();
-			commentsAndUsername.add(new CommentHolder(username, text, commentUserId, commentId, videoUserId, currentUserId));
-		}
+				List<CommentsController.CommentHolder> commentsAndUsername = new ArrayList<CommentsController.CommentHolder>();
 
-		return commentsAndUsername;
-		
+				List<Comment> comments = commentDao.findByVideoId(videoId);
+				comments.sort((c1, c2) -> c2.getId() - c1.getId());
+
+				for (Comment com : comments) {
+					if (com.getText().length() == 0) {
+						continue;
+					}
+
+					User comentator = com.getUsers();
+					username = comentator.getUsername();
+					text = com.getText();
+					int commentUserId = comentator.getId();
+					int commentId = com.getId();
+					commentsAndUsername.add(
+							new CommentHolder(username, text, commentUserId, commentId, videoUserId, currentUserId));
+				}
+				System.out.println(currentUserId);
+
+			return commentsAndUsername;
+
 		} catch (Exception e) {
 			mailSender.handle(e);
 			return null;
@@ -156,8 +159,8 @@ public class CommentsController {
 
 	@RequestMapping(value = "/video/delete", method = POST)
 	public void deleteComment(@RequestParam("id") int id) {
-		System.out.println(id);	
-		commentDao.delete(id);		
+		System.out.println(id);
+		commentDao.delete(id);
 	}
 
 }
