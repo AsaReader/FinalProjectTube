@@ -86,7 +86,6 @@ public class FileUploadController {
 		try {
 			User loggedUser = userDAO.findByUsername(principal.getName());
 
-						
 			String title = request.getParameter("title");
 			String descr = request.getParameter("descr");
 			String tags = request.getParameter("tags");
@@ -106,13 +105,12 @@ public class FileUploadController {
 				return "singleFileUploader";
 			}
 
-
-			 String url = null;
-			 try {
-			 url = S3JavaSDK.uploadFileToS3AWS(fileName, multipartFile);
-			 } catch (Exception e) {
-			 e.printStackTrace();
-			 }
+			String url = null;
+			try {
+				url = S3JavaSDK.uploadFileToS3AWS(fileName, multipartFile);
+			} catch (Exception e) {
+				return mailSender.handle(e);
+			}
 
 			// Copy file to AWS - S3
 			title = title.trim();
@@ -145,8 +143,8 @@ public class FileUploadController {
 			}
 
 			// using copy to AWS - S3
-			 Video video = new Video(descr, url, title, loggedUser);
-			 
+			Video video = new Video(descr, url, title, loggedUser);
+
 			video.setTags(tagSet);
 			video = videoDao.saveAndFlush(video);
 			// int id = videoJDBCTemplate.addVideo(video);

@@ -19,7 +19,6 @@ public class S3JavaSDK {
 	private static final String BUCKET_NAME = "tube.videobucket";
 
 	public static String uploadFileToS3AWS(String name, MultipartFile file) throws Exception {
-		try {
 			BasicAWSCredentials awsCreds = new BasicAWSCredentials(Credentials.ACCESS_KEY_ID,
 					Credentials.SECRET_ACCESS_KEY);
 
@@ -52,9 +51,6 @@ public class S3JavaSDK {
 			url = url.replace("https", "http");
 
 			return url;
-		} catch (Exception e) {
-			return "redirect:/";
-		}
 	}
 
 	public static void serverSideEncryption() throws Exception {
@@ -87,17 +83,6 @@ public class S3JavaSDK {
 		final String fileName = "sometext.txt";
 
 		File file = new File(S3JavaSDK.class.getResource(fileName).toURI());
-
-		/*
-		 * remember this is a new bucket and "folders" dont exist in S3, they
-		 * are logical entities derived from the path specified in the key. S3
-		 * is just a key value store. they are created on the fly when we upload
-		 * an object with a specific key path Also, the folder setting in the
-		 * console on the S3 folder for server side encryption is a slightly
-		 * misleading instruction to encrypt the selected resources - it does
-		 * NOT set a persistant setting on all resources uploaded into that
-		 * folder
-		 */
 
 		{
 			PutObjectRequest putRequest1 = new PutObjectRequest(newBucketName,
