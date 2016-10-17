@@ -1,6 +1,8 @@
 package tube.security;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,19 +16,21 @@ public class SecurityUser implements UserDetails {
 	private String username;
 	private String password;
 	private Integer id;
+	private List<GrantedAuthority> authorities;
 	
-	public SecurityUser(User user) {
+	public SecurityUser(User user, List<GrantedAuthority> authorities) {
         if(user != null)
         {
         	this.id = user.getId();
             this.username = user.getUsername();
             this.password = user.getPassword();
+            this.authorities = authorities;
         }       
     }
 	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return null;
+		return this.authorities;
 	}
 
 	@Override
