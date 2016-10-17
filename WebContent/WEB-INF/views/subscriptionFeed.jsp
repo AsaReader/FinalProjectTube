@@ -21,7 +21,11 @@
 							<source src=<c:url value="${video.fileName}"/> type="video/mp4">
 						</video>
 						<c:out value="${video.title}"></c:out>
-					</a> <br />
+					</a>
+					<c:out value="by "/>
+							<a href="${pageContext.request.contextPath}/user/${video.user.username}">
+								<c:out value="${video.user.username}"/>
+							</a>
 				</div>
 			</div>
 		</c:forEach>

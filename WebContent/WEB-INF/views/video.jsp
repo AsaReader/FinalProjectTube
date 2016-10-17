@@ -10,7 +10,7 @@
 <head>
 <title><c:out value="YouPlay - Watch ${video.title}" /></title>
 </head>
-<body onload=" uploadComment(${video.id})"/>
+
 <body onload=" uploadComment(${video.id} , playlistButtonValue(${video.id}))" />
 <div class="upload">
 	<video width="854" height="480" controls>
@@ -145,7 +145,8 @@ function playlistButtonValue( videoId) {
 
 function uploadComment(videoId){
 	
-	var comment = $("#commentId").val();
+	var comment = $("#commentId").val().replace(/</g, "&lt;").replace(/>/g, "&gt;");
+	
 	if(comment == null){
 		console.log('vleze');
 		comment = '';

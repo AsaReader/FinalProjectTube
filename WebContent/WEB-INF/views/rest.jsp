@@ -64,8 +64,8 @@
 		function getLink() {
 			$("#link").empty();
 
-			var search = $("#text").val();
-			if(search.length != 0){
+			var search = $("#text").val().replace(/</g, "&lt;").replace(/>/g, "&gt;");
+			if(search.trim().length != 0){
 
 			var pieces = location.pathname.split("/")[1];
 
